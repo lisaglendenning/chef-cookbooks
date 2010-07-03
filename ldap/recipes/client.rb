@@ -75,3 +75,11 @@ template CONFFILE do
   owner "root"
   group "root"
 end
+
+attr = Mash.new
+attr[:role] = :client
+component 'ldap_component' do
+  action :enable
+  name 'ldap'
+  attributes attr
+end
