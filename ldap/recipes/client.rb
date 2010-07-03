@@ -80,6 +80,6 @@ attr = Mash.new
 attr[:role] = :client
 component 'ldap_component' do
   action :enable
-  name 'ldap'
+  key 'ldap'
   attributes attr
 end
