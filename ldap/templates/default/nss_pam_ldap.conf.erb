@@ -1,0 +1,22 @@
+# This is the configuration file for the LDAP nameservice
+# switch library and the LDAP PAM module.
+#
+# The man pages for this file are nss_ldap(5) and pam_ldap(5)
+#
+# PADL Software
+# http://www.padl.com
+#
+
+uri             <%= node[:ldap][:auth][:uri] %>
+<% if node[:ldap][:basedn] %>
+base            <%= node[:ldap][:basedn] %>
+<% end %>
+ssl             <%= node[:ldap][:auth][:ssl] %>
+<% if node[:ldap][:cafile] %> 
+tls_cacert      <%= node[:ldap][:cafile] %>
+<% else %>
+tls_cacertdir   <%= node[:ldap][:cadir] %>
+<% end %>
+<% if node[:ldap][:auth][:passwd] %>
+<%= node[:ldap][:auth][:passwd] %>
+<% end %>
