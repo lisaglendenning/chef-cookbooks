@@ -1,0 +1,28 @@
+#!/bin/sh
+
+#
+# Flush all current rules from iptables
+#
+ iptables -F
+
+# TEMPORARY! 
+#
+# SSH
+#
+ iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+<%= @defaults %>
+
+#############################################################################
+## Services
+#############################################################################
+
+<%= @services %>
+
+<% case node[:platform] %>
+<% when "redhat", "centos", "fedora" %>
+#
+# Save settings
+#
+ /sbin/service iptables save
+<% end %>
