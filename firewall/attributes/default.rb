@@ -37,6 +37,8 @@ components[:firewall][:registry].each { |name,rules|
   rules.each { |rule|
     text = "iptables -A INPUT -j ACCEPT"
     rule.each { |k,v|
+      Chef::Log.info(k.to_s)
+      Chef::Log.info(v.to_s)
       case k
       when :protocol
         text << " -p #{v}"
