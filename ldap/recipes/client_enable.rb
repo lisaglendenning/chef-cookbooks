@@ -1,5 +1,8 @@
 
 props = node[:components][:ldap_client]
+  
+print node[:components][:ldap_client]
+print node[:components]['ldap_client']
 
 #
 # Resources
