@@ -30,18 +30,31 @@ HERE
 
 default[:components][:firewall][:registry] = Mash.new
 
+PARAMETERS = ['protocol']
 services = ""
 components[:firewall][:registry].each { |name,rules|
   text = "#\n# #{name}\n#\n "
   services << text
   rules.each { |rule|
     text = "iptables -A INPUT -j ACCEPT"
+    
+    # parameter must be before any extra options
+    PARAMETERS.each { |p|
+      if rule.key?(p)
+        case p.to_s
+        when 'protocol'
+          text << " -p #{v}"
+        end
+        break
+      end
+    }
     rule.each { |k,v|
-      case k.to_s
-      when 'protocol'
-        text << " -p #{v}"
-      when 'port'
-        text << " --dport #{v}"
+      key = k.to_s
+      if ! PARAMETERS.include?(key)
+        case key
+        when 'port'
+          text << " --dport #{v}"
+        end
       end
     }
     services << text << "\n"
