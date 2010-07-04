@@ -38,7 +38,7 @@ service "ssh" do
 end
 
 if node[:components].key?(:firewall)
-  if ! node[:components][:firewall].key?(:ssh)
-    node[:components][:firewall][:ssh] = node[:components][:ssh][:server][:transports]
+  if ! node[:components][:firewall][:registry].key?(:ssh)
+    node[:components][:firewall][:registry][:ssh] = node[:components][:ssh][:server][:transports]
   end
 end

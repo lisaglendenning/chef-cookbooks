@@ -8,4 +8,7 @@ default[:components][:ssh][:packages] = case node[:platform]
     ['openssh-client', 'openssh-server']
   end
 
-default[:components][:ssh][:server][:transports] = [[:tcp, 22]]
+server = Mash.new
+server[:protocol] = :tcp
+server[:port] = 22
+default[:components][:ssh][:server][:transports] = [server]
