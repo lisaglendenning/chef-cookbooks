@@ -31,6 +31,9 @@ if ! props.key?(:packages)
 end
 
 if ! props.key?(:server)
+  props[:server] = Mash.new
+  :transports
+  :tcp
   props[:server][:transports] = [[:tcp, 22]]
 end  
 
