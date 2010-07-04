@@ -29,11 +29,11 @@ default[:firewall][:defaults] = <<HERE
 HERE
 
 default[:firewall][:registry] = Mash.new
-set[:firewall][:services] = ""
 
+services = ""
 firewall[:registry].each { |name,rules|
   text = "#\n# #{name}\n#\n "
-  [:firewall][:services] << text
+  services << text
   rules.each { |rule|
     text = "iptables -A INPUT -j ACCEPT"
     rule.each { |k,v|
@@ -44,6 +44,7 @@ firewall[:registry].each { |name,rules|
         text << " --dport #{v}"
       end
     }
-    firewall[:services] << text << "\n"
+    services << text << "\n"
   }
 }
+set[:firewall][:services] = services
