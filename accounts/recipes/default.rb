@@ -1,4 +1,6 @@
 
+rhels = ['redhat', 'centos', 'fedora']
+  
 node[:components][:accounts][:packages].each { |p|
   package p do
    action :upgrade
