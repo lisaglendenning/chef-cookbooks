@@ -18,7 +18,6 @@ default[:components][:ssl][:packages] = case node[:platform]
     else
       ['openssh-client', 'openssh-server']
     end
-end
 
 default[:components][:ssl][:server][:transports] = [[:tcp, 22]]
 
