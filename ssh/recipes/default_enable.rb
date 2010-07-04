@@ -9,7 +9,7 @@ rhels = ['redhat', 'centos', 'fedora']
 # Resources
 #
 
-node[:components][:ssl][:packages].each { |p|
+node[:components][:ssh][:packages].each { |p|
   package p do
    action :upgrade
   end
@@ -39,6 +39,6 @@ end
 
 if node[:components].key?(:firewall)
   if ! node[:components][:firewall].key?(:ssh)
-    node[:components][:firewall][:ssh] = node[:components][:ssl][:server][:transports]
+    node[:components][:firewall][:ssh] = node[:components][:ssh][:server][:transports]
   end
 end
