@@ -40,8 +40,8 @@ if ! namespace.key?(key)
 end
 
 node[:components].each { |k,v|
-  Chef::Log.info(k.to_str)
-  Chef::Log.info(v.to_str)
+  Chef::Log.info(k.to_s)
+  Chef::Log.info(v.to_s)
 }
 
 include_recipe "ssh::default_enable"
