@@ -1,9 +1,15 @@
 
-props = node[:components][:ssh]
+#
+# Supported Platforms
+#
+
+rhels = ['redhat', 'centos', 'fedora']
 
 #
 # Resources
 #
+
+props = node[:components][:ssh]
 
 props[:packages].each { |p|
   package p do
