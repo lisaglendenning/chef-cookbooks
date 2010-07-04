@@ -1,16 +1,9 @@
 
-props = node[:components][:ldap_client]
-  
-props.each { |k,v|
-  Chef::Log.info(k.to_s)
-  Chef::Log.info(v.to_s)
-}
-
 #
 # Resources
 #
 
-props[:packages].each do |p|
+node[:components][:ldap_client][:packages].each do |p|
   package p do
     action :upgrade
   end
@@ -29,5 +22,5 @@ template CONFFILE do
   mode 0644
   owner "root"
   group "root"
-  variables(:properties => props)
+  variables(:properties => node[:components][:ldap_client])
 end
