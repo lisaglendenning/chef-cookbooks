@@ -23,5 +23,5 @@ end
 execute "rebuild-iptables" do
   command BINFILE
   action :nothing
-  #subscribes :run, resources(:template => BINFILE)
+  subscribes :run, resources(:template => BINFILE)
 end

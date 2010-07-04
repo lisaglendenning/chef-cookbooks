@@ -41,6 +41,7 @@ components[:firewall][:registry].each { |name,rules|
     # parameter must be before any extra options
     PARAMETERS.each { |p|
       if rule.key?(p)
+        v = rule[p]
         case p.to_s
         when 'protocol'
           text << " -p #{v}"
