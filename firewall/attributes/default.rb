@@ -31,7 +31,7 @@ HERE
 default[:components][:firewall][:registry] = Mash.new
 
 services = ""
-firewall[:registry].each { |name,rules|
+components[:firewall][:registry].each { |name,rules|
   text = "#\n# #{name}\n#\n "
   services << text
   rules.each { |rule|
