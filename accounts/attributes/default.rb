@@ -6,13 +6,13 @@ default[:components][:accounts][:ldap] = node[:components].key?(:ldap_client)
 
 packages = ['nscd', 'autodir']
 if components[:accounts][:ldap]
-  packages << case node[:platform]
+  packages.concat(case node[:platform]
   when rhels
     ['libnss-ldap', 'libpam-ldap']
   else
     ['auth-client-config', 'libnss-ldap', 'libpam-ldap', 
      'ldap-auth-config', 'ldapscripts', 'autodir']
-  end
+  end)
 
   default[:components][:accounts][:ldap][:uri] = \
     node[:components][:ldap_client][:protocol] + node[:components][:ldap_client][:domain]
