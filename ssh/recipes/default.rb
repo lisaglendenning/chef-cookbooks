@@ -2,15 +2,6 @@
 # Namespace
 #
 
-namespace = node[:components]
-
-key = :ssh
-if namespace.key?(key)
-  props = namespace[key]
-else
-  props = Mash.new
-end
-
 #
 # Supported Platforms
 #
@@ -21,8 +12,8 @@ rhels = ['redhat', 'centos', 'fedora']
 # Default properties
 #
 
-if ! props.key?(:packages)
-  props[:packages] = case node[:platform]
+if ! node[:components][:ssl][:packages]
+  node[:components][:ssl][:packages] = case node[:platform]
     when rhels
       ['openssh-clients', 'openssh']
     else
@@ -30,13 +21,9 @@ if ! props.key?(:packages)
     end
 end
 
-if ! props.key?(:server)
-  props[:server] = Mash.new
-  props[:server][:transports] = [[:tcp, 22]]
+if ! node[:components][:ssl][:server]
+  node[:components][:ssl][:server] = Mash.new
+  node[:components][:ssl][:server][:transports] = [[:tcp, 22]]
 end  
-
-if ! namespace.key?(key)
-  namespace[key] = props
-end
 
 include_recipe "ssh::default_enable"
