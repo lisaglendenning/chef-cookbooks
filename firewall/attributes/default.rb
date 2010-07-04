@@ -1,5 +1,5 @@
 
-default[:firewall][:defaults] = <<HERE
+default[:components][:firewall][:defaults] = <<HERE
 #
 # Default policies
 #
@@ -28,7 +28,7 @@ default[:firewall][:defaults] = <<HERE
  iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
 HERE
 
-default[:firewall][:registry] = Mash.new
+default[:components][:firewall][:registry] = Mash.new
 
 services = ""
 firewall[:registry].each { |name,rules|
@@ -47,4 +47,4 @@ firewall[:registry].each { |name,rules|
     services << text << "\n"
   }
 }
-set[:firewall][:services] = services
+set[:components][:firewall][:services] = services
