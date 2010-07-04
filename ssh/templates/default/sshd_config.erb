@@ -5,11 +5,11 @@
 
 # What ports, IPs and protocols we listen for
 #Port 22
-<% node[:components][:ssh][:transports].each do |tp| %>
+<% node[:components][:ssh][:transports].each { |tp| %>
 <%   if tp[1] != 22 %>
 Port <%= tp[1] %>
 <%   end %>
-<% end>
+<% } %>
 #Protocol 2,1
 Protocol 2
 #AddressFamily any
