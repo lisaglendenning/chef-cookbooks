@@ -1,10 +1,5 @@
-maintainer        "Opscode, Inc."
-maintainer_email  "cookbooks@opscode.com"
+maintainer        "www.cs.washington.edu"
+maintainer_email  "lglenden@cs.washington.edu"
 license           "Apache 2.0"
-description       "Sets up iptables to use a script to maintain rules"
-version           "0.9.1"
-
-recipe "iptables", "Installs iptables and sets up .d style config directory of iptables rules"
-%w{ redhat centos debian ubuntu}.each do |os|
-  supports os
-end
+description       "Configures iptables with a script"
+version           "0.1"
