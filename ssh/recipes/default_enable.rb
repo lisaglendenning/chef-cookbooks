@@ -9,6 +9,11 @@ rhels = ['redhat', 'centos', 'fedora']
 # Resources
 #
 
+node[:components][:ssh].each { |k,v|
+  Chef::Log.info(k.to_s)
+  Chef::Log.info(v.to_s)
+}
+
 props = node[:components][:ssh]
 
 props[:packages].each { |p|

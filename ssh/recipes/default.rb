@@ -39,9 +39,4 @@ if ! namespace.key?(key)
   namespace[key] = props
 end
 
-node[:components].each { |k,v|
-  Chef::Log.info(k.to_s)
-  Chef::Log.info(v.to_s)
-}
-
 include_recipe "ssh::default_enable"
