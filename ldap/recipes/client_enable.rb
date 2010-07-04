@@ -1,8 +1,8 @@
 
 props = node[:components][:ldap_client]
   
-print node[:components][:ldap_client]
-print node[:components]['ldap_client']
+Chef::Log.info(node[:components][:ldap_client].to_s)
+Chef::Log.info(node[:components]['ldap_client'].to_s)
 
 #
 # Resources
