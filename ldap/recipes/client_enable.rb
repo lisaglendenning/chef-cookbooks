@@ -2,8 +2,8 @@
 props = node[:components][:ldap_client]
   
 props.each { |k,v|
-  Chef::Log::Info(k.to_s)
-  Chef::Log::Info(v.to_s)
+  Chef::Log.info(k.to_s)
+  Chef::Log.info(v.to_s)
 }
 
 #
