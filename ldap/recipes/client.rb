@@ -1,4 +1,6 @@
 
+include_recipe "ldap"
+
 #
 # Namespace
 #
