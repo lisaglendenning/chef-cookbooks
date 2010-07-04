@@ -1,4 +1,6 @@
 
+rhels = ['redhat', 'centos', 'fedora']
+
 #
 # Resources
 #
