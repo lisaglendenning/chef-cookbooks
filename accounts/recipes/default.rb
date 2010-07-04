@@ -17,7 +17,6 @@ template AUTODIR_CONFFILE do
     :autohome => node[:components][:accounts][:autodir][:autohome],
     :autogroup => node[:components][:accounts][:autodir][:autogroup]
   })
-  notifies :restart, resources(:service => 'autodir')
 end
 
 #
@@ -32,6 +31,7 @@ end
 service "autodir" do
   supports :restart => true, :status => false
   action [:enable]
+  subscribes :restart, resources(:template => AUTODIR_CONFFILE)
 end
 
 # Well, at least on Ubuntu 9.10, the autodir (or autofs?) package is broken
