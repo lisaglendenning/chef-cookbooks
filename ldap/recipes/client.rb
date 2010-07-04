@@ -1,21 +1,16 @@
+
 #
-# Cookbook Name:: ldap
-# Recipe:: default
+# Namespace
 #
-# Copyright 2010, www.cs.washington.edu
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#     http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+
+namespace = node[:components]
+
+key = :ldap_client
+if namespace.key?(key)
+  props = namespace[key]
+else
+  props = Mash.new
+end
 
 #
 # Supported Platforms
@@ -24,62 +19,47 @@
 rhels = ['redhat', 'centos', 'fedora']
 
 #
-# Packages
+# Default properties
 #
 
-packages = case node[:platform]
-  when rhels
-    ['openssl', 'openldap', 'openldap-clients']
+if ! props.key?(:packages)
+  props[:packages] = case node[:platform]
+    when rhels
+      ['openldap', 'openldap-clients']
+    else
+      ['ldap-utils']
+    end
+end
+
+if ! props.key?(:domain)
+  domain = node[:domain]
+  if domain.empty?
+    props[:basedn] = ""
+    props[:domain] = "127.0.0.1"
   else
-    ['openssl', 'ldap-utils']
+    props[:domain] = "ldap.#{domain}"
+    props[:basedn] = "dc=#{domain.split('.').join(",dc=")}"
   end
-packages.each { |p|
-  package p do
-	 action :install
-  end
-}
+end
 
-#
-# Configuration
-#
-
-#
-# Platform-specific paths
-#
-
-CONFDIR = case node[:platform]
-  when rhels
-    "/etc/openldap"
-  else
-    "/etc/ldap"
-  end
-CONFFILE = CONFDIR + "/ldap.conf"
-
-SSLDIR = case node[:platform]
-  when rhels
-    "/etc/pki/tls/certs"
-  else
-    '/etc/ssl/certs'
-  end
+if ! props.key?(:protocol)
+  props[:protocol] = "ldap://"
+end
+if ! props.key?(:reqcert)
+  props[:reqcert] = 'allow'
+end
 
 # Use SSL CA certificates by default
-if ! node[:ldap][:cafile]
-  if ! node[:ldap][:cadir]
-    node[:ldap][:cadir] = SSLDIR
+if ! props.key?(:cafile)
+  if ! props.key?(:cadir)
+    if namespace.key?(:ssl)
+      props[:cadir] = namespace[:ssl][:pkidir] + '/certs'
+    end
   end
 end
 
-template CONFFILE do
-  source "ldap.conf.erb"
-  mode 0644
-  owner "root"
-  group "root"
+if ! namespace.key?(key)
+  namespace[key] = props
 end
 
-attr = Mash.new
-attr[:role] = :client
-component 'ldap_component' do
-  action :enable
-  key 'ldap'
-  attributes attr
-end
+include_recipe "ldap::client_enable"

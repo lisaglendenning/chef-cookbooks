@@ -1,10 +1,11 @@
+
 #
 # Namespace
 #
 
 namespace = node[:components]
 
-key = :ssh
+key = :ssl
 if namespace.key?(key)
   props = namespace[key]
 else
@@ -17,25 +18,21 @@ end
 
 rhels = ['redhat', 'centos', 'fedora']
 
-#
-# Default properties
-#
-
 if ! props.key?(:packages)
-  props[:packages] = case node[:platform]
-    when rhels
-      ['openssh-clients', 'openssh']
-    else
-      ['openssh-client', 'openssh-server']
-    end
+  props[:packages] = ['openssl']  
 end
 
-if ! props.key?(:server)
-  props[:server][:transports] = [[:tcp, 22]]
-end  
+if ! props.key?(:pkidir)
+  props[:pkidir] = case node[:platform]
+    when rhels
+      '/etc/pki/tls'
+    else
+      '/etc/ssl'
+    end
+end
 
 if ! namespace.key?(key)
   namespace[key] = props
 end
 
-include_recipe "ssh::default_enable"
+include_recipe "ssl::default_enable"
