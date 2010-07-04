@@ -44,6 +44,6 @@ firewall[:registry].each { |name,rules|
         text << " --dport #{v}"
       end
     }
-    [:firewall][:services] << text << "\n"
+    firewall[:services] << text << "\n"
   }
 }
