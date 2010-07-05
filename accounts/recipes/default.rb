@@ -78,6 +78,7 @@ if node[:components].key?(:ssh)
         group user_info[3]
         mode "0600"
         content authkeys.join('\n')
+        action :nothing
       end
       directory "#{user_info[0]}-dotssh" do
         path dotssh
