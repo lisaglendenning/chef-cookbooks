@@ -4,7 +4,7 @@ rhels = ['redhat', 'centos', 'fedora']
 default[:components][:ssl][:packages] = ['openssl']
 
 default[:components][:ssl][:pkidir] = case node[:platform]
-    when rhels
+    when 'redhat', 'centos', 'fedora'
       '/etc/pki/tls'
     else
       '/etc/ssl'
