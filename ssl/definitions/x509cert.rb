@@ -3,7 +3,7 @@ rhels = ['redhat', 'centos', 'fedora']
   
 define :x509cert, :action => :enable, :certname => nil, :cert => nil do
   certdir = node[:components][:ssl][:pkidir] + '/certs'
-  filename = '#{certdir}/#{params[:certname]}.crt'
+  filename = "#{certdir}/#{params[:certname]}.crt"
   if params[:action] == :enable
     ruby_block "x509cert-#{params[:certname]}-enable" do
       block do
