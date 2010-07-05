@@ -2,7 +2,13 @@
 rhels = ['redhat', 'centos', 'fedora']
 
 # LDAP enabled?
-default[:components][:accounts][:ldap] = node[:components].key?(:ldap_client)
+has_ldap = node[:components].key?(:ldap_client)
+if has_ldap
+  has_ldap = components[:ldap_client].key?(:protocol) &&
+    components[:ldap_client].key?(:domain) &&
+    components[:ldap_client].key?(:basedn)
+end
+default[:components][:accounts][:ldap] = has_ldap
 
 packages = ['nscd', 'autodir']
 if components[:accounts][:ldap]
