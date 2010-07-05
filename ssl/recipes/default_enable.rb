@@ -9,8 +9,8 @@ node[:components][:ssl][:packages].each { |p|
   end
 }
 
-node[:components][:ssl][:caregistry].each { |k,v|
-  x509ca k do
+node[:components][:ssl][:certregistry].each { |k,v|
+  x509cert k do
     action :enable
     certname k
     cert v

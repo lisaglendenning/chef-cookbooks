@@ -10,8 +10,8 @@ URI             <%= @properties[:protocol] + @properties[:domain] %>
 BASE            <%= @properties[:basedn] %>
 <% end %>
 TLS_REQCERT	    <%= @properties[:reqcert] %>
-<% if @properties[:cafile] %> 
-TLS_CACERT      <%= @properties[:cafile] %>
-<% else %>
-TLS_CACERTDIR   <%= @properties[:cadir] %>
+<% if @properties[:certfile] %> 
+TLS_CACERT      <%= @properties[:certfile] %>
+<% elsif @properties[:certdir] %>
+TLS_CACERTDIR   <%= @properties[:certdir] %>
 <% end %>

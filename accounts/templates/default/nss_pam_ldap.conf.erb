@@ -12,10 +12,10 @@ uri             <%= node[:components][:accounts][:ldap][:uri] %>
 base            <%= node[:components][:accounts][:ldap][:basedn] %>
 <% end %>
 ssl             <%= node[:components][:accounts][:ldap][:ssl] %>
-<% if node[:components][:ldap_client][:cafile] %> 
-tls_cacert      <%= node[:components][:ldap_client][:cafile] %>
-<% else %>
-tls_cacertdir   <%= node[:components][:ldap_client][:cadir] %>
+<% if node[:components][:ldap_client][:certfile] %> 
+tls_cacert      <%= node[:components][:ldap_client][:certfile] %>
+<% elsif node[:components][:ldap_client][:certdir] %>
+tls_cacertdir   <%= node[:components][:ldap_client][:certdir] %>
 <% end %>
 <% if node[:components][:accounts][:ldap][:passwd] %>
 <%= node[:components][:accounts][:ldap][:passwd] %>
