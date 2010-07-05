@@ -8,6 +8,7 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
     ruby_block "x509cert-#{params[:certname]}-enable" do
       block do
         hash = `openssl x509 -noout -hash -in #{filename}`
+        hash = hash.strip
         hashlink = "#{certdir}/#{hash}.0"
         if not File.exist?(hashlink)
           File.symlink(filename, hashlink)
