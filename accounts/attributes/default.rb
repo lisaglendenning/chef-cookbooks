@@ -27,7 +27,8 @@ default[:components][:accounts][:packages] = packages
 default[:components][:accounts][:autodir][:autohome] = '"yes"'
 default[:components][:accounts][:autodir][:autogroup] = '"no"'
 
-default[:components][:accounts][:admins] = case node[:platform]
+default[:components][:accounts][:admins] = []
+default[:components][:accounts][:sudoers] = case node[:platform]
 when rhels
   ['%wheel']
 else

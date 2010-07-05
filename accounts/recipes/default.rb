@@ -29,8 +29,38 @@ template SUDOERS do
   owner "root"
   group "root"
   variables(
-    :admins => node[:components][:accounts][:admins]
+    :sudoers => node[:components][:accounts][:sudoers]
   )
+end
+
+admin_group = case node[:platform]
+when rhels
+  ['wheel']
+else
+  ['admin']
+end
+
+# get admin info from databag
+admin_users = []
+users = data_bag_item('accounts', 'users')
+node[:components][:accounts][:admins].each { |admin|
+  admin = admin.to_s
+  if users.contains?(admin)
+    admin_users << admin
+  else
+    # assume admin is a group
+    users.each { |k,v|
+      if v['groups'].contains?(admin)
+        admin_users << k
+      end
+    }
+  end
+}
+
+group 'admin' do
+  group_name admin_group
+  action :modify
+  members admin_users
 end
 
 #

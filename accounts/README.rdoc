@@ -2,6 +2,11 @@
 
 = REQUIREMENTS:
 
+Databag:
+
+accounts
+    users
+
 = ATTRIBUTES: 
 
 = USAGE:
