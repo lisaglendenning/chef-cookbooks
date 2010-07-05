@@ -47,7 +47,7 @@ when rhels
 else
   []
 end
-users = data_bag_item('accounts', 'users')
+users = data_bag_item('accounts', 'users')['uids']
 node[:components][:accounts][:admins].each { |admin|
   admin = admin.to_s
   if users.key?(admin)
