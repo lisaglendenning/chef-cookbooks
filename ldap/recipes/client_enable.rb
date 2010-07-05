@@ -13,15 +13,6 @@ end
 
 if node[:components][:ldap_client][:cert]
   certname = node[:components][:ldap_client][:cert][:key]
-  remote_file "/tmp/#{certname}" do
-    source node[:components][:ldap_client][:cert][:source]
-    mode "0644"
-    owner "root"
-    group "root"
-    checksum node[:components][:ldap_client][:cert][:checksum]
-    action :create
-    notifies :create, resources(:rubyblock => "install-ssl-#{certname}")
-  end
   rubyblock "install-ssl-#{certname}" do
     block do
       File.open("/tmp/#{certname}", "r") { |f|
@@ -33,6 +24,15 @@ if node[:components][:ldap_client][:cert]
       }
     end
     action :nothing
+  end
+  remote_file "/tmp/#{certname}" do
+    source node[:components][:ldap_client][:cert][:source]
+    mode "0644"
+    owner "root"
+    group "root"
+    checksum node[:components][:ldap_client][:cert][:checksum]
+    action :create
+    notifies :create, resources(:rubyblock => "install-ssl-#{certname}")
   end
 end
 

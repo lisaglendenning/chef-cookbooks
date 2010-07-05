@@ -5,16 +5,6 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
   certdir = node[:components][:ssl][:pkidir] + '/certs'
   filename = '#{certdir}/#{params[:certname]}.crt'
   if params[:action] == :enable
-    file "x509cert-#{params[:certname]}" do
-      path filename
-      mode "0644"
-      owner "root"
-      group "root"
-      action :create
-      content params[:cert]
-      notifies :create, resources(:rubyblock => "x509cert-#{params[:certname]}-enable")
-      not_if "[ -f #{filename} ]"
-    end
     rubyblock "x509cert-#{params[:certname]}-enable" do
       block do
         hash = `openssl x509 -noout -hash -in #{filename}`
@@ -25,7 +15,21 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
       end
       action :nothing
     end
+    file "x509cert-#{params[:certname]}" do
+      path filename
+      mode "0644"
+      owner "root"
+      group "root"
+      action :create
+      content params[:cert]
+      notifies :create, resources(:rubyblock => "x509cert-#{params[:certname]}-enable")
+      not_if "[ -f #{filename} ]"
+    end
   elsif params[:action] == :disable
+    file "x509cert-#{params[:certname]}" do
+      path filename
+      action :nothing
+    end
     rubyblock "x509cert-#{params[:certname]}-disable" do
       block do
         hash = `openssl x509 -noout -hash -in #{filename}`
@@ -33,10 +37,6 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
       end
       action :create
       notifies :delete, resources(:file => "x509cert-#{params[:certname]}")
-    end
-    file "x509cert-#{params[:certname]}" do
-      path filename
-      action :nothing
     end
   end
 
