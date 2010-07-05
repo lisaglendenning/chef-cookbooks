@@ -50,7 +50,7 @@ node[:components][:accounts][:admins].each { |admin|
   else
     # assume admin is a group
     users.each { |k,v|
-      if v['groups'].contains?(admin)
+      if v['groups'].includes?(admin)
         admin_users << k
       end
     }
