@@ -12,7 +12,8 @@ rhels = ['redhat', 'centos', 'fedora']
 LDAP_CONFDIR = "/etc"
 LDAP_CONFFILE = LDAP_CONFDIR + "/ldap.conf"
   
-template LDAP_CONFFILE do
+template "nss-pam-ldap-conf" do
+  path LDAP_CONFFILE
   source "nss_pam_ldap.conf.erb"
   mode 0644
   owner "root"
@@ -25,7 +26,7 @@ when rhels
     command "authconfig"
     user "root"
     action :nothing
-    subscribes :run, resources(:template => LDAP_CONFFILE)
+    subscribes :run, resources(:template => "nss-pam-ldap-conf")
     notifies :restart, resources(:service => 'nscd'), :delayed
   end
 else
@@ -33,7 +34,7 @@ else
     command "auth-client-config -t nss -p lac_ldap"
     user "root"
     action :nothing
-    subscribes :run, resources(:template => LDAP_CONFFILE)
+    subscribes :run, resources(:template => "nss-pam-ldap-conf")
     notifies :restart, resources(:service => 'nscd'), :delayed
   end
   execute "pam-auth-update" do

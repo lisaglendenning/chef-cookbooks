@@ -19,7 +19,8 @@ CONFDIR = case node[:platform]
   end
 CONFFILE = CONFDIR + "/ldap.conf"
 
-template CONFFILE do
+template "ldap-client-conf" do
+  path CONFFILE
   source "ldap.conf.erb"
   mode 0644
   owner "root"

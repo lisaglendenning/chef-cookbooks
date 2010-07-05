@@ -2,15 +2,23 @@
 
 = REQUIREMENTS:
 
-Databag:
+Databag name "accounts", item "users" example:
 
-"accounts"
-    "users"
-        "uids"
-            UID
-                "groups"
-                "pki"
-                    "authorized"
+  {
+    "uids": {
+      "alice": {
+        "groups": [
+          "admins"
+        ],
+        "pki": {
+          "authorized": [
+            "ssh-rsa BASE64ENCODING alice@localdomain"
+          ]
+        }
+      }
+    }
+  }
+
 = ATTRIBUTES: 
 
 = USAGE:

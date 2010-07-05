@@ -10,7 +10,8 @@ node[:components][:accounts][:packages].each { |p|
 AUTODIR_CONFDIR = "/etc/default"
 AUTODIR_CONFFILE = AUTODIR_CONFDIR + "/autodir"
 
-template AUTODIR_CONFFILE do
+template "autodir-conf" do
+  path AUTODIR_CONFFILE
   source "autodir.erb"
   mode 0644
   owner "root"
@@ -23,7 +24,8 @@ end
 
 SUDOERS = '/etc/sudoers'
 
-template SUDOERS do
+template "sudoers" do
+  path SUDOERS
   source "sudoers.erb"
   mode 0440
   owner "root"
@@ -108,7 +110,7 @@ end
 service "autodir" do
   supports :restart => true, :status => false
   action [:enable]
-  subscribes :restart, resources(:template => AUTODIR_CONFFILE)
+  subscribes :restart, resources(:template => "autodir-conf")
 end
 
 # Well, at least on Ubuntu 9.10, the autodir (or autofs?) package is broken
@@ -126,7 +128,7 @@ else
     command "depmod && modprobe -r autofs && modprobe autofs4"
     user "root"
     action :nothing
-    subscribes :run, resources(:template => AUTODIR_CONFFILE)
+    subscribes :run, resources(:template => "autodir-conf")
     notifies :restart, resources(:service => 'autodir')
   end
 end
