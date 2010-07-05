@@ -35,9 +35,9 @@ end
 
 admin_group = case node[:platform]
 when rhels
-  ['wheel']
+  'wheel'
 else
-  ['admin']
+  'admin'
 end
 
 # get admin info from databag
