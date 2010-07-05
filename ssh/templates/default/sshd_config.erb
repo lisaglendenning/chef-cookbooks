@@ -40,6 +40,7 @@ SyslogFacility AUTH
 # Authentication:
 #LoginGraceTime 2m
 #PermitRootLogin yes
+PermitRootLogin <% = node[:components][:ssh][:root] %>
 #StrictModes yes
 #MaxAuthTries 6
 
