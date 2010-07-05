@@ -69,6 +69,7 @@ if node[:components].key?(:ssh)
     user_info = `getent passwd #{name}`
     if ! user_info.empty?
       authkeys = props['pki']['authorized']
+      authkeys = authkeys.join('\n') + '\n'
       user_info = user_info.split(':')
       dotssh = "#{user_info[5]}/.ssh"
       file "#{user_info[0]}-dotssh-authkeys" do
@@ -76,7 +77,7 @@ if node[:components].key?(:ssh)
         owner user_info[0]
         group user_info[3]
         mode "0600"
-        content authkeys.join('\n') + '\n'
+        content authkeys
         action :create
         not_if "[ ! -d #{dotssh} ]"
       end
