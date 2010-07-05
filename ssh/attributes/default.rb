@@ -7,7 +7,7 @@ default[:components][:ssh][:packages] = case node[:platform]
   end
 
 default[:components][:ssh][:root] = true  
-default[:components][:ssh][:auth] = [ :password, :publickey ]
+default[:components][:ssh][:auth] = [ 'password', 'publickey' ]
   
 server = Mash.new
 server[:protocol] = :tcp
