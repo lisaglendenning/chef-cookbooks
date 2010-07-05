@@ -7,6 +7,6 @@ CLIENT_KEY = '/etc/chef/client.pem'
 
 execute "remove-validation" do
   command "if [ -f #{VALIDATION_KEY} ]; then rm -f #{VALIDATION_KEY}; fi"
-  only_if "[ -f {CLIENT_KEY} ]"
+  only_if "[ -f #{CLIENT_KEY} ]"
   action :run
 end

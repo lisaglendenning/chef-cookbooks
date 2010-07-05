@@ -15,13 +15,14 @@ end
 
 packages = ['nscd', 'autodir']
 if components[:accounts][:hasldap]
-  packages.concat(case node[:platform]
+  ldap_packages = case node[:platform]
   when rhels
     ['libnss-ldap', 'libpam-ldap']
   else
     ['auth-client-config', 'libnss-ldap', 'libpam-ldap', 
      'ldap-auth-config', 'ldapscripts', 'autodir']
-  end)
+  end
+  packages.concat(ldap_packages)
 
   default[:components][:accounts][:ldap][:uri] = \
     node[:components][:ldap_client][:protocol] + node[:components][:ldap_client][:domain]
@@ -29,6 +30,12 @@ if components[:accounts][:hasldap]
     node[:components][:ldap_client][:basedn]
   default[:components][:accounts][:ldap][:ssl] = 'start_tls'
 
+  if components[:accounts][:packages]
+    missing = components[:accounts][:packages] - packages
+      if missing
+        set[:components][:accounts][:packages] = packages
+      end
+  end
 end
 
 default[:components][:accounts][:packages] = packages
