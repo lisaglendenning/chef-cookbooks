@@ -1,6 +1,4 @@
 
-rhels = ['redhat', 'centos', 'fedora']
-  
 define :x509cert, :action => :enable, :certname => nil, :cert => nil do
   certdir = node[:components][:ssl][:pkidir] + '/certs'
   filename = "#{certdir}/#{params[:certname]}.crt"

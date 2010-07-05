@@ -1,11 +1,5 @@
 
 #
-# Supported Platforms
-#
-
-rhels = ['redhat', 'centos', 'fedora']
-
-#
 # Resources
 #
 
@@ -20,7 +14,7 @@ CONFFILE = CONFDIR + '/sshd_config'
 
 service 'ssh' do
   case node[:platform]
-  when rhels
+  when 'redhat', 'centos', 'fedora'
     service_name "sshd"
   else
     service_name "ssh"

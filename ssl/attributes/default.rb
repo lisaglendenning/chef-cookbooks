@@ -1,6 +1,4 @@
 
-rhels = ['redhat', 'centos', 'fedora']
-
 default[:components][:ssl][:packages] = ['openssl']
 
 default[:components][:ssl][:pkidir] = case node[:platform]

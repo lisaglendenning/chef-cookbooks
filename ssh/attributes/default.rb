@@ -1,9 +1,7 @@
 
-rhels = ['redhat', 'centos', 'fedora']
-
 default[:components][:ssh][:packages] = case node[:platform]
-  when rhels
-    ['openssh-clients', 'openssh']
+  when 'redhat', 'centos', 'fedora'
+    ['openssh-clients', 'openssh',  'openssh-server']
   else
     ['openssh-client', 'openssh-server']
   end
