@@ -78,14 +78,14 @@ if node[:components].key?(:ssh)
         group user_info[3]
         mode "0600"
         content authkeys.join('\n')
-        action :nothing
+        action :create
+        not_if "[ ! -d #{dotssh} ]"
       end
       directory "#{user_info[0]}-dotssh" do
         path dotssh
         owner user_info[0]
         group user_info[3]
         mode "0700"
-        notifies :create, resources(:file => "#{user_info[0]}-dotssh-authkeys")
       end 
     end
   }
