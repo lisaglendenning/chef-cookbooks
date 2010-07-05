@@ -41,7 +41,12 @@ else
 end
 
 # get admin info from databag
-admin_users = []
+admin_users = case node[:platform]
+when rhels
+  ['root']
+else
+  []
+end
 users = data_bag_item('accounts', 'users')
 node[:components][:accounts][:admins].each { |admin|
   admin = admin.to_s
@@ -50,7 +55,7 @@ node[:components][:accounts][:admins].each { |admin|
   else
     # assume admin is a group
     users.each { |k,v|
-      if v['groups'].includes?(admin)
+      if v['groups'].include?(admin)
         admin_users << k
       end
     }
