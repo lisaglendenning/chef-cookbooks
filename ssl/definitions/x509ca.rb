@@ -13,11 +13,15 @@ define :x509ca, :action => :enable, :certname => nil, :cert => nil do
       action :create
       content params[:cert]
       notifies :create, resources(:rubyblock => "x509ca-#{params[:certname]}-enable")
+      not_if "[ -f #{filename} ]"
     end
     rubyblock "x509ca-#{params[:certname]}-enable" do
       block do
         hash = `openssl x509 -noout -hash -in #{filename}`
-        File.symlink(filename, "#{certdir}/#{hash}.0")
+        hashlink = "#{certdir}/#{hash}.0"
+        if not File.exist?(hashlink)
+          File.symlink(filename, hashlink)
+        end
       end
       action :nothing
     end

@@ -9,3 +9,5 @@ default[:components][:ssl][:pkidir] = case node[:platform]
     else
       '/etc/ssl'
     end
+
+default[:components][:ssl][:caregistry] = Mash.new
