@@ -13,7 +13,7 @@ end
 
 if node[:components][:ldap_client][:cert]
   certname = node[:components][:ldap_client][:cert][:key]
-  rubyblock "install-ssl-#{certname}" do
+  ruby_block "install-ssl-#{certname}" do
     block do
       File.open("/tmp/#{certname}", "r") { |f|
         content = f.readlines().join
@@ -32,7 +32,7 @@ if node[:components][:ldap_client][:cert]
     group "root"
     checksum node[:components][:ldap_client][:cert][:checksum]
     action :create
-    notifies :create, resources(:rubyblock => "install-ssl-#{certname}")
+    notifies :create, resources(:ruby_block => "install-ssl-#{certname}")
   end
 end
 

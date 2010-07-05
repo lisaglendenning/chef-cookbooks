@@ -5,7 +5,7 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
   certdir = node[:components][:ssl][:pkidir] + '/certs'
   filename = '#{certdir}/#{params[:certname]}.crt'
   if params[:action] == :enable
-    rubyblock "x509cert-#{params[:certname]}-enable" do
+    ruby_block "x509cert-#{params[:certname]}-enable" do
       block do
         hash = `openssl x509 -noout -hash -in #{filename}`
         hashlink = "#{certdir}/#{hash}.0"
@@ -22,7 +22,7 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
       group "root"
       action :create
       content params[:cert]
-      notifies :create, resources(:rubyblock => "x509cert-#{params[:certname]}-enable")
+      notifies :create, resources(:ruby_block => "x509cert-#{params[:certname]}-enable")
       not_if "[ -f #{filename} ]"
     end
   elsif params[:action] == :disable
@@ -30,7 +30,7 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
       path filename
       action :nothing
     end
-    rubyblock "x509cert-#{params[:certname]}-disable" do
+    ruby_block "x509cert-#{params[:certname]}-disable" do
       block do
         hash = `openssl x509 -noout -hash -in #{filename}`
         File.unlink("#{certdir}/#{hash}.0")
