@@ -45,7 +45,7 @@ admin_users = []
 users = data_bag_item('accounts', 'users')
 node[:components][:accounts][:admins].each { |admin|
   admin = admin.to_s
-  if users.contains?(admin)
+  if users.key?(admin)
     admin_users << admin
   else
     # assume admin is a group
