@@ -15,10 +15,22 @@ template AUTODIR_CONFFILE do
   mode 0644
   owner "root"
   group "root"
-  variables({
+  variables(
     :autohome => node[:components][:accounts][:autodir][:autohome],
     :autogroup => node[:components][:accounts][:autodir][:autogroup]
-  })
+  )
+end
+
+SUDOERS = '/etc/sudoers'
+
+template SUDOERS do
+  source "sudoers.erb"
+  mode 0440
+  owner "root"
+  group "root"
+  variables(
+    :admins => node[:components][:accounts][:admins]
+  )
 end
 
 #
