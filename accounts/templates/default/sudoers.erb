@@ -84,6 +84,6 @@ root    ALL=(ALL)   ALL
 ## Allows members of the users group to shutdown this system
 # %users  localhost=/sbin/shutdown -h now
 
-<% @admins.each do { |admin| %>
+<% @admins.each { |admin| %>
 <%= admin %>    ALL=(ALL)   ALL
 <% } %>
