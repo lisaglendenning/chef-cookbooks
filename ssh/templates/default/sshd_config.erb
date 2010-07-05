@@ -46,7 +46,7 @@ PermitRootLogin <%= node[:components][:ssh][:root] ? 'yes' : 'no' %>
 
 #RSAAuthentication yes
 #PubkeyAuthentication yes
-PubkeyAuthentication <%= node[:components][:ssh][:auth].include?(:publickey) ? 'yes' : 'no' %>
+PubkeyAuthentication <%= node[:components][:ssh][:auth].include?('publickey') ? 'yes' : 'no' %>
 #AuthorizedKeysFile .ssh/authorized_keys
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
@@ -61,7 +61,7 @@ PubkeyAuthentication <%= node[:components][:ssh][:auth].include?(:publickey) ? '
 
 # To disable tunneled clear text passwords, change to no here!
 #PasswordAuthentication yes
-PasswordAuthentication <%= node[:components][:ssh][:auth].include?(:password) ? 'yes' : 'no' %>
+PasswordAuthentication <%= node[:components][:ssh][:auth].include?('password') ? 'yes' : 'no' %>
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
