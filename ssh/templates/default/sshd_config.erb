@@ -40,12 +40,13 @@ SyslogFacility AUTH
 # Authentication:
 #LoginGraceTime 2m
 #PermitRootLogin yes
-PermitRootLogin <%= node[:components][:ssh][:root] %>
+PermitRootLogin <%= node[:components][:ssh][:root] ? 'yes' : 'no' %>
 #StrictModes yes
 #MaxAuthTries 6
 
 #RSAAuthentication yes
 #PubkeyAuthentication yes
+PubkeyAuthentication <%= node[:components][:ssh][:auth].include?(:publickey) ? 'yes' : 'no' %>
 #AuthorizedKeysFile .ssh/authorized_keys
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
@@ -60,6 +61,7 @@ PermitRootLogin <%= node[:components][:ssh][:root] %>
 
 # To disable tunneled clear text passwords, change to no here!
 #PasswordAuthentication yes
+PasswordAuthentication <%= node[:components][:ssh][:auth].include?(:password) ? 'yes' : 'no' %>
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords

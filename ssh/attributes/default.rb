@@ -8,7 +8,8 @@ default[:components][:ssh][:packages] = case node[:platform]
     ['openssh-client', 'openssh-server']
   end
 
-default[:components][:ssh][:root] = 'yes'  
+default[:components][:ssh][:root] = true  
+default[:components][:ssh][:auth] = [ :password, :publickey ]
   
 server = Mash.new
 server[:protocol] = :tcp

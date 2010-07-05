@@ -4,9 +4,13 @@
 
 Databag:
 
-accounts
-    users
-
+"accounts"
+    "users"
+        "uids"
+            UID
+                "groups"
+                "pki"
+                    "authorized"
 = ATTRIBUTES: 
 
 = USAGE:

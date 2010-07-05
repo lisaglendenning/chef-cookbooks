@@ -3,8 +3,8 @@
 
 # Master system-wide autodir switches. The initscript
 # will not run one or both if they are not set to yes.
-RUN_AUTOHOME=<%= @autohome %>
-RUN_AUTOGROUP=<%= @autogroup %>
+RUN_AUTOHOME=<%= @autohome ? '"yes"' : '"no"' %>
+RUN_AUTOGROUP=<%= @autogroup ? '"yes"' : '"no"' %>
 
 # Where (virtual) home/group directories are supposed to be?
 # Visible to applications

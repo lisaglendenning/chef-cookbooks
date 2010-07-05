@@ -62,6 +62,34 @@ node[:components][:accounts][:admins].each { |admin|
   end
 }
 
+# get ssh public key info from databag
+if node[:components].key?(:ssh)
+  AUTHFILE = 'authorized_keys'
+  users.each { |name, props|
+    user_info = `getent passwd #{name}`
+    if ! user_info.empty?
+      authkeys = props['pki']['authorized']
+      
+      user_info = user_info.split(':')
+      dotssh = "#{user_info[5]}/.ssh"
+      file "#{user_info[0]}-dotssh-authkeys" do
+        path "#{dotssh}/#{AUTHFILE}"
+        owner user_info[0]
+        group user_info[3]
+        mode "0600"
+        content authkeys.join('\n')
+      end
+      directory "#{user_info[0]}-dotssh" do
+        path dotssh
+        owner user_info[0]
+        group user_info[3]
+        mode "0700"
+        notifies :create, resources(:file => "#{user_info[0]}-dotssh-authkeys")
+      end 
+    end
+  }
+end
+
 group 'admin' do
   group_name admin_group
   action :modify
