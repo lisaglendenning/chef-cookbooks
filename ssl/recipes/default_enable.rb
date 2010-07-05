@@ -13,6 +13,6 @@ node[:components][:ssl][:certregistry].each { |k,v|
   x509cert k do
     action :enable
     certname k
-    cert v
+    cert v[:content]
   end
 }

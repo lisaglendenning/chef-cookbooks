@@ -18,8 +18,8 @@ if node[:components][:ldap_client][:cert]
       File.open("/tmp/#{certname}", "r") { |f|
         content = f.readlines().join
         if ! node[:components][:ssl][:certregistry].key?(certname) ||
-          node[:components][:ssl][:certregistry][certname] != content
-          node[:components][:ssl][:certregistry][certname]  = content
+          node[:components][:ssl][:certregistry][certname][:content] != content
+          node[:components][:ssl][:certregistry][certname][:content]  = content
         end
       }
     end
@@ -34,6 +34,10 @@ if node[:components][:ldap_client][:cert]
     action :create
     notifies :create, resources(:ruby_block => "install-ssl-#{certname}")
   end
+  
+  if node[:components][:ssl][:certregistry][certname][:path]
+    node[:components][:ldap_client][:certfile] = node[:components][:ssl][:certregistry][certname][:path]
+  end  
 end
 
 CONFDIR = case node[:platform]

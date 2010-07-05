@@ -13,6 +13,10 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
         if not File.exist?(hashlink)
           File.symlink(filename, hashlink)
         end
+        if ! node[:components][:ssl][:certregistry][certname][:path] ||
+          node[:components][:ssl][:certregistry][certname][:path] != filename:
+            node[:components][:ssl][:certregistry][certname][:path] = filename
+        end
       end
       action :nothing
     end
