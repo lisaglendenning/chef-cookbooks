@@ -132,6 +132,6 @@ else
   end
 end
 
-if node[:components][:accounts][:ldap]
+if node[:components][:accounts][:hasldap]
   include_recipe "ldap"
 end

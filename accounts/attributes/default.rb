@@ -8,10 +8,10 @@ if has_ldap
     components[:ldap_client].key?(:domain) &&
     components[:ldap_client].key?(:basedn)
 end
-default[:components][:accounts][:ldap] = has_ldap
+default[:components][:accounts][:hasldap] = has_ldap
 
 packages = ['nscd', 'autodir']
-if components[:accounts][:ldap]
+if components[:accounts][:hasldap]
   packages.concat(case node[:platform]
   when rhels
     ['libnss-ldap', 'libpam-ldap']
