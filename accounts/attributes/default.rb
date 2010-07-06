@@ -15,7 +15,7 @@ packages = ['nscd', 'autodir']
 if components[:accounts][:hasldap]
   ldap_packages = case node[:platform]
   when 'redhat', 'centos', 'fedora'
-    ['nss-ldap']
+    ['nss-ldap'] # FIXME: EPEL
   else
     ['auth-client-config', 'libnss-ldap', 'libpam-ldap', 
      'ldap-auth-config', 'ldapscripts', 'autodir']
