@@ -24,7 +24,6 @@ when 'redhat', 'centos', 'fedora'
     user "root"
     action :nothing
     subscribes :run, resources(:template => "nss-pam-ldap-conf")
-    notifies :restart, resources(:service => 'nscd'), :delayed
   end
 else
   execute "auth-client" do
