@@ -1,0 +1,48 @@
+# Sources:
+# Centos 5.5 /etc/sysconfig/autohome
+
+# Where home directories are supposed to be?
+# Usually it is /home on most systems.
+AUTOHOME_HOME=/home
+
+# How long to wait in seconds
+# before it is assumed home directory
+# is inactive and unmounted.
+#
+# Servers like IMAP/POP access home directories every 10min 
+# in most configurations -- client side default mail check duraion.
+# Therefore it is beter to make it 11min in this situation.
+#
+# If your site has different requirements, change according to that.
+AUTOHOME_TIMEOUT=660
+
+# Authome module path
+AUTOHOME_MODULE="/usr/lib64/autodir/autohome.so"
+
+# realpath => path where real home directories should reside
+# level    => Default value is ok for almost all sites. See Autodir-HOWTO
+# skel     => Location of skel files. absolute path is expected
+# noskel   => Don not copy skel files to home directories
+# mode     => Default mode for newly created home directories
+AUTOHOME_OPTIONS="realpath=/autohome,level=2,skel=/etc/skel,mode=0700"
+
+# If you desire backup feature and you know what this feature is, then uncomment it!
+# Full path to program as well as arguments.
+# %x characters are replaced with appropriate values.
+# Following is just example. Do not use it as is!
+# See Autodir-HOWTO for further info.
+
+#AUTOHOME_BACKUP="'/bin/tar cf /tmp/%N.tar.gz %L'"
+
+# How long to wait after a home directory is unmounted 
+# to start backup. Value expected in seconds and can not exceed one day.
+
+#AUTOHOME_BACKWAIT=600
+
+# Backup priority. 1 to 40 inclusive. Smaller value means higher priority.
+
+#AUTOHOME_BACKPRI=30
+
+# Max backup program execusions not to exceed at any givne time.
+
+#AUTOHOME_MAXBACK=150

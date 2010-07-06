@@ -1,0 +1,44 @@
+# Sources:
+# Centos 5.5 /etc/sysconfig/autogroup
+
+# Where group directories are supposed to be?
+# Visible to applications
+AUTOGROUP_HOME=/group
+
+# How long to wait in seconds
+# before it is assumed home directory
+# is inactive and unmounted.
+AUTOGROUP_TIMEOUT=300
+
+# Authome module path
+AUTOGROUP_MODULE="/usr/lib64/autodir/autogroup.so"
+
+# realpath => path where real group directories should reside.
+# level    => Default value is ok for almost all sites. See Autodir-HOWTO.
+# nosetgid => Default is to setgid the group directory created.
+# nopriv   => Default is to create group directory for every kind of group. 
+#         If your site has user private groups and you dont want 
+#         group directories created for these, use this option.
+# mode     => Default mode for newly created group directories
+AUTOGROUP_OPTIONS="realpath=/autogroup,level=2,nopriv=false,mode=02070"
+
+# If you desire backup feature and you know what this feature is, then uncomment it!
+# Full path to program as well as arguments.
+# %x characters are replaced with appropriate values.
+# Following is just example. Do not use it as is!
+# See Autodir-HOWTO for further info.
+
+#AUTOGROUP_BACKUP="'/bin/tar cf /tmp/%N.tar.gz %L'"
+
+# How long to wait after a home directory is unmounted 
+# to start backup. Value expected in seconds and can not exceed one day.
+
+#AUTOGROUP_BACKWAIT=600
+
+# Backup priority. 1 to 40 inclusive. Smaller value means higher priority.
+
+#AUTOGROUP_BACKPRI=30
+
+# Max backup program execusions not to exceed at any givne time.
+
+#AUTOGROUP_MAXBACK=150
