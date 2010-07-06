@@ -107,7 +107,7 @@ when 'redhat', 'centos', 'fedora'
   services.each { |s|
     template "#{s}-conf" do
       path "#{AUTODIR_CONFDIR}/#{s}"
-      source "auto#{s}.erb"
+      source "#{s}.erb"
       mode 0644
       owner "root"
       group "root"
