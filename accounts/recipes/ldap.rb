@@ -16,8 +16,10 @@ end
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
+  opts = ['--enableldap', '--enableldapauth',
+          '--enablecache', '--enablelocauthorize'].join(' ')
   execute "auth-client" do
-    command ";" # TODO
+    command "authconfig #{opts} --update"
     user "root"
     action :nothing
     subscribes :run, resources(:template => "nss-pam-ldap-conf")
