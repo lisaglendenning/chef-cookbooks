@@ -35,8 +35,10 @@ if node[:components][:ldap_client][:cert]
     notifies :create, resources(:ruby_block => "install-ssl-#{certname}")
   end
   
-  if node[:components][:ssl][:certregistry][certname][:path]
-    node[:components][:ldap_client][:certfile] = node[:components][:ssl][:certregistry][certname][:path]
+  if node[:components][:ssl][:certregistry].key?(certname)
+    if node[:components][:ssl][:certregistry][certname][:path]
+      node[:components][:ldap_client][:certfile] = node[:components][:ssl][:certregistry][certname][:path]
+    end
   end  
 end
 
