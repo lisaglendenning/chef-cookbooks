@@ -17,6 +17,7 @@ end
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
   opts = ['--enableldap', '--enableldapauth',
+          '--enableshadow', '--enablemd5',
           '--enablecache', '--enablelocauthorize'].join(' ')
   execute "auth-client" do
     command "authconfig #{opts} --update"
