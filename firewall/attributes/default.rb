@@ -55,6 +55,8 @@ components[:firewall][:registry].each { |name,rules|
         case key
         when 'port'
           text << " --dport #{v}"
+        when 'ports'
+          text << " --dport #{v[0]}:#{v[1]}"
         end
       end
     }

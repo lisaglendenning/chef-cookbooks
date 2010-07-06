@@ -10,6 +10,6 @@ default[:components][:ssh][:root] = true
 default[:components][:ssh][:auth] = [ 'password', 'publickey' ]
   
 server = Mash.new
-server[:protocol] = :tcp
+server[:protocol] = 'tcp'
 server[:port] = 22
 default[:components][:ssh][:server][:transports] = [server]

@@ -13,10 +13,4 @@
 
 <%= @services %>
 
-<% case node[:platform] %>
-<% when "redhat", "centos", "fedora" %>
-#
-# Save settings
-#
- /sbin/service iptables save
-<% end %>
+#############################################################################

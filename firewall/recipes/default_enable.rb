@@ -26,3 +26,13 @@ template 'iptables.sh' do
     :services => node[:components][:firewall][:services])
   notifies :run, resources(:execute => 'rebuild-iptables')
 end
+
+case node[:platform]
+when "redhat", "centos", "fedora"
+  service 'iptables' do
+    service_name 'iptables'
+    supports :restart => true, :status =>true
+    action [:enable, :start]
+    subscribes :save, resources(:execute => 'rebuild-iptables')
+  end
+end
