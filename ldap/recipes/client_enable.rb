@@ -1,5 +1,5 @@
 
-rhels = ['redhat', 'centos', 'fedora']
+rhels = []
 
 #
 # Resources
@@ -41,7 +41,7 @@ if node[:components][:ldap_client][:cert]
 end
 
 CONFDIR = case node[:platform]
-  when rhels
+  when 'redhat', 'centos', 'fedora'
     "/etc/openldap"
   else
     "/etc/ldap"

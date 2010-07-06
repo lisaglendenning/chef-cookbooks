@@ -1,12 +1,10 @@
 
-rhels = ['redhat', 'centos', 'fedora']
-
 #
 # Default properties
 #
 
 default[:components][:ldap_client][:packages] = case node[:platform]
-  when rhels
+  when 'redhat', 'centos', 'fedora'
     ['openldap', 'openldap-clients']
   else
     ['ldap-utils']
