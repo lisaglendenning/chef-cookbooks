@@ -33,6 +33,10 @@ when "redhat", "centos", "fedora"
     service_name 'iptables'
     supports :restart => true, :status =>true
     action [:enable, :start]
-    subscribes :save, resources(:execute => 'rebuild-iptables')
+  end
+  execute "iptables-save" do
+    command "service iptables save"
+    action :nothing
+    subscribes :run, resources(:execute => 'rebuild-iptables')
   end
 end
