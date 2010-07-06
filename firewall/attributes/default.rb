@@ -60,7 +60,7 @@ components[:firewall][:registry].each { |name,rules|
         end
       end
     }
-    services << text << "\n"
+    services << text << "\n\n"
   }
 }
 set[:components][:firewall][:services] = services
