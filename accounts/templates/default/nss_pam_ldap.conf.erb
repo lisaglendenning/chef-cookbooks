@@ -8,7 +8,7 @@
 #
 
 uri             <%= node[:components][:accounts][:ldap][:uri] %>
-<% if node[:ldap][:basedn] %>
+<% if node[:components][:accounts][:ldap][:basedn] %>
 base            <%= node[:components][:accounts][:ldap][:basedn] %>
 <% end %>
 ssl             <%= node[:components][:accounts][:ldap][:ssl] %>
