@@ -113,8 +113,8 @@ when 'redhat', 'centos', 'fedora'
       group "root"
     end
     service s do
-      supports :restart => true, :status => false
-      action node[:components][:accounts][:autodir][s.to_sym] ? :enable : :disable
+      supports :restart => true, :status => true
+      action node[:components][:accounts][:autodir][s.to_sym] ? [:enable,:start] : [:stop,:disable]
       subscribes :restart, resources(:template => "#{s}-conf")
     end
   }
