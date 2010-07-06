@@ -1,6 +1,4 @@
 
-rhels = ['redhat', 'centos', 'fedora']
-
 # autodetect if LDAP is enabled
 # unless explicitly disabled with false
 if components[:accounts][:hasldap] == nil || components[:accounts][:hasldap] != false
@@ -16,8 +14,8 @@ end
 packages = ['nscd', 'autodir']
 if components[:accounts][:hasldap]
   ldap_packages = case node[:platform]
-  when rhels
-    ['libnss-ldap', 'libpam-ldap']
+  when 'redhat', 'centos', 'fedora'
+    ['nss-ldap']
   else
     ['auth-client-config', 'libnss-ldap', 'libpam-ldap', 
      'ldap-auth-config', 'ldapscripts', 'autodir']
@@ -45,7 +43,7 @@ default[:components][:accounts][:autodir][:autogroup] = false
 
 default[:components][:accounts][:admins] = []
 default[:components][:accounts][:sudoers] = case node[:platform]
-when rhels
+when 'redhat', 'centos', 'fedora'
   ['%wheel']
 else
   ['%admin']

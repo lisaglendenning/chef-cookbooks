@@ -1,11 +1,5 @@
 
 #
-# Supported Platforms
-#
-
-rhels = ['redhat', 'centos', 'fedora']
-
-#
 # Configuration
 #
 
@@ -21,9 +15,9 @@ template "nss-pam-ldap-conf" do
 end
 
 case node[:platform]
-when rhels
+when 'redhat', 'centos', 'fedora'
   execute "auth-client" do
-    command "authconfig"
+    command ";" # TODO
     user "root"
     action :nothing
     subscribes :run, resources(:template => "nss-pam-ldap-conf")

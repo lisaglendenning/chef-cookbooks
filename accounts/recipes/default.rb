@@ -1,5 +1,3 @@
-
-rhels = ['redhat', 'centos', 'fedora']
   
 node[:components][:accounts][:packages].each { |p|
   package p do
@@ -36,19 +34,14 @@ template "sudoers" do
 end
 
 admin_group = case node[:platform]
-when rhels
+when 'redhat', 'centos', 'fedora'
   'wheel'
 else
   'admin'
 end
 
 # get admin info from databag
-admin_users = case node[:platform]
-when rhels
-  ['root']
-else
-  []
-end
+admin_users = []
 users = data_bag_item('accounts', 'users')['uids']
 node[:components][:accounts][:admins].each { |admin|
   admin = admin.to_s
@@ -87,6 +80,7 @@ if node[:components].key?(:ssh)
         owner user_info[0]
         group user_info[3]
         mode "0700"
+        not_if "[ ! -d #{user_info[5]} ]"
       end 
     end
   }
@@ -96,6 +90,7 @@ group 'admin' do
   group_name admin_group
   action :modify
   members admin_users
+  append true
 end
 
 #
@@ -117,7 +112,7 @@ end
 # So we need to make sure autofs4 is loaded
 # or something...sigh
 case node[:platform]
-when rhels
+when 'redhat', 'centos', 'fedora'
   execute "autofsfix" do
     command ""
     user "root"

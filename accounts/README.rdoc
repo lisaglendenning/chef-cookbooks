@@ -19,6 +19,8 @@ Databag name "accounts", item "users" example:
     }
   }
 
+autodir requires EPEL repository.
+
 = ATTRIBUTES: 
 
 = USAGE:
