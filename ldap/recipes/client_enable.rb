@@ -17,7 +17,10 @@ if node[:components][:ldap_client][:cert]
     block do
       File.open("/tmp/#{certname}", "r") { |f|
         content = f.readlines().join
-        if ! node[:components][:ssl][:certregistry].key?(certname) ||
+        if ! node[:components][:ssl][:certregistry].key?(certname)
+          node[:components][:ssl][:certregistry][certname] = Mash.new
+        end
+        if ! node[:components][:ssl][:certregistry][certname].key?(:content) ||
           node[:components][:ssl][:certregistry][certname][:content] != content
           node[:components][:ssl][:certregistry][certname][:content]  = content
         end
