@@ -154,5 +154,5 @@ else
 end
 
 if node[:components][:accounts][:hasldap]
-  include_recipe "ldap"
+  include_recipe "accounts::ldap"
 end
