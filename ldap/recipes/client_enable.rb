@@ -22,7 +22,7 @@ if node[:components][:ldap_client][:cert]
         end
         if ! node[:components][:ssl][:certregistry][certname].key?(:content) ||
           node[:components][:ssl][:certregistry][certname][:content] != content
-          node[:components][:ssl][:certregistry][certname][:content]  = content
+          node[:components][:ssl][:certregistry][certname][:content] = content
         end
       }
     end
