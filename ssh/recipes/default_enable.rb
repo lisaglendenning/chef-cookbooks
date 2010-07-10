@@ -37,3 +37,14 @@ if node[:components].key?(:firewall)
     node[:components][:firewall][:registry][:ssh] = node[:components][:ssh][:server][:transports]
   end
 end
+
+service 'denyhosts' do
+  service_name 'denyhosts'
+  case node[:platform]
+  when 'redhat', 'centos', 'fedora'
+    supports :restart => true, :status =>true
+  else
+    supports :restart => true, :status =>false
+  end
+  action [:enable, :start]
+end
