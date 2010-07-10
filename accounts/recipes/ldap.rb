@@ -19,7 +19,7 @@ packages = case node[:platform]
 when 'redhat', 'centos', 'fedora'
   ['apg', 'python-ldap', 'cracklib', 'cracklib-dicts']
 else
-  ['apg', 'python-ldap', 'cracklib2', 'python-cracklib']
+  ['apg', 'python-ldap', 'libcrack2', 'python-cracklib']
 end
 packages.each { |p|
   package p do
