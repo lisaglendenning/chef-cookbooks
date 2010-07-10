@@ -39,4 +39,19 @@ when "redhat", "centos", "fedora"
     action :nothing
     subscribes :run, resources(:execute => 'rebuild-iptables')
   end
+else
+  iptables_file = '/etc/network/iptables'
+  file 'iptables-restore' do
+    path "/etc/network/if-pre-up.d/iptables"
+    owner "root"
+    group "root"
+    mode "0754"
+    content "#!/bin/sh\niptables-restore < #{iptables_file}\n"
+    action :create
+  end
+  execute 'iptables-save' do
+    command "iptables-save > #{iptables_file}"
+    action :nothing
+    subscribes :run, resources(:execute => 'rebuild-iptables')
+  end
 end
