@@ -17,7 +17,6 @@ end
 service "chef-client" do
   supports :restart => true, :status => true
   action [:enable, :start]
-  subscribes :restart, resources(:template => "chef-client-config")
   only_if "[ -f #{node[:components][:chef][:client][:config]} ]"
 end
 
