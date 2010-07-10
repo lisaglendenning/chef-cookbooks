@@ -16,7 +16,7 @@ end
 
 service "chef-client" do
   supports :restart => true, :status => true
-  action [:enable, :start]
+  action :enable
   only_if "[ -f #{node[:components][:chef][:client][:config]} ]"
 end
 
