@@ -30,7 +30,7 @@ packages.each { |p|
 template "ldap-password" do
   path '/usr/bin/password'
   source "ldap.password.py.erb"
-  mode 755
+  mode 0755
   owner "root"
   group "root"
   variables(
