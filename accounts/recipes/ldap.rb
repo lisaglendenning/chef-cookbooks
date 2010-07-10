@@ -14,6 +14,30 @@ template "nss-pam-ldap-conf" do
   group "root"
 end
 
+# Packages needed for the ldap password user script
+packages = case node[:platform]
+when 'redhat', 'centos', 'fedora'
+  ['apg', 'python-ldap', 'cracklib', 'cracklib-dicts']
+else
+  ['apg', 'python-ldap', 'cracklib2', 'python-cracklib']
+end
+packages.each { |p|
+  package p do
+    action :upgrade
+  end  
+}
+  
+template "ldap-password" do
+  path '/usr/bin/password'
+  source "ldap.password.py.erb"
+  mode 755
+  owner "root"
+  group "root"
+  variables(
+    :ldapuri => node[:components][:accounts][:ldap][:uri]
+  )
+end
+
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
   opts = ['--enableldap', '--enableldapauth',

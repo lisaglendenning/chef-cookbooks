@@ -5,7 +5,7 @@
 
 node[:components][:accounts][:packages].each { |p|
   package p do
-   action :upgrade
+    action :upgrade
   end
 }
 
