@@ -40,11 +40,6 @@ end
 
 service 'denyhosts' do
   service_name 'denyhosts'
-  case node[:platform]
-  when 'redhat', 'centos', 'fedora'
-    supports :restart => true, :status =>true
-  else
-    supports :restart => true, :status =>false
-  end
+  supports :restart => true, :status =>false
   action [:enable, :start]
 end
