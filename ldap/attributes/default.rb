@@ -23,6 +23,6 @@ default[:components][:ldap_client][:protocol] = "ldap://"
 default[:components][:ldap_client][:reqcert] = 'allow'
 
 # Use SSL certificates by default
-if components.key?(:ssl)
+if components.key?(:ssl) && components[:ssl].key?(:pkidir)
   default[:components][:ldap_client][:certdir] = components[:ssl][:pkidir] + '/certs'
 end
