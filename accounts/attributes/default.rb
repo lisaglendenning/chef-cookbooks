@@ -1,7 +1,11 @@
 
+if ! components.key?(:accounts)
+  components[:accounts] = Mash.new
+end
+
 # autodetect if LDAP is enabled
 # unless explicitly disabled with false
-if components[:accounts][:hasldap] == nil || components[:accounts][:hasldap] != false
+if ! components[:accounts].key?(:hasldap) || components[:accounts][:hasldap] == nil || components[:accounts][:hasldap] != false
   has_ldap = node[:components].key?(:ldap_client)
   if has_ldap
     has_ldap = components[:ldap_client].key?(:protocol) &&
