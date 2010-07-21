@@ -15,8 +15,7 @@ else
           :command => c, 
           :url => repo[:url],
           :distribution => repo[:dist],
-          :components => "main"),
-          )
+          :components => "main")
       }
     }
     default[:components][:packages][:repos][:official] = default_repos
