@@ -81,7 +81,7 @@ end
 
 group 'admin' do
   group_name admin_group
-  action :modify
+  action :create
   members admin_users
   append true
 end
