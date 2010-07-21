@@ -3,6 +3,8 @@
 # Default properties
 #
 
+include_attribute "ssl"
+
 default[:components][:ldap_client][:packages] = case node[:platform]
   when 'redhat', 'centos', 'fedora'
     ['openldap', 'openldap-clients']
