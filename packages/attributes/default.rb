@@ -33,6 +33,8 @@ when 'redhat', 'centos', 'fedora'
 
     default[:components][:packages][:repos][:official]['CentOS-Base'] = base_repo 
     default[:components][:packages][:repos][:official]['CentOS-Media'] = media_repo
+    
+    default[:components][:packages][:repos][:extra] = Mash.new
   end
 else
   set[:components][:packages][:repodir] = '/etc/apt'

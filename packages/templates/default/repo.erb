@@ -1,7 +1,7 @@
 <% @repo.each { |r,sections| %>
 
 <%= "[#{r}]" %>
-<%  sections.each { |k,v| %> 
-<%= "#{k}=#{v}" %>
+<%  (sections.sort).each { |kv| %> 
+<%= "#{kv[0]}=#{kv[1]}" %>
 <%  } %>
 <% } %>
