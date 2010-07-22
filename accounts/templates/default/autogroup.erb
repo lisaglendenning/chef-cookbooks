@@ -11,7 +11,11 @@ AUTOGROUP_HOME=/group
 AUTOGROUP_TIMEOUT=300
 
 # Authome module path
+<% if node[:kernel][:machine] == 'x86_64' %>
 AUTOGROUP_MODULE="/usr/lib64/autodir/autogroup.so"
+<% else %>
+AUTOGROUP_MODULE="/usr/lib/autodir/autogroup.so"
+<% end %>
 
 # realpath => path where real group directories should reside.
 # level    => Default value is ok for almost all sites. See Autodir-HOWTO.

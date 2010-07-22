@@ -17,7 +17,11 @@ AUTOHOME_HOME=/home
 AUTOHOME_TIMEOUT=660
 
 # Authome module path
+<% if node[:kernel][:machine] == 'x86_64' %>
 AUTOHOME_MODULE="/usr/lib64/autodir/autohome.so"
+<% else %>
+AUTOHOME_MODULE="/usr/lib64/autodir/autohome.so"
+<% end %>
 
 # realpath => path where real home directories should reside
 # level    => Default value is ok for almost all sites. See Autodir-HOWTO
