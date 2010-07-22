@@ -21,6 +21,7 @@ when 'redhat', 'centos', 'fedora'
     end
   }
   
+  # parse existing repo files
   repofiles.each { |fname|
     reponame = fname[0..-6]
     if ! node[:components][:packages][:repos][:official].key?(reponame)
@@ -50,6 +51,8 @@ when 'redhat', 'centos', 'fedora'
       end
     end
   }
+  
+  # TODO: install any missing repos
   
 else
   template 'sources.list' do
