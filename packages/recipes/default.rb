@@ -36,15 +36,14 @@ when 'redhat', 'centos', 'fedora'
           if comment
             line = line[0...comment]
           end
-          if line.empty?
-            continue
-          end
-          if line =~ /^\[(.+)\]/
-            section = Mash.new
-            repo[$1.strip] = section
-          elsif line =~ /^(.+?)\s*=\s*(.+)/
-            section[$1.strip] = $2.strip
-            # FIXME: error if else
+          if ! line.empty?
+            if line =~ /^\[(.+)\]/
+              section = Mash.new
+              repo[$1.strip] = section
+            elsif line =~ /^(.+?)\s*=\s*(.+)/
+              section[$1.strip] = $2.strip
+              # FIXME: error if else
+            end
           end
         end
         f.close
