@@ -1,0 +1,7 @@
+<% @repo.each { |r,sections| %>
+
+<%= "[#{r}]" %>
+<%  sections.each { |k,v| %> 
+<%= "#{k}=#{v}" %>
+<%  } %>
+<% } %>
