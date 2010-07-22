@@ -27,9 +27,9 @@ if components[:accounts][:hasldap]
   packages.concat(ldap_packages)
 
   set[:components][:accounts][:ldap][:uri] = \
-    node[:components][:ldap_client][:protocol] + node[:components][:ldap_client][:domain]
+    components[:ldap_client][:protocol] + components[:ldap_client][:domain]
   set[:components][:accounts][:ldap][:basedn] = \
-    node[:components][:ldap_client][:basedn]
+    components[:ldap_client][:basedn]
   default[:components][:accounts][:ldap][:ssl] = 'start_tls'
 
   if components[:accounts][:packages]
