@@ -44,9 +44,9 @@ when 'redhat', 'centos', 'fedora'
             repo[$1.strip] = section
           elsif line =~ /^(.+?)\s*=\s*(.+)/
             section[$1.strip] = $2.strip
-          else
-            # FIXME: error
-          end          
+            # FIXME: error if else
+          end
+        end
         f.close
       end
     end
