@@ -20,7 +20,7 @@ AUTOHOME_TIMEOUT=660
 <% if node[:kernel][:machine] == 'x86_64' %>
 AUTOHOME_MODULE="/usr/lib64/autodir/autohome.so"
 <% else %>
-AUTOHOME_MODULE="/usr/lib64/autodir/autohome.so"
+AUTOHOME_MODULE="/usr/lib/autodir/autohome.so"
 <% end %>
 
 # realpath => path where real home directories should reside
