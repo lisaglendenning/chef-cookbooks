@@ -8,7 +8,7 @@ template "chef-client-config" do
   source "client.#{chef_version}.erb"
   owner "root"
   group "root"
-  mode "0744"
+  mode "0644"
   variables(
     :parameters => node[:components][:chef][:client]
   )
