@@ -7,6 +7,40 @@ end
 # Iptables script
 #
 
+PARAMETERS = ['protocol']
+services = ""
+node[:components][:firewall][:registry].each { |name,rules|
+  text = "#\n# #{name}\n#\n "
+  services << text
+  rules.each { |rule|
+    text = "iptables -A INPUT -j ACCEPT"
+    
+    # parameter must be before any extra options
+    PARAMETERS.each { |p|
+      if rule.key?(p)
+        v = rule[p]
+        case p.to_s
+        when 'protocol'
+          text << " -p #{v}"
+        end
+        break
+      end
+    }
+    rule.each { |k,v|
+      key = k.to_s
+      if ! PARAMETERS.include?(key)
+        case key
+        when 'port'
+          text << " --dport #{v}"
+        when 'ports'
+          text << " --dport #{v[0]}:#{v[1]}"
+        end
+      end
+    }
+    services << text << "\n\n"
+  }
+}
+
 BINDIR = '/usr/sbin'
 BINFILE = BINDIR + '/iptables.sh'
 
@@ -23,7 +57,7 @@ template 'iptables.sh' do
   group "root"
   variables(
     :defaults => node[:components][:firewall][:defaults],
-    :services => node[:components][:firewall][:services])
+    :services => services)
   notifies :run, resources(:execute => 'rebuild-iptables')
 end
 
