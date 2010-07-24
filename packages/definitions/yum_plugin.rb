@@ -11,6 +11,8 @@ define :yum_plugin, :action => :enable, :plugin => nil do
         f.close
         changed = false
         section = nil
+        k = nil
+        v = nil
         lines.each_with_index { |l,i|
           content = l.strip
           comment = content.index('#')
@@ -30,8 +32,8 @@ define :yum_plugin, :action => :enable, :plugin => nil do
                   lines[i] = "%s=%s\n" % [k,v]
                 end
               end
-            else
-              raise RuntimeError, l
+            else # must be a value continuation
+              v << line
             end
           end
         }

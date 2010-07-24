@@ -46,7 +46,9 @@ when 'redhat', 'centos', 'fedora'
     node.default[:components][:packages][:repos][reponame][:official] = false
     node.default[:components][:packages][:repos][reponame][:exclude] = []
     f = File.new("#{repodir}/#{fname}", "r")
-    section = nil    
+    section = nil  
+    k = nil
+    v = nil  
     f.each_line do |line|
       line = line.strip
       comment = line.index('#')
@@ -57,13 +59,20 @@ when 'redhat', 'centos', 'fedora'
         if line =~ /^\[(.+)\]/
           section = $1.strip
         elsif line =~ /^(.+?)\s*=\s*(.+)/
+          if k && v
+            # store the previous value
+            node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
+          end
           k = $1.strip
           v = $2.strip
-          node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
-        else
-          raise RuntimeError, line
+        else # must be a value continuation
+          v << line
         end
       end
+    end
+    if k && v
+      # store the last value
+      node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
     end
     f.close
   }
