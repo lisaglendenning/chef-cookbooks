@@ -11,7 +11,7 @@ define :yum_plugin, :action => :enable, :plugin => nil do
         f.close
         changed = false
         section = nil
-        lines.each_with_index do |l,i|
+        lines.each_with_index { |l,i|
           content = l.strip
           comment = content.index('#')
           if comment
@@ -34,19 +34,18 @@ define :yum_plugin, :action => :enable, :plugin => nil do
               raise RuntimeError, l
             end
           end
-        end
+        }
         if changed
           f = File.new(filename, "w")
-          lines.each do |l|
+          lines.each { |l|
             f.puts(l)
-          end
+          }
           f.close
         end
       end
       action :create
       only_if "[ -f #{filename} ]"
     end
-    
   # TODO: elsif params[:action] == :disable
-
+  end
 end
