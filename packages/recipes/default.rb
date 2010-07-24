@@ -54,7 +54,7 @@ when 'redhat', 'centos', 'fedora'
       tokens = [line.strip, nil]
       content = 0
       if ! tokens[content].index('#').nil?
-        tokens = tokens[content].split(/\s*#\s*/, 1)
+        tokens = tokens[content].split(/\s*#\s*/, 2)
       end
       if ! tokens[content].empty?
         if tokens[content] =~ /^\[(.+)\]/
