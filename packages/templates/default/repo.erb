@@ -1,7 +1,7 @@
-<% @repo.each { |r,sections| %>
-
-<%= "[#{r}]" %>
-<%  (sections.sort).each { |kv| %> 
-<%= "#{kv[0]}=#{kv[1]}" %>
+<% @sections.each { |section,config| %>
+<%= "[#{section}]" %>
+<%  (config.sort).each { |kv| %> 
+<%  if @exclude.include?(kv[0]) %>#<% end %><%= "#{kv[0]}=#{kv[1]}" %>
 <%  } %>
+
 <% } %>
