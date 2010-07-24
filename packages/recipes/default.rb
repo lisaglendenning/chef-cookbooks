@@ -1,7 +1,7 @@
 
 [node[:components][:packages][:repos], node[:components][:packages][:plugins]].each { |x|
   x.each { |k,v|
-    if v.attribute?(:package)
+    if v.key?(:package)
       if ! node[:components][:packages][:packages].include?(v[:package])
         node[:components][:packages][:packages] << v[:package]
       end
@@ -68,7 +68,7 @@ when 'redhat', 'centos', 'fedora'
     f.close
   }
 
-  if ! node[:components][:packages][:plugins].attribute?(:priorities)
+  if ! node[:components][:packages][:plugins].key?(:priorities)
     node[:components][:packages][:repos].each { |k,v|
       if ! v[:exclude].include?('priority')
         v[:exclude] << 'priority'
