@@ -23,12 +23,13 @@ define :yum_plugin, :action => :enable, :plugin => nil do
             elsif content =~ /^(.+?)\s*=\s*(.+)/
               k = $1.strip 
               v = $2.strip
-              if section == 'main' and k == 'enabled':
+              if section == 'main' && k == 'enabled':
                 if v != '1'
                   changed = true
                   v = '1'
                   lines[i] = "%s=%s\n" % [k,v]
                 end
+              end
             else
               raise RuntimeError, l
             end
