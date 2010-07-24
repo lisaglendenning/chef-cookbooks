@@ -16,7 +16,7 @@ define :yum_plugin, :action => :enable, :plugin => nil do
         lines.each_with_index { |l,i|
           content = l.strip
           comment = content.index('#')
-          if comment
+          if ! comment.nil?
             content = content[0...comment]
           end
           if ! content.empty?

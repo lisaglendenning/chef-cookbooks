@@ -53,7 +53,7 @@ when 'redhat', 'centos', 'fedora'
     f.each_line do |line|
       tokens = [line.strip, nil]
       content = 0
-      if tokens[content].index('#') != nil
+      if ! tokens[content].index('#').nil?
         tokens = tokens[content].split(/\s*#\s*/, 1)
       end
       if ! tokens[content].empty?
