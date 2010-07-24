@@ -53,13 +53,12 @@ when 'redhat', 'centos', 'fedora'
     f.each_line do |line|
       tokens = [line.strip, nil]
       content = 0
-      if tokens[content].index('#')
+      if tokens[content].index('#') != nil
         tokens = tokens[content].split(/\s*#\s*/, 1)
       end
       if ! tokens[content].empty?
         if tokens[content] =~ /^\[(.+)\]/
           if section
-        
             node.default[:components][:packages][:repos][reponame][:sections][section][:priority] = 5
           end
           section = $1.strip
@@ -74,6 +73,9 @@ when 'redhat', 'centos', 'fedora'
           v << line
         end
       end
+    end
+    if section
+      node.default[:components][:packages][:repos][reponame][:sections][section][:priority] = 5
     end
     if k && v
       # store the last value
