@@ -24,7 +24,7 @@ when 'redhat', 'centos', 'fedora'
         base_sections[r[0]] = Mash.new( 
           :name => "CentOS-$releasever - #{r[1]}",
           :mirrorlist => "http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=#{r[2]}",
-          :baseurl => "http://mirror.centos.org/centos/$releasever/#{r[2]}/$basearch/"
+          :baseurl => "http://mirror.centos.org/centos/$releasever/#{r[2]}/$basearch/",
           :gpgcheck => "1",
           :gpgkey => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}",
           :enabled => (r[0] == 'contrib' || r[0] == 'centosplus') ? "0" : "1",
