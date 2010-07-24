@@ -32,18 +32,6 @@ when 'redhat', 'centos', 'fedora'
       action v[:action]
     end
   }
-  
-  if ! node[:components][:packages][:plugins].key?(:priorities)
-    node[:components][:packages][:repos].each { |k,v|
-      if ! v[:exclude].include?('priority')
-        v[:exclude] << 'priority'
-      end
-    }
-  else
-    node[:components][:packages][:repos].each { |k,v|
-      v[:exclude].delete('priority')
-    }
-  end
 
   # parse existing repo files for default values
   repofiles = []
@@ -55,6 +43,8 @@ when 'redhat', 'centos', 'fedora'
   }
   repofiles.each { |fname|
     reponame = fname[0..-6]
+    default[:components][:packages][:repos][reponame][:official] = false
+    default[:components][:packages][:repos][reponame][:exclude] = []
     f = File.new("#{repodir}/#{fname}", "r")
     section = nil    
     f.each_line do |line|
@@ -69,7 +59,7 @@ when 'redhat', 'centos', 'fedora'
         elsif line =~ /^(.+?)\s*=\s*(.+)/
           k = $1.strip
           v = $2.strip
-          default[:components][:packages][:repos][reponame][section][k] = v
+          default[:components][:packages][:repos][reponame][:sections][section][k] = v
         else
           raise RuntimeError, line
         end
@@ -77,7 +67,20 @@ when 'redhat', 'centos', 'fedora'
     end
     f.close
   }
-  
+
+  if ! node[:components][:packages][:plugins].key?(:priorities)
+    node[:components][:packages][:repos].each { |k,v|
+      if ! v[:exclude].include?('priority')
+        v[:exclude] << 'priority'
+      end
+    }
+  else
+    node[:components][:packages][:repos].each { |k,v|
+      v[:exclude].delete('priority')
+    }
+  end
+
+  # manage repos
   node[:components][:packages][:repos].each { |k,v|
     conffile = "#{node[:components][:packages][:repodir]}/#{k}.repo"
     template k do
