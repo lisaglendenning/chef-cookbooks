@@ -58,6 +58,10 @@ when 'redhat', 'centos', 'fedora'
       end
       if ! tokens[content].empty?
         if tokens[content] =~ /^\[(.+)\]/
+          if section
+        
+            node.default[:components][:packages][:repos][reponame][:sections][section][:priority] = 5
+          end
           section = $1.strip
         elsif tokens[content] =~ /^(.+?)\s*=\s*(.+)/
           if k && v
@@ -75,7 +79,6 @@ when 'redhat', 'centos', 'fedora'
       # store the last value
       node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
     end
-    node.default[:components][:packages][:repos][reponame][:sections][:priority] = 5
     f.close
   }
 
