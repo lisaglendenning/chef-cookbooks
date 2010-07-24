@@ -45,6 +45,7 @@ when 'redhat', 'centos', 'fedora'
     reponame = fname[0..-6]
     node.default[:components][:packages][:repos][reponame][:official] = false
     node.default[:components][:packages][:repos][reponame][:exclude] = []
+    node.default[:components][:packages][:repos][reponame][:sections] = Mash.new
     f = File.new("#{repodir}/#{fname}", "r")
     section = nil  
     k = nil
