@@ -11,7 +11,7 @@ when 'redhat', 'centos', 'fedora'
       
   if node[:platform] == 'centos'
 
-    release = "CentOS-#{node[:platform_version][0]}"
+    release = "CentOS-#{node[:platform_version][0,1]}"
     
     if ! components[:packages][:repos].key?('CentOS-Base')
       base_sections = Mash.new

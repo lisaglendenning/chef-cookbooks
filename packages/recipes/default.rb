@@ -48,17 +48,17 @@ when 'redhat', 'centos', 'fedora'
     f = File.new("#{repodir}/#{fname}", "r")
     section = nil  
     k = nil
-    v = nil  
+    v = nil
     f.each_line do |line|
-      line = line.strip
-      comment = line.index('#')
-      if comment
-        line = line[0...comment]
+      tokens = [line.strip, nil]
+      content = 0
+      if tokens[content].index('#')
+        tokens = tokens[content].split(/\s*#\s*/, 1)
       end
-      if ! line.empty?
-        if line =~ /^\[(.+)\]/
+      if ! tokens[content].empty?
+        if tokens[content] =~ /^\[(.+)\]/
           section = $1.strip
-        elsif line =~ /^(.+?)\s*=\s*(.+)/
+        elsif tokens[content] =~ /^(.+?)\s*=\s*(.+)/
           if k && v
             # store the previous value
             node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
@@ -74,6 +74,7 @@ when 'redhat', 'centos', 'fedora'
       # store the last value
       node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
     end
+    node.default[:components][:packages][:repos][reponame][:sections][:priority] = 5
     f.close
   }
 
