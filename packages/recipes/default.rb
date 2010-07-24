@@ -1,7 +1,7 @@
 
 [node[:components][:packages][:repos], node[:components][:packages][:plugins]].each { |x|
   x.each { |k,v|
-    if v.key?(:package)
+    if v.attribute?(:package)
       if ! node[:components][:packages][:packages].include?(v[:package])
         node[:components][:packages][:packages] << v[:package]
       end
@@ -43,8 +43,8 @@ when 'redhat', 'centos', 'fedora'
   }
   repofiles.each { |fname|
     reponame = fname[0..-6]
-    default[:components][:packages][:repos][reponame][:official] = false
-    default[:components][:packages][:repos][reponame][:exclude] = []
+    node.default[:components][:packages][:repos][reponame][:official] = false
+    node.default[:components][:packages][:repos][reponame][:exclude] = []
     f = File.new("#{repodir}/#{fname}", "r")
     section = nil    
     f.each_line do |line|
@@ -59,7 +59,7 @@ when 'redhat', 'centos', 'fedora'
         elsif line =~ /^(.+?)\s*=\s*(.+)/
           k = $1.strip
           v = $2.strip
-          default[:components][:packages][:repos][reponame][:sections][section][k] = v
+          node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
         else
           raise RuntimeError, line
         end
@@ -68,7 +68,7 @@ when 'redhat', 'centos', 'fedora'
     f.close
   }
 
-  if ! node[:components][:packages][:plugins].key?(:priorities)
+  if ! node[:components][:packages][:plugins].attribute?(:priorities)
     node[:components][:packages][:repos].each { |k,v|
       if ! v[:exclude].include?('priority')
         v[:exclude] << 'priority'
