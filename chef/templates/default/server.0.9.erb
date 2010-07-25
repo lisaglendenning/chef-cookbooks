@@ -43,7 +43,7 @@ ssl_verify_mode    :verify_none
 # listens on 0.0.0.0:PORT. valid values are any HTTP URL. To change the port
 # the server listens on, modify /etc/sysconfig/chef-server.
 
-chef_server_url    <%= "'#{@parameters[:server]}'" %>
+chef_server_url    <%= "'http://#{@parameters[:fqdn]}:#{@parameters[:port]}'" %>
 
 # cookbook_path is a Ruby array of filesystem locations to search for cookbooks
 # that are available for clients. This is also where cookbooks uploaded via

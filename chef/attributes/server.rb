@@ -1,22 +1,24 @@
 
-chef_version = node[:chef_packages][:chef][:version]
-chef_version = chef_version.split('.')
-chef_version = chef_version[0, 2].join('.')
+include_attribute "chef"
 
-service "chef-server" do
-  supports :restart => true, :status => true
-  action :enable
-  only_if "[ -f #{node[:components][:chef][:server][:config]} ]"
+if node[:components][:chef][:server][:enabled]  
+  default[:components][:chef][:server][:config] = '/etc/chef/server.rb'
+  default[:components][:chef][:server][:service_config] = '/etc/sysconfig/chef-server'
+  default[:components][:chef][:server][:validator] = 'chef-validator'
+  default[:components][:chef][:server][:validator_key] = '/etc/chef/certificates/validation.pem'
+  default[:components][:chef][:server][:fqdn] = node[:components][:fqdn]
+  default[:components][:chef][:server][:port] = 4000
+  default[:components][:chef][:server][:log_level] = :warn
 end
 
-template "chef-server-config" do
-  path node[:components][:chef][:server][:config]
-  source "server.#{chef_version}.erb"
-  owner "root"
-  group "root"
-  mode "0644"
-  variables(
-    :parameters => node[:components][:chef][:server]
-  )
-  notifies :restart, resources(:service => "chef-server")
+if node[:components][:chef][:webui][:enabled]
+  default[:components][:chef][:webui][:config] = '/etc/chef/webui.rb'
+  default[:components][:chef][:webui][:service_config] = '/etc/sysconfig/chef-server-webui'
+  default[:components][:chef][:webui][:client_user] = 'chef-webui'
+  default[:components][:chef][:webui][:client_key] = '/etc/chef/webui.pem'
+  default[:components][:chef][:webui][:fqdn] = "localhost"
+  default[:components][:chef][:webui][:port] = 4000
+  default[:components][:chef][:webui][:log_level] = :info
+  default[:components][:chef][:webui][:admin_user] = 'admin'
+  default[:components][:chef][:webui][:admin_passwd] = 'p@ssw0rd1'
 end
