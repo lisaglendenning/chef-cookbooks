@@ -12,6 +12,7 @@ template "chef-server-config" do
   variables(
     :parameters => node[:components][:chef][:server]
   )
+  notifies :restart, resources(:service, "chef-server")
 end
 
 service "chef-server" do

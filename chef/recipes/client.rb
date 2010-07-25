@@ -23,7 +23,7 @@ template "chef-client-config-service" do
   variables(
     :parameters => node[:components][:chef][:client]
   )
-  notifies
+  notifies :restart, resources(:service, "chef-client")
 end
 
 service "chef-client" do
