@@ -14,6 +14,12 @@ template "chef-client-config" do
   )
 end
 
+service "chef-client" do
+  supports :restart => true, :status => true
+  action :enable
+  only_if "[ -f #{node[:components][:chef][:client][:config]} ]"
+end
+
 template "chef-client-config-service" do
   path node[:components][:chef][:client][:service_config]
   source "chef-client.#{chef_version}.erb"
@@ -24,12 +30,6 @@ template "chef-client-config-service" do
     :parameters => node[:components][:chef][:client]
   )
   notifies :restart, resources(:service => "chef-client")
-end
-
-service "chef-client" do
-  supports :restart => true, :status => true
-  action :enable
-  only_if "[ -f #{node[:components][:chef][:client][:config]} ]"
 end
 
 # remove the validation key once we have a client key
