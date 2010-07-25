@@ -19,7 +19,7 @@ if node[:components][:chef][:server][:enabled]
   ['couchdb', 'rabbitmq-server', 'chef-solr', 'chef-solr-indexer', 'chef-server'].each do |svc|
     service svc do
       supports :restart => true, :status => true
-      action :enable, :start
+      action [:enable, :start]
       only_if "[ -f #{node[:components][:chef][:server][:config]} ]"
     end
   end
@@ -51,7 +51,7 @@ if node[:components][:chef][:webui][:enabled]
   
   service "chef-server-webui" do
     supports :restart => true, :status => true
-    action :enable, :start
+    action [:enable, :start]
     only_if "[ -f #{node[:components][:chef][:webui][:config]} ]"
   end
   
