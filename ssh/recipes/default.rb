@@ -3,11 +3,32 @@
 # Resources
 #
 
-node[:components][:ssh][:packages].each { |p|
+
+packages = case node[:platform]
+  when 'redhat', 'centos', 'fedora'
+    ['openssh-clients', 'openssh',  'openssh-server']
+  else
+    ['openssh-client', 'openssh-server']
+  end  
+
+if node[:components][:ssh][:server][:denyhosts]
+  packages << 'denyhosts'
+end
+
+packages.each { |p|
   package p do
    action :upgrade
   end
 }
+
+if node[:components][:ssh][:server][:denyhosts]
+  service 'denyhosts' do
+    service_name 'denyhosts'
+    supports :restart => true, :status =>false
+    action [:enable, :start]
+  end
+end
+
 
 CONFDIR = '/etc/ssh'
 CONFFILE = CONFDIR + '/sshd_config'
@@ -39,10 +60,4 @@ end
 if node.components.attribute?(:firewall)
   server = Mash.new(:protocol => 'tcp', :port => node[:components][:ssh][:server][:port])
   node.set[:components][:firewall][:registry][:sshd] = [server]
-end
-
-service 'denyhosts' do
-  service_name 'denyhosts'
-  supports :restart => true, :status =>false
-  action [:enable, :start]
 end

@@ -1,17 +1,9 @@
 
-[node[:components][:packages][:repos], node[:components][:packages][:plugins]].each { |x|
-  x.each { |k,v|
-    if v.key?(:package)
-      if ! node[:components][:packages][:packages].include?(v[:package])
-        node[:components][:packages][:packages] << v[:package]
-      end
+node[:components][:packages][:registry].each { |p,v|
+  if v == true:
+    package p do
+      action :upgrade
     end
-  }
-}
-
-node[:components][:packages][:packages].each { |p|
-  package p do
-    action :upgrade
   end
 }
 

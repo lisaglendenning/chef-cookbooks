@@ -1,13 +1,13 @@
 
-node.default[:components][:packages][:packages] = []
-
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
   node.set[:components][:packages][:repodir] = '/etc/yum.repos.d'
   
-  node.default[:components][:packages][:plugins][:priorities][:package] = 'yum-priorities'
   node.default[:components][:packages][:plugins][:priorities][:enabled] = true
-      
+  if node[:components][:packages][:plugins][:priorities][:enabled]
+    node.set[:components][:packages][:registry]['yum-priorities'] = true
+  end
+        
   # parse existing repo files for default values
   repofiles = []
   repodir = node[:components][:packages][:repodir]
