@@ -25,8 +25,8 @@ if node.components.ldap.client.attribute?(:cert)
     block do
       File.open(fname, "r") { |f|
         content = f.readlines().join
+        node.default[:components][:ssl][:certregistry][certname][:content] = content
       }
-      node.default[:components][:ssl][:certregistry][certname][:content] = content
     end
     only_if "[ -f #{fname} ]"
     action node.default[:components][:ssl][:certregistry][certname][:content] ? :nothing : :create
