@@ -11,10 +11,12 @@ packages.each { |p|
   end
 }
 
-node[:components][:ssl][:certregistry].each { |k,v|
-  x509cert k do
-    action :enable
-    certname k
-    cert v[:content]
-  end
-}
+if node.components.ssl.attribute?(:certregistry)
+  node[:components][:ssl][:certregistry].each { |k,v|
+    x509cert k do
+      action :enable
+      certname k
+      cert v[:content]
+    end
+  }
+end
