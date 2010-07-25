@@ -17,7 +17,7 @@
 # valid values are: :debug, :info, :warn, :error, :fatal.
 # Corresponds to chef-client -l
 
-log_level          <%= ":#{@parameters[:log_level]}" %>
+log_level          <%= ":#{@client[:log_level]}" %>
 
 # log_location specifies where the client should log to.
 # valid values are: a quoted string specifying a file, or STDOUT with
@@ -39,7 +39,7 @@ ssl_verify_mode    :verify_none
 # valid values are any HTTP URL.
 # Corresponds to chef-client -S
 
-chef_server_url	<%= "'http://#{@parameters[:fqdn]}:#{@parameters[:port]}'" %>
+chef_server_url	<%= "'http://#{@client[:fqdn]}:#{@client[:port]}'" %>
 
 # file_cache_path specifies where the client should cache cookbooks, server
 # cookie ID, and openid registration data.
@@ -71,6 +71,6 @@ signing_ca_user "chef"
 
 Mixlib::Log::Formatter.show_time = true
 
-validation_client_name <%= "'#{@parameters[:validator]}'" %>
-validation_key         <%= "'#{@parameters[:validator_key]}'" %>
-client_key             <%= "'#{@parameters[:client_key]}'" %>
+validation_client_name <%= "'#{@client[:validator]}'" %>
+validation_key         <%= "'#{@client[:validator_key]}'" %>
+client_key             <%= "'#{@client[:client_key]}'" %>

@@ -24,7 +24,7 @@
 # log_level specifies the level of verbosity for output.
 # valid values are: :debug, :info, :warn, :error, :fatal
 
-log_level          <%= ":#{@parameters[:log_level]}" %>
+log_level          <%= ":#{@webui[:log_level]}" %>
 
 # log_location specifies where the server should log to.
 # valid values are: a quoted string specifying a file, or STDOUT with
@@ -46,7 +46,7 @@ ssl_verify_mode    :verify_none
 # valid values are any HTTP URL. If the server API port is changed, this
 # value needs to be updated as well.
 
-chef_server_url    <%= "'http://#{@parameters[:fqdn]}:#{@parameters[:port]}'" %>
+chef_server_url    <%= "'http://#{@webui[:fqdn]}:#{@webui[:port]}'" %>
 
 # file_cache_path specifies where the client should cache cookbooks, server
 # cookie ID, and openid registration data.
@@ -91,7 +91,7 @@ signing_ca_group "chef"
 # This user gets created by the chef-server and stored in CouchDB the
 # first time the server starts up if the user and key don't exist.
 
-web_ui_client_name <%= "'#{@parameters[:client_user]}'" %>
+web_ui_client_name <%= "'#{@webui[:client_user]}'" %>
 
 # web_ui_admin_user_name and web_ui_admin_default_password specify the
 # user and password that a human can use to initially log into the
@@ -101,8 +101,8 @@ web_ui_client_name <%= "'#{@parameters[:client_user]}'" %>
 # During package installation, debconf will prompt for a password, so this
 # may differ from the default.
 
-web_ui_admin_user_name <%= "'#{@parameters[:admin_user]}'" %>
-web_ui_admin_default_password <%= "'#{@parameters[:admin_passwd]}'" %>
+web_ui_admin_user_name <%= "'#{@webui[:admin_user]}'" %>
+web_ui_admin_default_password <%= "'#{@webui[:admin_passwd]}'" %>
 
 # web_ui_key specifics the file to use for authenticating with the Chef
 # Server API. By default this is already set to "/etc/chef/webui.pem".
@@ -111,4 +111,4 @@ web_ui_admin_default_password <%= "'#{@parameters[:admin_passwd]}'" %>
 # CouchDB the first time the server starts up if the user and key don't
 # exist.
 
-web_ui_key <%= "'#{@parameters[:client_key]}'" %>
+web_ui_key <%= "'#{@webui[:client_key]}'" %>

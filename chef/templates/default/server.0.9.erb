@@ -22,7 +22,7 @@
 # valid values are: :debug, :info, :warn, :error, :fatal
 
 # Default is :info, see http://tickets.opscode.com/browse/CHEF-1122
-log_level          <%= ":#{@parameters[:log_level]}" %>
+log_level          <%= ":#{@server[:log_level]}" %>
 
 # log_location specifies where the server should log to.
 # valid values are: a quoted string specifying a file, or STDOUT with
@@ -43,7 +43,7 @@ ssl_verify_mode    :verify_none
 # listens on 0.0.0.0:PORT. valid values are any HTTP URL. To change the port
 # the server listens on, modify /etc/sysconfig/chef-server.
 
-chef_server_url    <%= "'http://#{@parameters[:fqdn]}:#{@parameters[:port]}'" %>
+chef_server_url    <%= "'http://#{@server[:fqdn]}:#{@server[:port]}'" %>
 
 # cookbook_path is a Ruby array of filesystem locations to search for cookbooks
 # that are available for clients. This is also where cookbooks uploaded via
@@ -145,5 +145,5 @@ amqp_pass File.read('/etc/chef/amqp_passwd').chomp
 couchdb_database "chef"
 umask 0022
 
-validation_client_name <%= "'#{@parameters[:validator]}'" %>
-validation_key         <%= "'#{@parameters[:validator_key]}'" %>
+validation_client_name <%= "'#{@server[:validator]}'" %>
+validation_key         <%= "'#{@server[:validator_key]}'" %>

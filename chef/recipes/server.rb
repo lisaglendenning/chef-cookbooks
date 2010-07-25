@@ -5,10 +5,11 @@ chef_version = chef_version[0, 2].join('.')
 
 if node[:components][:chef][:server][:enabled]
 
-  if node[:components].attribute?(:firewall)
-    server = Mash.new
-    server[:protocol] = 'tcp'
-    server[:port] = node[:components][:chef][:server][:port]
+  if node.components.attribute?(:firewall)
+    server = Mash.new(
+      :protocol => 'tcp', 
+      :port => node[:components][:chef][:server][:port]
+    )
     node.set[:components][:firewall][:registry]['chef-server'] = [server]
   end
 
@@ -16,7 +17,8 @@ if node[:components][:chef][:server][:enabled]
     action :upgrade
   end
   
-  ['couchdb', 'rabbitmq-server', 'chef-solr', 'chef-solr-indexer', 'chef-server'].each do |svc|
+  services = ['couchdb', 'rabbitmq-server', 'chef-solr', 'chef-solr-indexer', 'chef-server']
+  services.each do |svc|
     service svc do
       supports :restart => true, :status => true
       action [:enable, :start]
@@ -31,7 +33,7 @@ if node[:components][:chef][:server][:enabled]
     group "root"
     mode "0644"
     variables(
-      :parameters => node[:components][:chef][:server]
+      :server => node[:components][:chef][:server]
     )
     notifies :restart, resources(:service => "chef-server")
   end
@@ -40,7 +42,7 @@ end
 
 if node[:components][:chef][:webui][:enabled]
 
-  if node[:components].attribute?(:firewall)
+  if node.components.attribute?(:firewall)
     server = Mash.new(:protocol => 'tcp', :port => 4040)
     node.set[:components][:firewall][:registry]['chef-webui'] = [server]
   end
@@ -62,7 +64,7 @@ if node[:components][:chef][:webui][:enabled]
     group "root"
     mode "0644"
     variables(
-      :parameters => node[:components][:chef][:webui]
+      :webui => node[:components][:chef][:webui]
     )
     notifies :restart, resources(:service => "chef-server-webui")
   end

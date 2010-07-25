@@ -6,15 +6,15 @@
     ['LOGFILE', :logfile], 
     ['INTERVAL', :interval],
     ['SPLAY', :splay]].each do |k| %>
-<%   if @parameters[k[1]] %>
-<%=     "#{k[0]}=#{@parameters[k[1]]}" %>
+<%   if @client[k[1]] %>
+<%=     "#{k[0]}=#{@client[k[1]]}" %>
 
 <%   end %>
 <% end %>
 
 <% options = "" %>
-<% if @parameters[:node] %>
-<%    options << "-N #{@parameters[:node]}" %>
+<% if @client[:node] %>
+<%    options << "-N #{@client[:node]}" %>
 <% end %>
 <% if ! options.empty? %>
 <%  "OPTIONS=#{options}" %>

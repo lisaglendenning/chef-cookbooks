@@ -16,7 +16,7 @@ if node[:components][:chef][:client][:enabled]
     group "root"
     mode "0644"
     variables(
-      :parameters => node[:components][:chef][:client]
+      :client => node[:components][:chef][:client]
     )
   end
   
@@ -33,7 +33,7 @@ if node[:components][:chef][:client][:enabled]
     group "root"
     mode "0644"
     variables(
-      :parameters => node[:components][:chef][:client]
+      :client => node[:components][:chef][:client]
     )
   end
   
