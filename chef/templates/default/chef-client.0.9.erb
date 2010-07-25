@@ -14,7 +14,7 @@
 
 <% options = "" %>
 <% if @parameters.key?(:node) %>
-<%    options << "-N #{@client[:node]}" %>
+<%    options << "-N #{@parameters[:node]}" %>
 <% end %>
 <% if ! options.empty? %>
 <%  "OPTIONS=#{options}" %>
