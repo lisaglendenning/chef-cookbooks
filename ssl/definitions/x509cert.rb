@@ -3,6 +3,7 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
   certdir = node[:components][:ssl][:pkidir] + '/certs'
   filename = "#{certdir}/#{params[:certname]}.crt"
   if params[:action] == :enable
+    node.set[:components][:ssl][:certregistry][params[:certname]][:path] = filename
     ruby_block "x509cert-#{params[:certname]}-enable" do
       block do
         hash = `openssl x509 -noout -hash -in #{filename}`
@@ -10,10 +11,6 @@ define :x509cert, :action => :enable, :certname => nil, :cert => nil do
         hashlink = "#{certdir}/#{hash}.0"
         if not File.exist?(hashlink)
           File.symlink(filename, hashlink)
-        end
-        if ! node[:components][:ssl][:certregistry][params[:certname]][:path] ||
-          node[:components][:ssl][:certregistry][params[:certname]][:path] != filename:
-            node[:components][:ssl][:certregistry][params[:certname]][:path] = filename
         end
       end
       action :nothing
