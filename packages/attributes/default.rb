@@ -75,8 +75,8 @@ when 'redhat', 'centos', 'fedora'
       node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:baseurl] = "http://mirror.centos.org/centos/$releasever/#{r[2]}/$basearch/"
       node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:gpgcheck] = "1"
       node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:gpgkey] = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}"
-      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:enabled] = (r[0] == 'contrib' || r[0] == 'centosplus') ? "0" : "1"
-      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:priority] = (r[0] == 'contrib' || r[0] == 'centosplus') ? "2" : "1"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:enabled] = (r[0] == :contrib || r[0] == :centosplus) ? "0" : "1"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:priority] = (r[0] == :contrib || r[0] == :centosplus) ? "2" : "1"
     }
   
     node.default[:components][:packages][:repos]['CentOS-Media'][:official] = true
