@@ -55,6 +55,58 @@ when 'redhat', 'centos', 'fedora'
       set[:components][:packages][:repos]['CentOS-Media'] = media_repo
     end
   end
+  
+  # parse existing repo files for default values
+  repofiles = []
+  repodir = node[:components][:packages][:repodir]
+  Dir.entries(repodir).each { |f|
+    if f[-5..-1] == '.repo'
+      repofiles << f
+    end
+  }
+  repofiles.each { |fname|
+    reponame = fname[0..-6]
+    node.default[:components][:packages][:repos][reponame][:official] = false
+    node.default[:components][:packages][:repos][reponame][:exclude] = []
+    node.default[:components][:packages][:repos][reponame][:sections] = Mash.new
+    f = File.new("#{repodir}/#{fname}", "r")
+    section = nil  
+    k = nil
+    v = nil
+    f.each_line do |line|
+      tokens = [line.strip, nil]
+      content = 0
+      if ! tokens[content].index('#').nil?
+        tokens = tokens[content].split(/\s*#\s*/, 2)
+      end
+      if ! tokens[content].empty?
+        if tokens[content] =~ /^\[(.+)\]/
+          if section
+            node.default[:components][:packages][:repos][reponame][:sections][section][:priority] = 5
+          end
+          section = $1.strip
+        elsif tokens[content] =~ /^(.+?)\s*=\s*(.+)/
+          if k && v
+            # store the previous value
+            node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
+          end
+          k = $1.strip
+          v = $2.strip
+        else # must be a value continuation
+          v << line
+        end
+      end
+    end
+    if section
+      node.default[:components][:packages][:repos][reponame][:sections][section][:priority] = 5
+    end
+    if k && v
+      # store the last value
+      node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
+    end
+    f.close
+  }
+
 else
   set[:components][:packages][:repodir] = '/etc/apt'
   
