@@ -5,7 +5,7 @@
 
 packages = case node[:platform]
   when 'redhat', 'centos', 'fedora'
-    ['nss-ldap'] # FIXME: EPEL
+    ['nss-ldap'] # FIXME: requires EPEL
   else
     ['auth-client-config', 'libnss-ldap', 'libpam-ldap', 
      'ldap-auth-config', 'ldapscripts', 'autodir']
@@ -36,9 +36,13 @@ template "nss-pam-ldap-conf" do
   mode 0644
   owner "root"
   group "root"
+  variables(
+    :client => node[:components][:ldap][:client],
+    :accounts => node[:components][:accounts][:ldap]
+  )
 end
 
-# Packages needed for the ldap password user script
+# Packages needed for ldap-password
 packages = case node[:platform]
 when 'redhat', 'centos', 'fedora'
   ['apg', 'python-ldap', 'cracklib', 'cracklib-dicts']
@@ -50,7 +54,11 @@ packages.each { |p|
     action :upgrade
   end  
 }
-  
+
+#
+# Front-end user script for changing LDAP password
+#
+
 template "ldap-password" do
   path '/usr/bin/password'
   source "ldap.password.py.erb"
@@ -58,9 +66,15 @@ template "ldap-password" do
   owner "root"
   group "root"
   variables(
-    :ldapuri => node[:components][:accounts][:ldap][:uri]
+    :protocol => node[:components][:accounts][:ldap][:protocol] ? node[:components][:accounts][:ldap][:protocol] : node[:components][:ldap][:client][:protocol],
+    :domain => node[:components][:accounts][:ldap][:protocol] ? node[:components][:accounts][:ldap][:domain] : node[:components][:ldap][:client][:domain],
+    :basedn => node[:components][:accounts][:ldap][:basedn]
   )
 end
+
+#
+# modify  system files to allow LDAP authentication
+#
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
@@ -86,7 +100,7 @@ else
     user "root"
     action :nothing
     subscribes :run, resources(:execute => 'auth-client')
-    if node.components.attribute?(:sshd)
+    if node.components.attribute?(:ssh)
       notifies :restart, resources(:service => 'sshd'), :delayed
     end
   end

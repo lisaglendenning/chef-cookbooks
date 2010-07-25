@@ -5,13 +5,13 @@
 # See ldap.conf(5) for details
 # This file should be world readable but not world writable.
 
-URI             <%= @properties[:protocol] + @properties[:domain] %>
-<% if @properties[:basedn] %>
-BASE            <%= @properties[:basedn] %>
+URI             <%= "#{@client[:protocol]}#{@client[:domain]}" %>
+<% if @client[:basedn] %>
+BASE            <%= @client[:basedn] %>
 <% end %>
-TLS_REQCERT	    <%= @properties[:reqcert] %>
-<% if @properties[:certfile] %> 
-TLS_CACERT      <%= @properties[:certfile] %>
-<% elsif @properties[:certdir] %>
-TLS_CACERTDIR   <%= @properties[:certdir] %>
+TLS_REQCERT	    <%= @client[:reqcert] %>
+<% if @client[:certfile] %> 
+TLS_CACERT      <%= @client[:certfile] %>
+<% elsif @client[:certdir] %>
+TLS_CACERTDIR   <%= @client[:certdir] %>
 <% end %>

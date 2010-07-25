@@ -57,12 +57,15 @@ group 'admin' do
   append true
 end
 
-# get ssh public key info from databag
+#
+# Populate SSH authorized keys
+#
+
 if node.components.attribute?(:ssh)
   AUTHFILE = 'authorized_keys'
   users.each { |name, props|
     user_info = `getent passwd #{name}`
-    if ! user_info.empty?
+    if ! user_info.empty? && props.key?('pki') && props['pki'].key?('authorized')
       authkeys = props['pki']['authorized']
       user_info = user_info.split(':')
       dotssh = "#{user_info[5]}/.ssh"

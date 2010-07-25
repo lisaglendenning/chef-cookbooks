@@ -7,16 +7,18 @@
 # http://www.padl.com
 #
 
-uri             <%= node[:components][:accounts][:ldap][:uri] %>
-<% if node[:components][:accounts][:ldap][:basedn] %>
-base            <%= node[:components][:accounts][:ldap][:basedn] %>
+uri             <%= @accounts[:protocol] ? @accounts[:protocol] : @client[:protocol] %><%= @accounts[:domain] ? @accounts[:domain] : @client[:domain] %>
+<% if @accounts[:basedn] %>
+base            <%= @accounts[:basedn] ? @accounts[:basedn] : @client[:basedn] %>
 <% end %>
-ssl             <%= node[:components][:accounts][:ldap][:ssl] %>
-<% if node[:components][:ldap_client][:certfile] %> 
-tls_cacert      <%= node[:components][:ldap_client][:certfile] %>
-<% elsif node[:components][:ldap_client][:certdir] %>
-tls_cacertdir   <%= node[:components][:ldap_client][:certdir] %>
+<% if @accounts[:ssl] %>
+ssl             <%= @accounts[:ssl] %>
 <% end %>
-<% if node[:components][:accounts][:ldap][:passwd] %>
-<%= node[:components][:accounts][:ldap][:passwd] %>
+<% if @client[:certfile] %> 
+tls_cacert      <%= @client[:certfile] %>
+<% elsif @client[:certdir] %>
+tls_cacertdir   <%= @client[:certdir] %>
+<% end %>
+<% if @accounts[:passwd] %>
+<%= @accounts[:passwd] %>
 <% end %>

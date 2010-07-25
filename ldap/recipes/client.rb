@@ -1,9 +1,6 @@
 
 include_recipe "ldap"
 
-#
-# Resources
-#
 
 packages = case node[:platform]
   when 'redhat', 'centos', 'fedora'
@@ -56,11 +53,12 @@ CONFDIR = case node[:platform]
   end
 CONFFILE = CONFDIR + "/ldap.conf"
 
+# If a certfile is specified, it will be used instead of the certdir
 template "ldap-client-conf" do
   path CONFFILE
   source "ldap.conf.erb"
   mode 0644
   owner "root"
   group "root"
-  variables(:properties => node[:components][:ldap][:client])
+  variables(:client => node[:components][:ldap][:client])
 end

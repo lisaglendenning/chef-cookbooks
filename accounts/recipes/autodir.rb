@@ -1,6 +1,5 @@
 
 packages = ['autodir']
-
 packages.each { |p|
   package p do
     action :upgrade
