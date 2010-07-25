@@ -25,7 +25,7 @@ if node.components.ldap.client.attribute?(:cert)
     block do
       File.open(fname, "r") { |f|
         content = f.readlines().join
-        node.default[:components][:ssl][:certregistry][certname][:content] = content
+        node.set[:components][:ssl][:certregistry][certname][:content] = content
       }
     end
     only_if "[ -f #{fname} ]"
