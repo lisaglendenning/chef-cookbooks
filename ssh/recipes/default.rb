@@ -30,7 +30,7 @@ template 'sshd-config' do
   owner "root"
   group "root"
   notifies :restart, resources(:service => 'sshd')
-  parameters(
+  variables(
     :server => node[:components][:ssh][:server],
     :platform => node[:platform]
     )
