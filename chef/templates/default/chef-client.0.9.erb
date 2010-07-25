@@ -11,11 +11,10 @@
 
 <%   end %>
 <% end %>
-
 <% options = "" %>
 <% if @client[:node] %>
 <%    options << "-N #{@client[:node]}" %>
 <% end %>
 <% if ! options.empty? %>
-<%=   "OPTIONS=#{options}" %>
+"<%=   "OPTIONS=#{options}" %>"
 <% end %>
