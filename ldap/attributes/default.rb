@@ -5,26 +5,16 @@
 
 include_attribute "ssl"
 
-default[:components][:ldap_client][:packages] = case node[:platform]
-  when 'redhat', 'centos', 'fedora'
-    ['openldap', 'openldap-clients']
-  else
-    ['ldap-utils']
-  end
-
-
-if domain.empty?
-  default[:components][:ldap_client][:domain] = ""
-  default[:components][:ldap_client][:basedn] = "127.0.0.1"
+if node[:domain].empty?
+  node.default[:components][:ldap][:client][:domain] = "localhost"
+  node.default[:components][:ldap][:client][:basedn] = ""
 else
-  default[:components][:ldap_client][:domain] = "ldap.#{domain}"
-  default[:components][:ldap_client][:basedn] = "dc=#{domain.split('.').join(",dc=")}"
+  node.default[:components][:ldap][:client][:domain] = "ldap.#{node[:domain]}"
+  node.default[:components][:ldap][:client][:basedn] = "dc=#{node[:domain].split('.').join(",dc=")}"
 end
 
-default[:components][:ldap_client][:protocol] = "ldap://"
-default[:components][:ldap_client][:reqcert] = 'allow'
+node.default[:components][:ldap][:client][:protocol] = "ldap://"
+node.default[:components][:ldap][:client][:reqcert] = 'allow'
 
 # Use SSL certificates by default
-if components.key?(:ssl) && components[:ssl].key?(:pkidir)
-  default[:components][:ldap_client][:certdir] = components[:ssl][:pkidir] + '/certs'
-end
+node.default[:components][:ldap][:client][:certdir] = node[:components][:ssl][:pkidir] + '/certs'

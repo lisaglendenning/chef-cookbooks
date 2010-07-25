@@ -1,2 +1,0 @@
-
-default[:components] = Mash.new

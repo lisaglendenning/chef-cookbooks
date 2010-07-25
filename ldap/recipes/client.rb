@@ -1,3 +1,60 @@
 
 include_recipe "ldap"
-include_recipe "ldap::client_enable"
+
+#
+# Resources
+#
+
+packages = case node[:platform]
+  when 'redhat', 'centos', 'fedora'
+    ['openldap', 'openldap-clients']
+  else
+    ['ldap-utils']
+  end
+  
+packages.each do |p|
+  package p do
+    action :upgrade
+  end
+end
+
+if node[:components][:ldap][:client][:cert]
+  certname = node[:components][:ldap][:client][:cert][:key]
+  ruby_block "install-ssl-#{certname}" do
+    block do
+      File.open("/tmp/#{certname}", "r") { |f|
+        content = f.readlines().join
+      }
+      node.default[:components][:ssl][:certregistry][certname][:content] = content
+    end
+    action :nothing
+  end
+  remote_file "/tmp/#{certname}" do
+    source node[:components][:ldap][:client][:cert][:source]
+    mode "0644"
+    owner "root"
+    group "root"
+    checksum node[:components][:ldap][:client][:cert][:checksum]
+    action :create
+    notifies :create, resources(:ruby_block => "install-ssl-#{certname}")
+  end
+  
+  node.default[:components][:ldap][:client][:certfile] = node[:components][:ssl][:certregistry][certname][:path] 
+end
+
+CONFDIR = case node[:platform]
+  when 'redhat', 'centos', 'fedora'
+    "/etc/openldap"
+  else
+    "/etc/ldap"
+  end
+CONFFILE = CONFDIR + "/ldap.conf"
+
+template "ldap-client-conf" do
+  path CONFFILE
+  source "ldap.conf.erb"
+  mode 0644
+  owner "root"
+  group "root"
+  variables(:properties => node[:components][:ldap][:client])
+end
