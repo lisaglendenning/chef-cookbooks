@@ -11,7 +11,8 @@
 
 node[:components][:packages][:packages].each { |p|
   if p =~ /^http:\/\//
-    rpm_package p do
+    package p do
+      provider Chef::Provider::Package::Rpm
       action :upgrade
     end  
   else
