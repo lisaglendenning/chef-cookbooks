@@ -7,7 +7,7 @@
     ['INTERVAL', :interval],
     ['SPLAY', :splay]].each do |k| %>
 <%   if @parameters.key?(k[1]) %>
-<%=     "#{k[0]}=#{@client[:config][k[1]]}" %>
+<%=     "#{k[0]}=#{@parameters[:config][k[1]]}" %>
 
 <%   end %>
 <% end %>

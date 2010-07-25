@@ -29,7 +29,6 @@ template "chef-client-config-service" do
   variables(
     :parameters => node[:components][:chef][:client]
   )
-  notifies :restart, resources(:service => "chef-client")
 end
 
 # remove the validation key once we have a client key
