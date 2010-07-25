@@ -21,6 +21,7 @@ end
 if node.components.ldap.client.attribute?(:cert)
   certname = node[:components][:ldap][:client][:cert][:key]
   fname = "/tmp/#{certname}.pem"
+  registered = (node.components.ssl.attribute?(:certregistry) && node.components.ssl.certregistry.attribute?(certname))
   ruby_block "install-ssl-#{certname}" do
     block do
       File.open(fname, "r") { |f|
@@ -29,7 +30,7 @@ if node.components.ldap.client.attribute?(:cert)
       }
     end
     only_if "[ -f #{fname} ]"
-    action (node.components.ssl.attribute?(:certregistry) && node.components.ssl.certregistry.attribute?(certname)) ? :nothing : :create
+    action registered ? :nothing : :create
   end
   remote_file fname do
     path fname
@@ -42,7 +43,9 @@ if node.components.ldap.client.attribute?(:cert)
     notifies :create, resources(:ruby_block => "install-ssl-#{certname}")
   end
   
-  node.set[:components][:ldap][:client][:certfile] = node[:components][:ssl][:certregistry][certname][:path] 
+  if registered
+    node.set[:components][:ldap][:client][:certfile] = node[:components][:ssl][:certregistry][certname][:path]
+  end
 end
 
 CONFDIR = case node[:platform]
