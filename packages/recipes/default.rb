@@ -10,15 +10,8 @@
 }
 
 node[:components][:packages][:packages].each { |p|
-  if p =~ /^http:\/\//
-    package p do
-      provider Chef::Provider::Package::Rpm
-      action :upgrade
-    end  
-  else
-    package p do
-      action :upgrade
-    end
+  package p do
+    action :upgrade
   end
 }
 
