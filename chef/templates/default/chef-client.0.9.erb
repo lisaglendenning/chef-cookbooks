@@ -6,14 +6,14 @@
     ['LOGFILE', :logfile], 
     ['INTERVAL', :interval],
     ['SPLAY', :splay]].each do |k| %>
-<%   if @parameters.key?(k[1]) %>
+<%   if @parameters[k[1]] %>
 <%=     "#{k[0]}=#{@parameters[k[1]]}" %>
 
 <%   end %>
 <% end %>
 
 <% options = "" %>
-<% if @parameters.key?(:node) %>
+<% if @parameters[:node] %>
 <%    options << "-N #{@parameters[:node]}" %>
 <% end %>
 <% if ! options.empty? %>
