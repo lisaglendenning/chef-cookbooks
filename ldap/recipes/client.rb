@@ -18,18 +18,21 @@ packages.each do |p|
   end
 end
 
-if node[:components][:ldap][:client][:cert]
+if node.components.ldap.client.attribute?(:cert)
   certname = node[:components][:ldap][:client][:cert][:key]
+  fname = "/tmp/#{certname}.pem"
   ruby_block "install-ssl-#{certname}" do
     block do
-      File.open("/tmp/#{certname}", "r") { |f|
+      File.open(fname, "r") { |f|
         content = f.readlines().join
       }
       node.default[:components][:ssl][:certregistry][certname][:content] = content
     end
+    only_if "[ -f #{fname} ]"
     action node.default[:components][:ssl][:certregistry][certname][:content] ? :nothing : :create
   end
-  remote_file "/tmp/#{certname}" do
+  remote_file fname do
+    path fname
     source node[:components][:ldap][:client][:cert][:source]
     mode "0644"
     owner "root"
