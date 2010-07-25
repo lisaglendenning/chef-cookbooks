@@ -1,7 +1,31 @@
 
 #
-# Configuration
+# Packages
 #
+
+packages = case node[:platform]
+  when 'redhat', 'centos', 'fedora'
+    ['nss-ldap'] # FIXME: EPEL
+  else
+    ['auth-client-config', 'libnss-ldap', 'libpam-ldap', 
+     'ldap-auth-config', 'ldapscripts', 'autodir']
+  end
+packages << 'nscd'
+
+packages.each { |p|
+  package p do
+    action :upgrade
+  end
+}
+
+#
+# name service caching
+#
+
+service "nscd" do
+  supports :restart => true, :status => true
+  action [:enable, :start]
+end
 
 LDAP_CONFDIR = "/etc"
 LDAP_CONFFILE = LDAP_CONFDIR + "/ldap.conf"
@@ -62,6 +86,8 @@ else
     user "root"
     action :nothing
     subscribes :run, resources(:execute => 'auth-client')
-    notifies :restart, resources(:service => 'ssh'), :delayed
+    if node.components.attribute?(:sshd)
+      notifies :restart, resources(:service => 'sshd'), :delayed
+    end
   end
 end
