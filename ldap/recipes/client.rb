@@ -29,7 +29,7 @@ if node.components.ldap.client.attribute?(:cert)
       }
     end
     only_if "[ -f #{fname} ]"
-    action (node.components.ssl.attribute?(certregistry) && node.components.ssl.certregistry.attribute?(certname)) ? :nothing : :create
+    action (node.components.ssl.attribute?(:certregistry) && node.components.ssl.certregistry.attribute?(certname)) ? :nothing : :create
   end
   remote_file fname do
     path fname
