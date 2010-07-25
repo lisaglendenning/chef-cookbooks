@@ -1,0 +1,21 @@
+# Configuration file for the chef-client service
+
+<% [['CONFIG', :config], 
+    ['PIDFILE', :pidfile], 
+    ['LOCKFILE', :lockfile], 
+    ['LOGFILE', :logfile], 
+    ['INTERVAL', :interval],
+    ['SPLAY', :splay]].each do |k| %>
+<%   if @parameters.key?(k[1]) %>
+<%=     "#{k[0]}=#{@client[:config][k[1]]}" %>
+
+<%   end %>
+<% end %>
+
+<% options = "" %>
+<% if @parameters.key?(:node) %>
+<%    options << "-N #{@client[:node]}" %>
+<% end %>
+<% if ! options.empty? %>
+<%  "OPTIONS=#{options}" %>
+<% end %>
