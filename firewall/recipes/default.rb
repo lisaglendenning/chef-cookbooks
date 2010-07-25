@@ -49,11 +49,6 @@ end
 BINDIR = '/usr/sbin'
 BINFILE = BINDIR + '/iptables.sh'
 
-execute "rebuild-iptables" do
-  command BINFILE
-  action :nothing
-end
-
 template 'iptables.sh' do
   path BINFILE
   source "iptables.sh.erb"
@@ -64,7 +59,12 @@ template 'iptables.sh' do
     :defaults => node[:components][:firewall][:defaults],
     :services => services
   )
-  notifies :run, resources(:execute => 'rebuild-iptables')
+end
+
+execute "rebuild-iptables" do
+  command BINFILE
+  action :nothing
+  subscribes :run, resources(:template => 'iptables.sh')
 end
 
 case node[:platform]

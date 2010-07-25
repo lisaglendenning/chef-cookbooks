@@ -8,7 +8,7 @@ if node[:components][:chef][:server][:enabled]
   node.default[:components][:chef][:server][:validator_key] = '/etc/chef/certificates/validation.pem'
   node.default[:components][:chef][:server][:fqdn] = node[:components][:fqdn] ? node[:components][:fqdn] : node.name 
   node.default[:components][:chef][:server][:port] = 4000
-  node.default[:components][:chef][:server][:log_level] = :warn
+  node.default[:components][:chef][:server][:log_level] = :info
 end
 
 if node[:components][:chef][:webui][:enabled]
