@@ -16,5 +16,5 @@
 <%    options << "-N #{@client[:node]}" %>
 <% end %>
 <% if ! options.empty? %>
-"<%=   "OPTIONS=#{options}" %>"
+<%=   "OPTIONS=\"#{options}\"" %>
 <% end %>
