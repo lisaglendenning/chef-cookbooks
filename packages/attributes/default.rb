@@ -6,7 +6,7 @@ when 'redhat', 'centos', 'fedora'
   node.set[:components][:packages][:repodir] = '/etc/yum.repos.d'
   
   node.default[:components][:packages][:plugins][:priorities][:package] = 'yum-priorities'
-  node.default[:components][:packages][:plugins][:priorities][:action] = :enable
+  node.default[:components][:packages][:plugins][:priorities][:enabled] = true
       
   # parse existing repo files for default values
   repofiles = []
@@ -58,6 +58,7 @@ when 'redhat', 'centos', 'fedora'
     f.close
   }
 
+  # this section overrides the previous section
   if node[:platform] == 'centos'
   
     release = "CentOS-#{node[:platform_version][0,1]}"

@@ -28,8 +28,8 @@ when 'redhat', 'centos', 'fedora'
   
   node[:components][:packages][:plugins].each { |k,v|
     yum_plugin k do
-      plugin v[:plugin]
-      action v[:action]
+      plugin k
+      action v[:enabled] ? :enable : :disable
     end
   }
 
