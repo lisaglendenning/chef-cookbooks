@@ -10,7 +10,7 @@ if node[:components][:chef][:client][:enabled]
   node.default[:components][:chef][:client][:fqdn] = "localhost"
   node.default[:components][:chef][:client][:port] = 4000
   node.default[:components][:chef][:client][:log_level] = :info
-  node.default[:components][:chef][:client][:node] = node[:components][:fqdn]
+  node.default[:components][:chef][:client][:node] = node.name
   node.default[:components][:chef][:client][:splay] = 20 # seconds
   node.default[:components][:chef][:client][:interval] = 1800 # seconds
 end
