@@ -8,38 +8,6 @@ when 'redhat', 'centos', 'fedora'
   node.default[:components][:packages][:plugins][:priorities][:package] = 'yum-priorities'
   node.default[:components][:packages][:plugins][:priorities][:action] = :enable
       
-  if node[:platform] == 'centos'
-
-    release = "CentOS-#{node[:platform_version][0,1]}"
-
-    node.default[:components][:packages][:repos]['CentOS-Base'][:official] = true
-    node.default[:components][:packages][:repos]['CentOS-Base'][:exclude] = ['baseurl']
-    [[:base, 'Base', 'os'], 
-     [:updates, 'Updates', 'updates'],
-     [:addons, 'Addons', 'addons'],
-     [:extras, 'Extras', 'extras'],
-     [:centosplus, 'Plus', 'centosplus'],
-     [:contrib, 'Contrib', 'contrib']].each { |r|
-      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:name] = "CentOS-$releasever - #{r[1]}"
-      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:mirrorlist] = "http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=#{r[2]}"
-      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:baseurl] = "http://mirror.centos.org/centos/$releasever/#{r[2]}/$basearch/"
-      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:gpgcheck] = "1"
-      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:gpgkey] = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}"
-      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:enabled] = (r[0] == 'contrib' || r[0] == 'centosplus') ? "0" : "1"
-      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:priority] = (r[0] == 'contrib' || r[0] == 'centosplus') ? "2" : "1"
-    }
-
-    node.default[:components][:packages][:repos]['CentOS-Media'][:official] = true
-    node.default[:components][:packages][:repos]['CentOS-Media'][:exclude] = []
-    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:name] = "CentOS-$releasever - Media"
-    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:baseurl] = "file:///media/CentOS/\nfile:///media/cdrom/\nfile:///media/cdrecorder/"
-    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:gpgcheck] = "1"
-    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:gpgkey] = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}"
-    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:enabled] = "0"
-    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:priority] = "2"
-  
-  end
-
   # parse existing repo files for default values
   repofiles = []
   repodir = node[:components][:packages][:repodir]
@@ -89,6 +57,38 @@ when 'redhat', 'centos', 'fedora'
     end
     f.close
   }
+
+  if node[:platform] == 'centos'
+  
+    release = "CentOS-#{node[:platform_version][0,1]}"
+  
+    node.default[:components][:packages][:repos]['CentOS-Base'][:official] = true
+    node.default[:components][:packages][:repos]['CentOS-Base'][:exclude] = ['baseurl']
+    [[:base, 'Base', 'os'], 
+     [:updates, 'Updates', 'updates'],
+     [:addons, 'Addons', 'addons'],
+     [:extras, 'Extras', 'extras'],
+     [:centosplus, 'Plus', 'centosplus'],
+     [:contrib, 'Contrib', 'contrib']].each { |r|
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:name] = "CentOS-$releasever - #{r[1]}"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:mirrorlist] = "http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=#{r[2]}"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:baseurl] = "http://mirror.centos.org/centos/$releasever/#{r[2]}/$basearch/"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:gpgcheck] = "1"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:gpgkey] = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:enabled] = (r[0] == 'contrib' || r[0] == 'centosplus') ? "0" : "1"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:priority] = (r[0] == 'contrib' || r[0] == 'centosplus') ? "2" : "1"
+    }
+  
+    node.default[:components][:packages][:repos]['CentOS-Media'][:official] = true
+    node.default[:components][:packages][:repos]['CentOS-Media'][:exclude] = []
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections]['c5-media'][:name] = "CentOS-$releasever - Media"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections]['c5-media'][:baseurl] = "file:///media/CentOS/\nfile:///media/cdrom/\nfile:///media/cdrecorder/"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections]['c5-media'][:gpgcheck] = "1"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections]['c5-media'][:gpgkey] = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections]['c5-media'][:enabled] = "0"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections]['c5-media'][:priority] = "2"
+  
+  end
 
 else
   node.set[:components][:packages][:repodir] = '/etc/apt'
