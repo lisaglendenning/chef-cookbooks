@@ -5,11 +5,9 @@
 
 # What ports, IPs and protocols we listen for
 #Port 22
-<% node[:components][:ssh][:server][:transports].each { |tp| %>
-<%   if tp[:port] != 22 %>
-Port <%= tp[:port] %>
-<%   end %>
-<% } %>
+<% if @server[:port] != 22 %>
+Port <%= @server[:port] %>
+<% end %>
 #Protocol 2,1
 Protocol 2
 #AddressFamily any
@@ -28,7 +26,7 @@ Protocol 2
 #ServerKeyBits 768
 
 # Logging
-<% case node[:platform] %>
+<% case @platform %>
 <% when "redhat", "centos", "fedora" %>
 #SyslogFacility AUTH
 SyslogFacility AUTHPRIV
@@ -40,13 +38,13 @@ SyslogFacility AUTH
 # Authentication:
 #LoginGraceTime 2m
 #PermitRootLogin yes
-PermitRootLogin <%= node[:components][:ssh][:root] ? 'yes' : 'no' %>
+PermitRootLogin <%= @server[:root] ? 'yes' : 'no' %>
 #StrictModes yes
 #MaxAuthTries 6
 
 #RSAAuthentication yes
 #PubkeyAuthentication yes
-PubkeyAuthentication <%= node[:components][:ssh][:auth].include?('publickey') ? 'yes' : 'no' %>
+PubkeyAuthentication <%= @server[:auth].include?('publickey') ? 'yes' : 'no' %>
 #AuthorizedKeysFile .ssh/authorized_keys
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
@@ -61,7 +59,7 @@ PubkeyAuthentication <%= node[:components][:ssh][:auth].include?('publickey') ? 
 
 # To disable tunneled clear text passwords, change to no here!
 #PasswordAuthentication yes
-PasswordAuthentication <%= node[:components][:ssh][:auth].include?('password') ? 'yes' : 'no' %>
+PasswordAuthentication <%= @server[:auth].include?('password') ? 'yes' : 'no' %>
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
@@ -119,7 +117,7 @@ PrintMotd no
 AcceptEnv LANG LC_*
 
 # override default of no subsystems
-<% case node[:platform] %>
+<% case @platform %>
 <% when "redhat", "centos", "fedora" %>
 Subsystem   sftp    /usr/libexec/openssh/sftp-server
 <% else %>
