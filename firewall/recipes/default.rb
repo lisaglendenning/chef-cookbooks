@@ -65,6 +65,7 @@ execute "rebuild-iptables" do
   command BINFILE
   action :nothing
   subscribes :run, resources(:template => 'iptables.sh')
+  only_if '[ -x #{BINFILE} ]'
 end
 
 case node[:platform]

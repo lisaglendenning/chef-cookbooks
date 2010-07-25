@@ -42,7 +42,7 @@ if node[:components][:chef][:client][:enabled]
   clikey = node[:components][:chef][:client][:client_key]
   execute "remove-validation" do
     command "if [ -f #{valkey} ]; then rm -f #{valkey}; fi"
-    only_if "[ -f #{clikey} ]"
+    only_if "[ (-f #{clikey}) -a (-f #{valkey}) ]"
     action :run
   end
 end
