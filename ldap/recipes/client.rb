@@ -27,7 +27,7 @@ if node[:components][:ldap][:client][:cert]
       }
       node.default[:components][:ssl][:certregistry][certname][:content] = content
     end
-    action :nothing
+    action node.default[:components][:ssl][:certregistry][certname][:content] ? :nothing : :create
   end
   remote_file "/tmp/#{certname}" do
     source node[:components][:ldap][:client][:cert][:source]
