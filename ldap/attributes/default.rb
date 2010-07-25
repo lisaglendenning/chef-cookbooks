@@ -5,7 +5,7 @@
 
 include_attribute "ssl"
 
-if node[:domain].empty?
+if !node[:domain] || node[:domain].empty?
   node.default[:components][:ldap][:client][:domain] = "localhost"
   node.default[:components][:ldap][:client][:basedn] = ""
 else
