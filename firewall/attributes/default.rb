@@ -1,5 +1,5 @@
 
-default[:components][:firewall][:defaults] = <<HERE
+node.default[:components][:firewall][:defaults] = <<HERE
 #
 # Default policies
 #
@@ -27,5 +27,3 @@ default[:components][:firewall][:defaults] = <<HERE
 #
  iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
 HERE
-
-default[:components][:firewall][:registry] = Mash.new
