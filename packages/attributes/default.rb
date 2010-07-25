@@ -1,61 +1,45 @@
 
-default[:components][:packages][:repos] = Mash.new
-default[:components][:packages][:packages] = []
+node.default[:components][:packages][:packages] = []
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
-  set[:components][:packages][:repodir] = '/etc/yum.repos.d'
+  node.set[:components][:packages][:repodir] = '/etc/yum.repos.d'
   
-  priority_plugin = Mash.new(:plugin => 'priorities', :package => 'yum-priorities', :action => :enable)
-  default[:components][:packages][:plugins][:priorities] = priority_plugin
+  node.default[:components][:packages][:plugins][:priorities][:package] = 'yum-priorities'
+  node.default[:components][:packages][:plugins][:priorities][:action] = :enable
       
   if node[:platform] == 'centos'
 
     release = "CentOS-#{node[:platform_version][0,1]}"
-    
-    if ! components[:packages][:repos].key?('CentOS-Base')
-      base_sections = Mash.new
-      [['base', 'Base', 'os'], 
-       ['updates', 'Updates', 'updates'],
-       ['addons', 'Addons', 'addons'],
-       ['extras', 'Extras', 'extras'],
-       ['centosplus', 'Plus', 'centosplus'],
-       ['contrib', 'Contrib', 'contrib']].each { |r|
-        base_sections[r[0]] = Mash.new( 
-          :name => "CentOS-$releasever - #{r[1]}",
-          :mirrorlist => "http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=#{r[2]}",
-          :baseurl => "http://mirror.centos.org/centos/$releasever/#{r[2]}/$basearch/",
-          :gpgcheck => "1",
-          :gpgkey => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}",
-          :enabled => (r[0] == 'contrib' || r[0] == 'centosplus') ? "0" : "1",
-          :priority => (r[0] == 'contrib' || r[0] == 'centosplus') ? "2" : "1"
-        )
-      }
-      base_repo = Mash.new
-      base_repo[:official] = true
-      base_repo[:exclude] = ['baseurl']
-      base_repo[:sections] = base_sections
-      set[:components][:packages][:repos]['CentOS-Base'] = base_repo
-    end
 
-    if ! components[:packages][:repos].key?('CentOS-Media')
-      media_sections = Mash.new
-      media_sections['c5-media'] = Mash.new(
-        :name => "CentOS-$releasever - Media",
-        :baseurl => "file:///media/CentOS/\nfile:///media/cdrom/\nfile:///media/cdrecorder/",
-        :gpgcheck => "1",
-        :gpgkey => "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}",
-        :enabled => "0",
-        :priority => "2"
-      ) 
-      media_repo = Mash.new
-      media_repo[:official] = true
-      media_repo[:exclude] = []
-      media_repo[:sections] = media_sections
-      set[:components][:packages][:repos]['CentOS-Media'] = media_repo
-    end
-  end
+    node.default[:components][:packages][:repos]['CentOS-Base'][:official] = true
+    node.default[:components][:packages][:repos]['CentOS-Base'][:exclude] = ['baseurl']
+    [[:base, 'Base', 'os'], 
+     [:updates, 'Updates', 'updates'],
+     [:addons, 'Addons', 'addons'],
+     [:extras, 'Extras', 'extras'],
+     [:centosplus, 'Plus', 'centosplus'],
+     [:contrib, 'Contrib', 'contrib']].each { |r|
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:name] = "CentOS-$releasever - #{r[1]}"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:mirrorlist] = "http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=#{r[2]}"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:baseurl] = "http://mirror.centos.org/centos/$releasever/#{r[2]}/$basearch/"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:gpgcheck] = "1"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:gpgkey] = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:enabled] = (r[0] == 'contrib' || r[0] == 'centosplus') ? "0" : "1"
+      node.default[:components][:packages][:repos]['CentOS-Base'][:sections][r[0]][:priority] = (r[0] == 'contrib' || r[0] == 'centosplus') ? "2" : "1"
+    }
+
+    node.default[:components][:packages][:repos]['CentOS-Media'][:official] = true
+    node.default[:components][:packages][:repos]['CentOS-Media'][:exclude] = []
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:name] = "CentOS-$releasever - Media"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:baseurl] = "file:///media/CentOS/\nfile:///media/cdrom/\nfile:///media/cdrecorder/"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:gpgcheck] = "1"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:gpgkey] = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:enabled] = "0"
+    node.default[:components][:packages][:repos]['CentOS-Media'][:sections][:priority] = "2"
   
+  end
+
   # parse existing repo files for default values
   repofiles = []
   repodir = node[:components][:packages][:repodir]
@@ -68,7 +52,6 @@ when 'redhat', 'centos', 'fedora'
     reponame = fname[0..-6]
     node.default[:components][:packages][:repos][reponame][:official] = false
     node.default[:components][:packages][:repos][reponame][:exclude] = []
-    node.default[:components][:packages][:repos][reponame][:sections] = Mash.new
     f = File.new("#{repodir}/#{fname}", "r")
     section = nil  
     k = nil
@@ -108,7 +91,7 @@ when 'redhat', 'centos', 'fedora'
   }
 
 else
-  set[:components][:packages][:repodir] = '/etc/apt'
+  node.set[:components][:packages][:repodir] = '/etc/apt'
   
   if node[:platform] == 'debian'
     dist = "lenny"
@@ -124,6 +107,6 @@ else
           :components => "main")
       }
     }
-    default[:components][:packages][:repos][:debian] = default_repos
+    node.default[:components][:packages][:repos][:debian] = default_repos
   end
 end

@@ -1,7 +1,7 @@
 
 include_attribute "chef"
 
-if node[:components][:chef][:server][:enabled]  
+if components.chef.server.enabled
   default[:components][:chef][:server][:config] = '/etc/chef/server.rb'
   default[:components][:chef][:server][:service_config] = '/etc/sysconfig/chef-server'
   default[:components][:chef][:server][:validator] = 'chef-validator'
@@ -11,7 +11,7 @@ if node[:components][:chef][:server][:enabled]
   default[:components][:chef][:server][:log_level] = :warn
 end
 
-if node[:components][:chef][:webui][:enabled]
+if components.chef.webui.enabled
   default[:components][:chef][:webui][:config] = '/etc/chef/webui.rb'
   default[:components][:chef][:webui][:service_config] = '/etc/sysconfig/chef-server-webui'
   default[:components][:chef][:webui][:client_user] = 'chef-webui'

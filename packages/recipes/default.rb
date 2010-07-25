@@ -33,15 +33,15 @@ when 'redhat', 'centos', 'fedora'
     end
   }
 
-  if ! node[:components][:packages][:plugins].key?(:priorities)
+  if node[:components][:packages][:plugins][:priorities][:enabled]
+    node[:components][:packages][:repos].each { |k,v|
+      v[:exclude].delete('priority')
+    }
+  else
     node[:components][:packages][:repos].each { |k,v|
       if ! v[:exclude].include?('priority')
         v[:exclude] << 'priority'
       end
-    }
-  else
-    node[:components][:packages][:repos].each { |k,v|
-      v[:exclude].delete('priority')
     }
   end
 
@@ -70,7 +70,7 @@ else
     owner "root"
     group "root"
     variables(
-      :repos => node[:components][:packages][:repos][:official]
+      :repos => node[:components][:packages][:repos]
     )
   end
 end
