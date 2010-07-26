@@ -42,7 +42,9 @@ when 'redhat', 'centos', 'fedora'
         :sections => v[:sections],
         :exclude => v[:exclude]
       )
-      only_if "[ -f #{conffile} ]"
+      if node[:components][:packages][:repos][k][:action] != :create
+        only_if "[ -f #{conffile} ]"
+      end
     end
   }
 
@@ -64,9 +66,7 @@ end
 #
 
 node[:components][:packages][:registry].each { |p,v|
-  if v == true:
-    package p do
-      action :upgrade
-    end
+  package p do
+    action v
   end
 }

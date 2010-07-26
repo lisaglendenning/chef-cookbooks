@@ -5,7 +5,7 @@ when 'redhat', 'centos', 'fedora'
   
   node.default[:components][:packages][:plugins][:priorities][:enabled] = true
   if node[:components][:packages][:plugins][:priorities][:enabled]
-    node.set[:components][:packages][:registry]['yum-priorities'] = true
+    node.set[:components][:packages][:registry]['yum-priorities'] = :upgrade
   end
         
   # parse existing repo files for default values
