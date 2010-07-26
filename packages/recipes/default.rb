@@ -1,12 +1,4 @@
 
-node[:components][:packages][:registry].each { |p,v|
-  if v == true:
-    package p do
-      action :upgrade
-    end
-  end
-}
-
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
   
@@ -66,3 +58,15 @@ else
     )
   end
 end
+
+#
+# manage packages after managing repositories
+#
+
+node[:components][:packages][:registry].each { |p,v|
+  if v == true:
+    package p do
+      action :upgrade
+    end
+  end
+}
