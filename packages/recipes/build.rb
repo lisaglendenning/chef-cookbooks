@@ -57,7 +57,7 @@ when 'redhat', 'centos', 'fedora'
   
   if node.components.packages.build.attribute?(:registry)
     # setup mach roots if required
-    cmd = "cat /etc/mach/conf | grep \"config\\['defaultroot'\\]\" | cut -d \"=\" -f 2 | sed \"s/[ \t',]//g\""
+    cmd = "cat /etc/mach/conf | grep \"config\\['defaultroot'\\]\" | cut -d \"=\" -f 2 | sed \"s/[ \t\n',]//g\""
     defaultroot = `#{cmd}`
     roots = []
     node[:components][:packages][:build][:registry].each { |k,v|
@@ -70,7 +70,7 @@ when 'redhat', 'centos', 'fedora'
       end
     }
     
-    cmd = "cat /etc/mach/conf | grep \"'roots':\" | cut -d \":\" -f 2 | sed \"s/[ \t',]//g\""
+    cmd = "cat /etc/mach/conf | grep \"'roots':\" | cut -d \":\" -f 2 | sed \"s/[ \t\n',]//g\""
     rootspath = `#{cmd}`
     roots.each { |r|
       if ! File::exists?("#{rootspath}/#{r}")
