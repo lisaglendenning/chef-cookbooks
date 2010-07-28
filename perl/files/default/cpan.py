@@ -1,6 +1,6 @@
 #!/bin/env python
 
-import sys
+import sys, re
 
 # must be installed
 import pexpect
@@ -25,10 +25,11 @@ def main(argv):
         for cmd in argv[1:]:
             child.sendline(cmd)
             while True:
-                i = child.expect([MAKE_ERROR, r'\[yes\]', PROMPT])
+                i = child.expect([r'\[yes\]', PROMPT])
+                m = re.search(MAKE_ERROR, child.before)
+                if m:
+                    raise RuntimeError(m.group(0))
                 if i == 0:
-                    raise RuntimeError()
-                elif i == 1:
                     child.sendline('')
                 else:
                     break
