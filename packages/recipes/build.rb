@@ -65,7 +65,7 @@ when 'redhat', 'centos', 'fedora'
       if v.key?(:root) && !v[:root].nil?
         target = v[:root]
       end
-      if ! roots.includes?(target)
+      if ! roots.include?(target)
         roots << target
       end
     }
