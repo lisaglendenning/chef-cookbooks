@@ -79,7 +79,9 @@ when 'redhat', 'centos', 'fedora'
           cmd << " -r #{r}" 
         end
         cmd << " setup build\""
-        `#{cmd}`
+        outs = `#{cmd} 2>&1`
+        if $?.to_i != 0:
+          raise RuntimeError, outs
       end
     }
   end
