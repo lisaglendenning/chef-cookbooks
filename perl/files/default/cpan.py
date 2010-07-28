@@ -13,8 +13,8 @@ import pexpect
 CONF = r'Are you ready for manual configuration? \[yes\]'
 PROMPT = r'cpan> '
 MAKE_ERROR = r'\nmake: \*\*\* \[.+\] Error \d+'
-CONFLICT_ERROR = r'\nOther job is running.\n'
-UNCLEAN_ERROR = r'Other job not responding. Shall I overwrite the lockfile? \(Y/N\) \[y\]'
+CONFLICT_ERROR = r'Other job is running\.'
+UNCLEAN_ERROR = r'Other job not responding\.'
 KILL_MATCH = r'\s*kill (\d+)\s*'
 
 def cpan():
@@ -32,7 +32,7 @@ def main(argv):
                 child.close()
                 child = cpan()
             elif i == 1:
-                child.sendline('')
+                child.sendline('Y')
             elif i == 2:
                 child.sendline('no')
             else:
