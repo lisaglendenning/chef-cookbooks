@@ -70,7 +70,7 @@ when 'redhat', 'centos', 'fedora'
       end
     }
     
-    cmd = "cat /etc/mach/conf | grep `"'roots':`" | cut -d \":\" -f 2 | sed \"s/[ \t',]//g\""
+    cmd = "cat /etc/mach/conf | grep \"'roots':\" | cut -d \":\" -f 2 | sed \"s/[ \t',]//g\""
     rootspath = `#{cmd}`
     roots.each { |r|
       if ! File::exists?("#{rootspath}/#{r}")
