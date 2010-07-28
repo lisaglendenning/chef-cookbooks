@@ -1,4 +1,6 @@
 
+include_recipe "packages"
+
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
   
@@ -18,7 +20,21 @@ when 'redhat', 'centos', 'fedora'
   end
 
   file "#{machuser}-profile" do
-    path "/home/#{machuser}"
+    path "/home/#{machuser}/.bashrc"
+    content "umask 0002\n"
+    owner machuser
+    group "mach"
+    mode 0644
+  end
+
+  template "machrc" do
+    source 'machrc.erb'
+    path "/home/#{machuser}/.machrc"
+    content "umask 0002\n"
+    owner machuser
+    group "mach"
+    mode 0644
+    variables(:mach => node[:components][:packages][:build])
   end
   
   root = node[:components][:packages][:build][:root]
@@ -26,6 +42,7 @@ when 'redhat', 'centos', 'fedora'
     path "/root/.rpmmacros"
     owner "root"
     group "root"
+    mode 0644
     content "%_topdir #{root}\n"
   end
 
