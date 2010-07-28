@@ -5,8 +5,9 @@ import sys
 # must be installed
 import pexpect
 
-CONF = 'Are you ready for manual configuration? [yes]'
-PROMPT = 'cpan> '
+CONF = r'Are you ready for manual configuration? \[yes\]'
+PROMPT = r'cpan> '
+MAKE_ERROR = r'make: \*\*\* \[.+\] Error \d+'
 
 def main(argv):
     # need a longer timeout for cpan
@@ -19,8 +20,10 @@ def main(argv):
         for cmd in argv[1:]:
             child.sendline(cmd)
             while True:
-                i = child.expect_exact(['[yes]', PROMPT])
+                i = child.expect([MAKE_ERROR, r'\[yes\]', PROMPT])
                 if i == 0:
+                    raise RuntimeError()
+                elif i == 2:
                     child.sendline('')
                 else:
                     break
