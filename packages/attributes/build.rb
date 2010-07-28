@@ -1,5 +1,5 @@
 
-include_attribute "packages::build"
+include_attribute "packages"
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
