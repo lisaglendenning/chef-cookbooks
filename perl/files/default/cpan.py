@@ -10,8 +10,9 @@ import sys, os, re
 # must be installed
 import pexpect
 
-CONF = r'Are you ready for manual configuration? \[yes\]'
+CONF = r'Are you ready for manual configuration\?'
 PROMPT = r'cpan> '
+DEFAULT = r'\[.+\]\s*$'
 MAKE_ERROR = r'\nmake: \*\*\* \[.+\] Error \d+'
 CONFLICT_ERROR = r'kill (\d+)\.'
 UNCLEAN_ERROR = r'Other job not responding\.'
@@ -38,7 +39,7 @@ def main(argv):
         for cmd in argv[1:]:
             child.sendline(cmd)
             while True:
-                i = child.expect([r'\[yes\]', PROMPT])
+                i = child.expect([DEFAULT, PROMPT])
                 m = re.search(MAKE_ERROR, child.before)
                 if m:
                     raise RuntimeError(m.group(0))
