@@ -73,16 +73,19 @@ when 'redhat', 'centos', 'fedora'
     cmd = "cat /etc/mach/conf | grep \"'roots':\" | cut -d \":\" -f 2 | sed \"s/[ \t\n',]//g\""
     rootspath = `#{cmd}`
     roots.each { |r|
-      if ! File::exists?("#{rootspath}/#{r}")
-        cmd = "sudo -u #{machuser} -i \"mach"
-        if r != defaultroot
-          cmd << " -r #{r}" 
+      ruby_block "mach-setup-#{r}" do
+        block do
+          cmd = "sudo -u #{machuser} -i \"mach"
+          if r != defaultroot
+            cmd << " -r #{r}" 
+          end
+          cmd << " setup build\""
+          outs = `#{cmd} 2>&1`
+          if $?.to_i != 0:
+            raise RuntimeError, outs
+          end
         end
-        cmd << " setup build\""
-        outs = `#{cmd} 2>&1`
-        if $?.to_i != 0:
-          raise RuntimeError, outs
-        end
+        not_if "[ -d #{rootspath}/#{r} ]" 
       end
     }
   end
