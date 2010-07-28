@@ -82,6 +82,7 @@ when 'redhat', 'centos', 'fedora'
         outs = `#{cmd} 2>&1`
         if $?.to_i != 0:
           raise RuntimeError, outs
+        end
       end
     }
   end
