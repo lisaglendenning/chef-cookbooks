@@ -88,9 +88,9 @@ when 'redhat', 'centos', 'fedora'
     node.default[:components][:packages][:repos]['CentOS-Media'][:sections]['c5-media'][:gpgkey] = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-#{release}"
     node.default[:components][:packages][:repos]['CentOS-Media'][:sections]['c5-media'][:enabled] = "0"
     node.default[:components][:packages][:repos]['CentOS-Media'][:sections]['c5-media'][:priority] = "2"
-  
-  end
 
+  end
+  
 else
   node.set[:components][:packages][:repodir] = '/etc/apt'
   
