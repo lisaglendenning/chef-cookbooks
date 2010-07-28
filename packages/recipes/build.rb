@@ -55,7 +55,7 @@ when 'redhat', 'centos', 'fedora'
     end
   }
   
-  if node.components.packages.build.attribute?(:registry) do
+  if node.components.packages.build.attribute?(:registry)
     # setup mach roots if required
     cmd = "cat /etc/mach/conf | grep \"config\\['defaultroot'\\]\" | cut -d \"=\" -f 2 | sed \"s/[ \t',]//g\""
     defaultroot = `#{cmd}`
