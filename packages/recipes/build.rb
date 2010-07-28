@@ -74,11 +74,11 @@ when 'redhat', 'centos', 'fedora'
     rootspath = `#{cmd}`
     roots.each { |r|
       if ! File::exists?("#{rootspath}/#{r}")
-        cmd = "mach"
+        cmd = "sudo -u #{machuser} -i \"mach"
         if r != defaultroot
           cmd << " -r #{r}" 
         end
-        cmd << " setup build"
+        cmd << " setup build\""
         `#{cmd}`
       end
     }
