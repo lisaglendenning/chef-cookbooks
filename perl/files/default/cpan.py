@@ -7,7 +7,7 @@ import pexpect
 
 CONF = r'Are you ready for manual configuration? \[yes\]'
 PROMPT = r'cpan> '
-MAKE_ERROR = r'make: \*\*\* \[.+\] Error \d+'
+MAKE_ERROR = r'\nmake: \*\*\* \[.+\] Error \d+'
 
 def main(argv):
     # need a longer timeout for cpan
@@ -23,7 +23,7 @@ def main(argv):
                 i = child.expect([MAKE_ERROR, r'\[yes\]', PROMPT])
                 if i == 0:
                     raise RuntimeError()
-                elif i == 2:
+                elif i == 1:
                     child.sendline('')
                 else:
                     break
