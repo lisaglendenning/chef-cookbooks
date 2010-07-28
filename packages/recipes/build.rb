@@ -54,6 +54,34 @@ when 'redhat', 'centos', 'fedora'
       mode 0770
     end
   }
+  
+  if node.components.packages.build.attribute?(:registry) do
+    # setup mach roots if required
+    cmd = "cat /etc/mach/conf | grep \"config\\['defaultroot'\\]\" | cut -d \"=\" -f 2 | sed \"s/[ \t',]//g\""
+    defaultroot = `#{cmd}`
+    roots = []
+    node[:components][:packages][:build][:registry].each { |k,v|
+      target = defaultroot
+      if v.key?(:root) && !v[:root].nil?
+        target = v[:root]
+      end
+      if ! roots.includes?(target)
+        roots << target
+      end
+    }
+    
+    cmd = "cat /etc/mach/conf | grep `"'roots':`" | cut -d \":\" -f 2 | sed \"s/[ \t',]//g\""
+    rootspath = `#{cmd}`
+    roots.each { |r|
+      if ! File::exists?("#{rootspath}/#{r}")
+        cmd = "mach"
+        if r != defaultroot
+          cmd << " -r #{r}" 
+        end
+        cmd << " setup build"
+        `#{cmd}`
+      end
+    }
+  end
 
-# TODO: else
 end
