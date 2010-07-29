@@ -57,8 +57,9 @@ when 'redhat', 'centos', 'fedora'
   
   if node.components.packages.build.attribute?(:registry)
     # setup mach roots if required
-    cmd = "cat /etc/mach/conf | grep \"config\\['defaultroot'\\]\" | cut -d \"=\" -f 2 | sed \"s/[ \t\n',]//g\""
+    cmd = "cat /etc/mach/conf | grep \"config\\['defaultroot'\\]\" | cut -d \"=\" -f 2 | sed \"s/[',]//g\""
     defaultroot = `#{cmd}`
+    defaultroot = defaultroot.strip
     roots = []
     node[:components][:packages][:build][:registry].each { |k,v|
       target = defaultroot
@@ -70,16 +71,17 @@ when 'redhat', 'centos', 'fedora'
       end
     }
     
-    cmd = "cat /etc/mach/conf | grep \"'roots':\" | cut -d \":\" -f 2 | sed \"s/[ \t\n',]//g\""
+    cmd = "cat /etc/mach/conf | grep \"'roots':\" | cut -d \":\" -f 2 | sed \"s/[',]//g\""
     rootspath = `#{cmd}`
+    rootspath = rootspath.strip
     roots.each { |r|
       ruby_block "mach-setup-#{r}" do
         block do
-          cmd = "sudo -u #{machuser} -i \"mach"
+          cmd = "su --session-command=\"mach"
           if r != defaultroot
             cmd << " -r #{r}" 
           end
-          cmd << " setup build\""
+          cmd << " setup build\" #{machuser}"
           outs = `#{cmd} 2>&1`
           if $?.to_i != 0:
             raise RuntimeError, outs
