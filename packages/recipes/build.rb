@@ -94,7 +94,7 @@ when 'redhat', 'centos', 'fedora'
     # build rpms
     node[:components][:packages][:build][:registry].each { |k,v|
       specfile = nil
-      if v.attribute?(:cookbook)
+      if v.key?(:cookbook)
         specfile = "/tmp/#{v[:spec]}"
         cookbook_file v[:spec] do
           path specfile
