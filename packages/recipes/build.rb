@@ -140,8 +140,8 @@ when 'redhat', 'centos', 'fedora'
         }
         package rpm do
           provider Chef::Provider::Package::Rpm
-          action :nothing
-          subscribes :install, resources(:ruby_block => "mach-build-#{k}")
+          action :install, :upgrade
+          only_if "[ -f #{rpm} ]"
         end
       end
     }
