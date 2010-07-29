@@ -51,7 +51,6 @@ when 'redhat', 'centos', 'fedora'
     directory d do
       owner machuser
       group "mach"
-      mode 0770
     end
   }
   
@@ -77,7 +76,7 @@ when 'redhat', 'centos', 'fedora'
     roots.each { |r|
       ruby_block "mach-setup-#{r}" do
         block do
-          cmd = "su --session-command=\"mach"
+          cmd = "su --login --command=\"mach"
           if r != defaultroot
             cmd << " -r #{r}" 
           end
@@ -108,7 +107,7 @@ when 'redhat', 'centos', 'fedora'
       
       ruby_block "mach-build-#{k}" do
         block do
-          cmd = "su --session-command=\"mach"
+          cmd = "su --login --command=\"mach"
           if v.key?(:root) && !v[:root].nil?
             cmd << " -r #{v[:root]}" 
           end
