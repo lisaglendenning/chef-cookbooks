@@ -139,6 +139,7 @@ when 'redhat', 'centos', 'fedora'
           end
         }
         package k do
+          provider Chef::Provider::Package::Rpm
           source rpm
           action :nothing
           subscribes :install, resources(:ruby_block => "mach-build-#{k}")
