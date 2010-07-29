@@ -134,7 +134,7 @@ when 'redhat', 'centos', 'fedora'
         rpm = nil
         rpms.each { |r|
           if ! (r =~ /-debuginfo-/ || r =~ /\.src\./)
-            rpm = r
+            rpm = r.strip
             break
           end
         }
