@@ -56,7 +56,7 @@ when 'redhat', 'centos', 'fedora'
   
   if node.components.packages.build.attribute?(:registry)
     # setup mach roots if required
-    cmd = "cat /etc/mach/conf | grep \"config\\['defaultroot'\\]\" | cut -d \"=\" -f 2 | sed \"s/[',]//g\""
+    cmd = "grep \"config\\['defaultroot'\\]\" /etc/mach/conf | cut -d \"=\" -f 2 | sed \"s/[',]//g\""
     defaultroot = `#{cmd}`
     defaultroot = defaultroot.strip
     roots = []
@@ -70,7 +70,7 @@ when 'redhat', 'centos', 'fedora'
       end
     }
     
-    cmd = "cat /etc/mach/conf | grep \"'roots':\" | cut -d \":\" -f 2 | sed \"s/[',]//g\""
+    cmd = "grep \"'roots':\" /etc/mach/conf | cut -d \":\" -f 2 | sed \"s/[',]//g\""
     rootspath = `#{cmd}`
     rootspath = rootspath.strip
     roots.each { |r|
@@ -90,11 +90,32 @@ when 'redhat', 'centos', 'fedora'
       end
     }
     
+    # where built RPMs go
+    cmd = "grep \"'results':\" /etc/mach/conf | cut -d \":\" -f 2 | sed \"s/[',]//g\""
+    resultspath = `#{cmd}`
+    resultspath = rootspath.strip
+        
     # build rpms
     node[:components][:packages][:build][:registry].each { |k,v|
-      specfile = nil
+      specfile = v.key?(:cookbook) ? "/tmp/#{v[:spec]}" : v[:spec]
+      root = (v.key?(:root) && !v[:root].nil?) ? v[:root] : nil
+
+      ruby_block "mach-build-#{k}" do
+        block do
+          cmd = "su --login --command=\"mach"
+          if root
+            cmd << " -r #{root}" 
+          end
+          cmd << " build #{specfile}\" #{machuser}"
+          outs = `#{cmd} 2>&1`
+          if $?.to_i != 0:
+            raise RuntimeError, outs
+          end
+        end
+        action :nothing
+      end
+      
       if v.key?(:cookbook)
-        specfile = "/tmp/#{v[:spec]}"
         cookbook_file v[:spec] do
           path specfile
           source v[:spec]
@@ -102,20 +123,25 @@ when 'redhat', 'centos', 'fedora'
           group "mach"
           mode 0644
           cookbook v[:cookbook]
+          notifies :create, resources(:ruby_block => "mach-build-#{k}")
         end
       end
       
-      ruby_block "mach-build-#{k}" do
-        block do
-          cmd = "su --login --command=\"mach"
-          if v.key?(:root) && !v[:root].nil?
-            cmd << " -r #{v[:root]}" 
+      if v[:action] == :install
+        rpmroot = root ? root : defaultroot
+        cmd = "find #{resultspath}/#{rpmroot} -name \"xmlrpc-c*.rpm\""
+        rpms = `#{cmd}`
+        rpm = nil
+        rpms.each { |r|
+          if ! (r =~ '-debuginfo-' || r =~ '\.src\.')
+            rpm = r
+            break
           end
-          cmd << " build #{specfile}\" #{machuser}"
-          outs = `#{cmd} 2>&1`
-          if $?.to_i != 0:
-            raise RuntimeError, outs
-          end
+        }
+        package k do
+          source rpm
+          action :nothing
+          subscribes :install, resources(:ruby_block => "mach-build-#{k}")
         end
       end
     }
