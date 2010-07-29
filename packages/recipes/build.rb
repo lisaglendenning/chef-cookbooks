@@ -133,7 +133,7 @@ when 'redhat', 'centos', 'fedora'
         rpms = `#{cmd}`
         rpm = nil
         rpms.each { |r|
-          if ! (r =~ '-debuginfo-' || r =~ '\.src\.')
+          if ! (r =~ /-debuginfo-/ || r =~ /\.src\./)
             rpm = r
             break
           end
