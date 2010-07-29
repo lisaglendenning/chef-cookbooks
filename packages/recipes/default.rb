@@ -19,11 +19,13 @@ when 'redhat', 'centos', 'fedora'
 
   if node[:components][:packages][:plugins][:priorities][:enabled]
     node[:components][:packages][:repos].each { |k,v|
-      v[:exclude].delete('priority')
+      if v.key?(:exclude)
+        v[:exclude].delete('priority')
+      end
     }
   else
     node[:components][:packages][:repos].each { |k,v|
-      if ! v[:exclude].include?('priority')
+      if v.key?(:exclude) && !v[:exclude].include?('priority')
         v[:exclude] << 'priority'
       end
     }
