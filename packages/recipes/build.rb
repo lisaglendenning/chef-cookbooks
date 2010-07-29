@@ -39,9 +39,9 @@ when 'redhat', 'centos', 'fedora'
   
   root = node[:components][:packages][:build][:root]
   file "rpmmacros" do
-    path "/root/.rpmmacros"
-    owner "root"
-    group "root"
+    path "/home/#{machuser}/.rpmmacros"
+    owner machuser
+    group "mach"
     mode 0644
     content "%_topdir #{root}\n"
   end
@@ -90,6 +90,37 @@ when 'redhat', 'centos', 'fedora'
         not_if "[ -d #{rootspath}/#{r} ]" 
       end
     }
+    
+    # build rpms
+    node[:components][:packages][:build][:registry].each { |k,v|
+      specfile = nil
+      if v.attribute?(:cookbook)
+        specfile = "/tmp/#{v[:spec]}"
+        cookbook_file v[:spec] do
+          path specfile
+          source v[:spec]
+          owner machuser
+          group "mach"
+          mode 0644
+          cookbook v[:cookbook]
+        end
+      end
+      
+      ruby_block "mach-build-#{k}" do
+        block do
+          cmd = "su --session-command=\"mach"
+          if v.key?(:root) && !v[:root].nil?
+            cmd << " -r #{v[:root]}" 
+          end
+          cmd << " build #{specfile}\" #{machuser}"
+          outs = `#{cmd} 2>&1`
+          if $?.to_i != 0:
+            raise RuntimeError, outs
+          end
+        end
+      end
+    }
+    
   end
 
 end
