@@ -6,16 +6,17 @@ when 'redhat', 'centos', 'fedora'
   
   # create mach user
   machuser = node[:components][:packages][:build][:user]
+  machgroup = node[:components][:packages][:build][:group]
   user machuser do
     comment "mach user"
-    gid "mach"
+    gid machgroup
     home "/home/#{machuser}"
     shell "/bin/bash"
     system true
   end
   
   # create mach group
-  group "mach" do
+  group machgroup do
     members ['root', machuser]
   end
 
@@ -23,7 +24,7 @@ when 'redhat', 'centos', 'fedora'
     path "/home/#{machuser}/.bashrc"
     content "umask 0002\n"
     owner machuser
-    group "mach"
+    group machgroup
     mode 0644
   end
 
@@ -32,28 +33,11 @@ when 'redhat', 'centos', 'fedora'
     path "/home/#{machuser}/.machrc"
     content "umask 0002\n"
     owner machuser
-    group "mach"
+    group machgroup
     mode 0644
     variables(:mach => node[:components][:packages][:build])
   end
-  
-  root = node[:components][:packages][:build][:root]
-  file "rpmmacros" do
-    path "/home/#{machuser}/.rpmmacros"
-    owner machuser
-    group "mach"
-    mode 0644
-    content "%_topdir #{root}\n"
-  end
 
-  # create rpmbuild directories
-  [root, "#{root}/BUILD", "#{root}/RPMS", "#{root}/SOURCES", "#{root}/SPECS", "#{root}/SRPMS"].each { |d|
-    directory d do
-      owner machuser
-      group "mach"
-    end
-  }
-  
   if node.components.packages.build.attribute?(:registry)
     # setup mach roots if required
     cmd = "grep \"config\\['defaultroot'\\]\" /etc/mach/conf | cut -d \"=\" -f 2 | sed \"s/[',]//g\""
@@ -129,7 +113,7 @@ when 'redhat', 'centos', 'fedora'
       
       if v[:action] == :install
         rpmroot = root ? root : defaultroot
-        cmd = "find #{resultspath}/#{rpmroot} -name \"xmlrpc-c*.rpm\""
+        cmd = "find #{resultspath}/#{rpmroot} -name \"#{k}*.rpm\""
         rpms = `#{cmd}`
         rpm = nil
         rpms.each { |r|
