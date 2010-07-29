@@ -140,7 +140,7 @@ when 'redhat', 'centos', 'fedora'
         }
         package rpm do
           provider Chef::Provider::Package::Rpm
-          action :install, :upgrade
+          action :install
           only_if "[ -f #{rpm} ]"
         end
       end
