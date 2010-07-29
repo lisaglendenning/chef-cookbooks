@@ -93,7 +93,7 @@ when 'redhat', 'centos', 'fedora'
     # where built RPMs go
     cmd = "grep \"'results':\" /etc/mach/conf | cut -d \":\" -f 2 | sed \"s/[',]//g\""
     resultspath = `#{cmd}`
-    resultspath = rootspath.strip
+    resultspath = resultspath.strip
         
     # build rpms
     node[:components][:packages][:build][:registry].each { |k,v|
