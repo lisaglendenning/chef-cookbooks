@@ -5,7 +5,7 @@ case node[:platform]
 when 'redhat', 'centos', 'fedora'
   if node[:platform] == 'centos'
     # FIXME: requires EPEL
-    node.set[:components][:packages][:registry][:mach] = :install
+    node.set[:components][:packages][:registry][:mach][:action] = :install
   end
 
   node.default[:components][:packages][:build][:user] = 'mach'

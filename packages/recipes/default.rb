@@ -69,6 +69,15 @@ end
 
 node[:components][:packages][:registry].each { |p,v|
   package p do
-    action v
+    if v.key?(:url)
+      source v[:url]  
+      case node[:platform]
+      when 'redhat', 'centos', 'fedora'
+        provider Chef::Provider::Package::Rpm
+      end
+    end
+    if v.key?(:action)
+      action v[:action]
+    end
   end
 }
