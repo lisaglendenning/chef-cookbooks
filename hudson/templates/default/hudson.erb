@@ -17,21 +17,25 @@
 
 . /etc/rc.d/init.d/functions
 
-JAVA_HOME="<%= @hudson[:java] %>"
-HUDSON_HOME="<%= @hudson[:home] %>"
-HUDSON_USER="<%= @hudson[:user] %>"
-
-prog="hudson-server"
-exec="${HUDSON_HOME}/${prog}"
+prog=hudson
 pidfile="/var/run/hudson.pid"
+
+JAVA_HOME="<%= @hudson[:java] %>"
+JAVA="${JAVA_HOME}/bin/java"
+HUDSON_USER="<%= @hudson[:user] %>"
+HUDSON_HOME="<%= @hudson[:home] %>"
+HUDSON_LOG="${HUDSON_HOME}/hudson.log"
+HUDSON="${HUDSON_HOME}/hudson.war"
 
 [ -f /etc/sysconfig/${prog} ] && . /etc/sysconfig/${prog}
 
 start() {
-    [ -x ${exec} ] || exit 5
+    [ -f ${HUDSON} ] || exit 5
+
+    cmd="HUDSON_HOME=${HUDSON_HOME} JAVA_HOME=${JAVA_HOME} ${JAVA} -jar ${HUDSON} > ${HUDSON_LOG} 2>&1"
 
     action $"Starting ${prog}: "
-    daemon --check ${prog} --user ${HUDSON_USER} "HUDSON_HOME=${HUDSON_HOME} JAVA_HOME=${JAVA_HOME} ${exec}" &
+    daemon --check ${prog} --pidfile ${pidfile} --user ${HUDSON_USER} "${cmd}"
     retval=$?
     return $retval
 }
