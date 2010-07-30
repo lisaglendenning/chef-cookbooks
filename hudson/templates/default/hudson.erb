@@ -1,0 +1,62 @@
+#! /bin/bash
+#
+# hudson    Start/Stop the Hudson Continuous Integration server.
+#
+# chkconfig: 345 91 10
+# description: Hudson is a Continuous Integration server. \
+#              It monitors a source code repository and triggers builds \
+#              when it detects any changes. See https://hudson.dev.java.net/ \
+#              for more details.
+# processname: hudson
+# pidfile: /var/run/hudson.pid
+
+
+. /etc/rc.d/init.d/functions
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ "${NETWORKING}" = "no" ] && exit 0
+
+export JAVA_HOME=<%= @hudson[:java] %>
+export HUDSON_HOME=<%= @hudson[:home] %>
+export HUDSON_USER=<%= @hudson[:user] %>
+startup=<%= @hudson[:home] %>/start_hudson.sh
+
+start() {
+    echo -n $"Starting Hudson service: "
+    daemon --check hudson --user $HUDSON_USER $startup &
+    RETVAL=$?
+    echo
+    return $RETVAL
+}
+
+stop() {
+    action $"Stopping Hudson service: "
+    echo
+    killproc hudson
+    RETVAL=$?
+    echo
+    return $RETVAL
+}
+
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+    status hudson
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: hudson {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
+exit $?
