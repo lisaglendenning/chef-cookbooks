@@ -27,7 +27,6 @@ start() {
     daemon --check hudson --user $HUDSON_USER $startup &
     RETVAL=$?
     echo
-    return $RETVAL
 }
 
 stop() {
@@ -36,7 +35,6 @@ stop() {
     killproc hudson
     RETVAL=$?
     echo
-    return $RETVAL
 }
 
 
