@@ -33,8 +33,11 @@ start() {
     cmd="HUDSON_HOME=${HUDSON_HOME} JAVA_HOME=${JAVA_HOME} ${exec}"
     action $"Starting ${prog}: "
     daemon --pidfile ${pidfile} --user ${HUDSON_USER} "${cmd}"
-    `ps -ef | grep hudson.war | grep -v grep | awk '{ print $2 }'` > ${pidfile}
     retval=$?
+    if [ $retval -eq 0 ]; then
+        pid=`ps -ef | grep hudson.war | grep -v grep | awk '{ print $2 }'`
+        echo "${pid}" > ${pidfile}
+    fi
     echo
     return $retval
 }
@@ -47,6 +50,10 @@ stop() {
     return $retval
 }
 
+restart() {
+    stop
+    start
+}
 
 case "$1" in
     start)
@@ -56,15 +63,13 @@ case "$1" in
         $1
         ;;
     status)
-        status hudson
+        status -p ${pidfile}
         ;;
     restart)
-        stop
-        start
+        $1
         ;;
     force-reload)
-        stop
-        start
+        restart
         ;;
     *)
         echo $"Usage: $0 {start|stop|status|restart|force-reload}"
