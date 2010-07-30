@@ -3,42 +3,43 @@
 # hudson    Daemon script for Hudson server.
 #
 # chkconfig: 345 91 10
-# description: See https://hudson.dev.java.net/.
-# processname: hudson
-# pidfile: /var/run/hudson.pid
+# description: Hudson
 
+### BEGIN INIT INFO
+# Provides: hudson
+# Required-Start: $local_fs $network
+# Required-Stop: $local_fs $network
+# Should-Start: $named $time
+# Should-Stop: $named $time
+# Short-Description: Startup script for hudson 
+# Description: See http://hudson-ci.org/
+### END INIT INFO
 
 . /etc/rc.d/init.d/functions
-. /etc/sysconfig/network
 
-# Check that networking is up.
-[ "${NETWORKING}" = "no" ] && exit 0
-
-export JAVA_HOME=<%= @hudson[:java] %>
-export HUDSON_HOME=<%= @hudson[:home] %>
-export HUDSON_USER=<%= @hudson[:user] %>
+JAVA_HOME="<%= @hudson[:java] %>"
+HUDSON_HOME="<%= @hudson[:home] %>"
+HUDSON_USER="<%= @hudson[:user] %>"
 
 prog="hudson-server"
 exec="${HUDSON_HOME}/${prog}"
+pidfile="/var/run/hudson.pid"
 
-[ -f /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
+[ -f /etc/sysconfig/${prog} ] && . /etc/sysconfig/${prog}
 
 start() {
-    [ -x $exec ] || exit 5
+    [ -x ${exec} ] || exit 5
 
-    echo -n $"Starting ${prog}: "
-    daemon --check ${prog} --user $HUDSON_USER $exec &
+    action $"Starting ${prog}: "
+    daemon --check ${prog} --user ${HUDSON_USER} "HUDSON_HOME=${HUDSON_HOME} JAVA_HOME=${JAVA_HOME} ${exec}" &
     retval=$?
-    echo
     return $retval
 }
 
 stop() {
     action $"Stopping ${prog}: "
-    echo
-    killproc ${prog}
+    killproc -p ${pidfile} ${prog}
     retval=$?
-    echo
     return $retval
 }
 
