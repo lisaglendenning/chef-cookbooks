@@ -75,6 +75,9 @@ node[:components][:packages][:registry].each { |p,v|
     remote_file source do
       path source
       source v[:url]
+      if v.key?(:checksum)
+        checksum v[:checksum]
+      end
     end
   end
   package p do
