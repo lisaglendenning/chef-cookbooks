@@ -21,18 +21,18 @@ JAVA_HOME="<%= @hudson[:java] %>"
 HUDSON_USER="<%= @hudson[:user] %>"
 HUDSON_HOME="<%= @hudson[:home] %>"
 
-prog="hudson-server"
-exec="${HUDSON_HOME}/${prog}"
+prog="hudson"
+exec="${HUDSON_HOME}/hudson-server"
 pidfile="/var/run/hudson.pid"
+cmd="HUDSON_HOME=${HUDSON_HOME} JAVA_HOME=${JAVA_HOME} ${exec}"
 
-[ -f /etc/sysconfig/${hudson} ] && . /etc/sysconfig/${hudson}
+[ -f /etc/sysconfig/${prog} ] && . /etc/sysconfig/${prog}
 
 start() {
     [ -x ${exec} ] || exit 5
 
-    cmd="HUDSON_HOME=${HUDSON_HOME} JAVA_HOME=${JAVA_HOME} ${exec}"
     action $"Starting ${prog}: "
-    daemon --pidfile ${pidfile} --user ${HUDSON_USER} "${cmd}"
+    daemon --check ${prog} --pidfile ${pidfile} --user ${HUDSON_USER} "${cmd}"
     retval=$?
     if [ $retval -eq 0 ]; then
         pid=`ps -ef | grep hudson.war | grep -v grep | awk '{ print $2 }'`
@@ -63,7 +63,7 @@ case "$1" in
         $1
         ;;
     status)
-        status -p ${pidfile}
+        status -p ${pidfile} ${prog}
         ;;
     restart)
         $1
