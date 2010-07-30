@@ -86,14 +86,20 @@ when 'redhat', 'centos', 'fedora'
 
       ruby_block "mach-build-#{k}" do
         block do
-          cmd = "su --login --command=\"mach"
-          if root
-            cmd << " -r #{root}" 
-          end
-          cmd << " build #{specfile}\" #{machuser}"
-          outs = `#{cmd} 2>&1`
-          if $?.to_i != 0:
-            raise RuntimeError, outs
+          opts = root ? " -r #{root}" : ""
+          while true
+            cmd = "su --login --command=\"mach #{opts}"
+            cmd << " build #{specfile}\" #{machuser}"
+            outs = `#{cmd} 2>&1`
+            if $?.to_i != 0:
+              cmd = "su --login --command=\"mach clean\" #{machuser}"
+              raise RuntimeError, outs
+            end
+            if outs =~ /^Root is locked/
+              if ! opts =~ /-f/
+                opts << " -f"
+              end
+            end
           end
         end
         action :nothing
