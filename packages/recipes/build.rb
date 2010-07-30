@@ -97,6 +97,7 @@ when 'redhat', 'centos', 'fedora'
                 cmd << " -r #{root}"
               end
               cmd << " clean\" #{machuser}"
+              `#{cmd}`
               raise RuntimeError, outs
             end
             if outs =~ /^Root is locked/
