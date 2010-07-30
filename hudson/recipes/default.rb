@@ -32,12 +32,12 @@ directory hudsonhome do
   mode 0755
 end
 
-cookbook_file "start_hudson.sh" do
-  path "#{hudsonhome}/start_hudson.sh"
+cookbook_file "hudson-server" do
+  path "#{hudsonhome}/hudson-server"
   owner hudsonuser
   group hudsonuser
   mode 0755
-  source "start_hudson.sh"
+  source "hudson-server"
 end
 
 template "hudson-service" do

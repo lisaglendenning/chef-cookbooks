@@ -1,12 +1,9 @@
-#! /bin/bash
+#!/bin/sh
 #
-# hudson    Start/Stop the Hudson Continuous Integration server.
+# hudson    Daemon script for Hudson server.
 #
 # chkconfig: 345 91 10
-# description: Hudson is a Continuous Integration server. \
-#              It monitors a source code repository and triggers builds \
-#              when it detects any changes. See https://hudson.dev.java.net/ \
-#              for more details.
+# description: See https://hudson.dev.java.net/.
 # processname: hudson
 # pidfile: /var/run/hudson.pid
 
@@ -20,41 +17,53 @@
 export JAVA_HOME=<%= @hudson[:java] %>
 export HUDSON_HOME=<%= @hudson[:home] %>
 export HUDSON_USER=<%= @hudson[:user] %>
-startup=<%= @hudson[:home] %>/start_hudson.sh
+
+prog="hudson-server"
+exec="${HUDSON_HOME}/${prog}"
+
+[ -f /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
 
 start() {
-    echo -n $"Starting Hudson service: "
-    daemon --check hudson --user $HUDSON_USER $startup &
-    RETVAL=$?
+    [ -x $exec ] || exit 5
+
+    echo -n $"Starting ${prog}: "
+    daemon --check ${prog} --user $HUDSON_USER $exec &
+    retval=$?
     echo
+    return $retval
 }
 
 stop() {
-    action $"Stopping Hudson service: "
+    action $"Stopping ${prog}: "
     echo
-    killproc hudson
-    RETVAL=$?
+    killproc ${prog}
+    retval=$?
     echo
+    return $retval
 }
 
 
 case "$1" in
     start)
-        start
+        $1
         ;;
     stop)
-        stop
+        $1
         ;;
     status)
-    status hudson
+        status hudson
         ;;
     restart)
         stop
         start
         ;;
+    force-reload)
+        stop
+        start
+        ;;
     *)
-        echo "Usage: hudson {start|stop|status|restart}"
-        exit 1
+        echo $"Usage: $0 {start|stop|status|restart|force-reload}"
+        exit 2
         ;;
 esac
 exit $?
