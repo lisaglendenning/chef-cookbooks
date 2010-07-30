@@ -68,16 +68,24 @@ end
 #
 
 node[:components][:packages][:registry].each { |p,v|
+  source = nil
+  if v.key?(:url)
+    f = v[:url][/[^\/]+$/]
+    source = "/tmp/#{f}"
+    remote_file source do
+      path source
+      source v[:url]
+    end
+  end
   package p do
-    if v.key?(:url)
-      source v[:url]  
-      case node[:platform]
-      when 'redhat', 'centos', 'fedora'
-        provider Chef::Provider::Package::Rpm
-      end
+    if source
+      source source
+      only_if "[ -f #{source} ]"
     end
     if v.key?(:action)
       action v[:action]
     end
   end
+  
+  
 }
