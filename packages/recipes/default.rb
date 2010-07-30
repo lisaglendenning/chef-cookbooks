@@ -68,27 +68,28 @@ end
 #
 
 node[:components][:packages][:registry].each { |p,v|
-  source = nil
   if v.key?(:url)
     f = v[:url][/[^\/]+$/]
     source = "/tmp/#{f}"
+    package p do
+      source source
+      only_if "[ -f #{source} ]"
+      action :nothing
+    end
     remote_file source do
       path source
       source v[:url]
       if v.key?(:checksum)
         checksum v[:checksum]
       end
+      notifies v[:action], resources(:package => p), :immediately
+    end
+  else
+    package p do
+      if v.key?(:action)
+        action v[:action]
+      end
     end
   end
-  package p do
-    if source
-      source source
-      only_if "[ -f #{source} ]"
-    end
-    if v.key?(:action)
-      action v[:action]
-    end
-  end
-  
   
 }

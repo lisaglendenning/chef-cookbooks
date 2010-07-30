@@ -92,7 +92,11 @@ when 'redhat', 'centos', 'fedora'
             cmd << " build #{specfile}\" #{machuser}"
             outs = `#{cmd} 2>&1`
             if $?.to_i != 0:
-              cmd = "su --login --command=\"mach clean\" #{machuser}"
+              cmd = "su --login --command=\"mach"
+              if root
+                cmd << " -r #{root}"
+              end
+              cmd << " clean\" #{machuser}"
               raise RuntimeError, outs
             end
             if outs =~ /^Root is locked/
