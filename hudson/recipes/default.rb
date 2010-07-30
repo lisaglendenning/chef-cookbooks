@@ -8,16 +8,16 @@ include_recipe "packages"
 hudsonuser = node[:components][:hudson][:user]
 hudsongroup = node[:components][:hudson][:group]
 
+group hudsongroup do
+  members [hudsonuser]
+  append true
+end
 user hudsonuser do
   comment "hudson user"
   gid hudsongroup
   home "/home/#{hudsonuser}"
   shell "/bin/bash"
   system true
-end
-group hudsonuser do
-  members [hudsonuser]
-  append true
 end
 
 #

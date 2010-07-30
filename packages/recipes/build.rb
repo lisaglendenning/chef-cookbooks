@@ -7,17 +7,15 @@ when 'redhat', 'centos', 'fedora'
   # create mach user
   machuser = node[:components][:packages][:build][:user]
   machgroup = node[:components][:packages][:build][:group]
+  group machgroup do
+    members ['root', machuser]
+  end
   user machuser do
     comment "mach user"
     gid machgroup
     home "/home/#{machuser}"
     shell "/bin/bash"
     system true
-  end
-  
-  # create mach group
-  group machgroup do
-    members ['root', machuser]
   end
 
   file "#{machuser}-profile" do
