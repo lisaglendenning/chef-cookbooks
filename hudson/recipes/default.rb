@@ -1,5 +1,5 @@
 
-include_recipe["packages"]
+include_recipe "packages"
 
 #
 # Hudson user
