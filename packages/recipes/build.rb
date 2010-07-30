@@ -107,7 +107,7 @@ when 'redhat', 'centos', 'fedora'
           group "mach"
           mode 0644
           cookbook v[:cookbook]
-          notifies :create, resources(:ruby_block => "mach-build-#{k}")
+          notifies :create, resources(:ruby_block => "mach-build-#{k}"), :immediately
         end
       end
       
