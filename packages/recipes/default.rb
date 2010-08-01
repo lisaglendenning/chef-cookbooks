@@ -68,9 +68,7 @@ end
 #
 
 node[:components][:packages][:registry].each { |p,v|
-  if !v.key?(:action)
-    v[:action] = :install
-  end
+  action = v.key?(:action) ? v[:action] : :install
   if v.key?(:url)
     f = v[:url][/[^\/]+$/]
     source = "/tmp/#{f}"
@@ -85,11 +83,13 @@ node[:components][:packages][:registry].each { |p,v|
       if v.key?(:checksum)
         checksum v[:checksum]
       end
-      notifies v[:action], resources(:package => p), :immediately
+      notifies action, resources(:package => p), :immediately
     end
   else
+    Chef::Log.info(p.to_s)
+    Chef::Log.info(k.to_s)
     package p do
-      action v[:action]
+      action action
     end
   end
   
