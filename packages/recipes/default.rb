@@ -87,7 +87,7 @@ node[:components][:packages][:registry].each { |p,v|
     end
   else
     Chef::Log.info(p.to_s)
-    Chef::Log.info(k.to_s)
+    Chef::Log.info(v.to_s)
     package p do
       action act
     end
