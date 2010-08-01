@@ -20,6 +20,17 @@ group hudsongroup do
 end
 
 #
+# Hudson service
+#
+
+service 'hudson' do
+  supports :restart => true, :status => true
+  action [:enable, :start]
+  only_if "[ -x /etc/rc.d/init.d/hudson ]"
+end
+
+
+#
 # Hudson control files
 #
 
@@ -129,6 +140,7 @@ cookbook_file "hudson-server" do
   group hudsonuser
   mode 0755
   source "hudson-server"
+  notifies :restart, resources(:service => 'hudson')
 end
 
 template "hudson-service" do
@@ -138,6 +150,7 @@ template "hudson-service" do
   group "root"
   mode 0755
   variables(:hudson => node[:components][:hudson])
+  notifies :restart, resources(:service => 'hudson')
 end
 
 
@@ -153,13 +166,5 @@ remote_file hudsonfile do
   owner hudsonuser
   group hudsongroup
   mode 0755
-end
-
-#
-# Hudson service
-#
-
-service 'hudson' do
-  supports :restart => true, :status => true
-  action [:enable, :start]
+  notifies :restart, resources(:service => 'hudson')
 end
