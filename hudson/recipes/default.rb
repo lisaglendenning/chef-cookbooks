@@ -66,6 +66,20 @@ if node[:components][:hudson][:ssl]
     group hudsongroup
     umask 027
   end
+
+  # TODO: Import CA
+  
+  cakey = node[:components][:hudson][:ssl][:ca][:key]
+  cafile = nil
+  execute "import-hudson-ca" do
+    command = "keytool -import -noprompt -trustcacerts -alias #{cakey} -file #{cafile} -storepass #{keypass} -storetype jks -keystore #{keystore}"
+    path = ["#{node[:components][:hudson][:java]}/bin"]
+    action :nothing
+    cwd hudsonhome
+    user hudsonuser
+    group hudsongroup
+    umask 027
+  end
   
   # Generate CSR
   
@@ -98,20 +112,6 @@ if node[:components][:hudson][:ssl]
     group hudsongroup
     umask 027
   end  
-  
-  # Import CA
-  
-  cakey = node[:components][:hudson][:ssl][:ca][:key]
-  cafile = nil
-  execute "import-hudson-ca" do
-    command = "keytool -import -noprompt -trustcacerts -alias #{cakey} -file #{cafile} -storepass #{keypass} -storetype jks -keystore #{keystore}"
-    path = ["#{node[:components][:hudson][:java]}/bin"]
-    action :nothing
-    cwd hudsonhome
-    user hudsonuser
-    group hudsongroup
-    umask 027
-  end
   
   # Modify command-line options if necessary
   opts = node[:components][:hudson][:opts]
