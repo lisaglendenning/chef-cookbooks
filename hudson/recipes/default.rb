@@ -103,6 +103,8 @@ if node[:components][:hudson][:ssl]
   # Import signed certificate
   # NOTE:  The data to be imported must be either in binary or base64 encoding format (between -----BEGIN/------END)
   # can be converted using: openssl x509 -in cert.crt.pem -inform PEM -out cert.crt.der -outform DER
+  # NOTE: The signed certificate must be the same alias as the key in order to
+  # replace the original, self-signed certificate
   execute "import-hudson-crt" do
     command = "keytool -import -noprompt -trustcacerts -alias #{server} -file #{crtfile} -storepass #{keypass} -storetype jks -keystore #{keystore}"
     path = ["#{node[:components][:hudson][:java]}/bin"]
