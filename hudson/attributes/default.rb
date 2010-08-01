@@ -8,6 +8,7 @@ node.default[:components][:hudson][:opts] = ["--httpPort=#{node[:components][:hu
 
 # Default to OpenJDK
 node.default[:components][:hudson][:java] = '/usr/lib/jvm/jre-1.6.0-openjdk'
+node.default[:components][:hudson][:javaopts] = []
 node.default[:components][:packages][:registry]['java-1.6.0-openjdk'][:action] = :install
 
 # Register with firewall

@@ -42,6 +42,8 @@ directory hudsonhome do
   mode 0755
 end
 
+# TODO: LDAP authentication? (need CA cert)
+
 #
 # SSL
 #
