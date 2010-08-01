@@ -68,7 +68,10 @@ end
 #
 
 node[:components][:packages][:registry].each { |p,v|
-  if v.key?(:url)
+  if !v.attribute?(:action)
+    node[:components][:packages][:registry][p][:action] = :install
+  end
+  if v.attribute?(:url)
     f = v[:url][/[^\/]+$/]
     source = "/tmp/#{f}"
     package p do
@@ -79,16 +82,14 @@ node[:components][:packages][:registry].each { |p,v|
     remote_file source do
       path source
       source v[:url]
-      if v.key?(:checksum)
+      if v.attribute?(:checksum)
         checksum v[:checksum]
       end
       notifies v[:action], resources(:package => p), :immediately
     end
   else
     package p do
-      if v.key?(:action)
-        action v[:action]
-      end
+      action v[:action]
     end
   end
   
