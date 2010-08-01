@@ -59,7 +59,7 @@ if node[:components][:hudson][:ssl]
   server = node[:fqdn]
   dname = node[:components][:hudson][:ssl][:dname] # must be set!
   execute "create-hudson-keystore" do
-    command "keytool -genkey -keyalg RSA -keysize 1024 -alias #{server} -dname #{dname} -keypass #{keypass} -storepass #{keypass} -storetype jks -keystore #{keystore}"
+    command "keytool -genkey -keyalg RSA -keysize 1024 -alias #{server} -dname \"#{dname}\" -keypass #{keypass} -storepass #{keypass} -storetype jks -keystore #{keystore}"
     path ["#{node[:components][:hudson][:java]}/bin"]
     creates keystore
     cwd hudsonhome
