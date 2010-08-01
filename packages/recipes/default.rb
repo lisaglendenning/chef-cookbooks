@@ -86,8 +86,6 @@ node[:components][:packages][:registry].each { |p,v|
       notifies action, resources(:package => p), :immediately
     end
   else
-    Chef::Log.info(p.to_s)
-    Chef::Log.info(v.to_s)
     package p do
       action act
     end
