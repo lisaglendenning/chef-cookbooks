@@ -25,7 +25,7 @@ HUDSON_OPTS="<%= @hudson[:opts].join(' ') %>"
 prog="hudson"
 exec="${HUDSON_HOME}/hudson-server"
 pidfile="/var/run/hudson.pid"
-cmd="HUDSON_HOME=${HUDSON_HOME} JAVA_HOME=${JAVA_HOME} HUDSON_OPTS=${HUDSON_OPTS} ${exec}"
+cmd="HUDSON_HOME=\"${HUDSON_HOME}\" JAVA_HOME=\"${JAVA_HOME}\" HUDSON_OPTS=\"${HUDSON_OPTS}\" ${exec}"
 
 [ -f /etc/sysconfig/${prog} ] && . /etc/sysconfig/${prog}
 
