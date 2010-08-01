@@ -79,7 +79,7 @@ if node[:components][:hudson][:ssl]
     user hudsonuser
     group hudsongroup
     umask 027
-    subscribes resources(:execute => "create-hudson-keystore"), :immediately
+    subscribes :run, resources(:execute => "create-hudson-keystore"), :immediately
   end
   
   # TODO: get CSR signed
