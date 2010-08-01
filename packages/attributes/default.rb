@@ -66,7 +66,7 @@ when 'redhat', 'centos', 'fedora'
     node.default[:components][:packages][:repos]['CentOS-Base'][:official] = true
     node.default[:components][:packages][:repos]['CentOS-Base'][:exclude] = ['baseurl']
     [[:base, 'Base', 'os'], 
-     [:updates, 'Updates', 'updates-newkey'],
+     [:updates, 'Updates', 'updates'],
      [:addons, 'Addons', 'addons'],
      [:extras, 'Extras', 'extras'],
      [:centosplus, 'Plus', 'centosplus'],
