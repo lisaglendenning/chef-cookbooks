@@ -59,8 +59,8 @@ if node[:components][:hudson][:ssl]
   server = node[:fqdn]
   dname = node[:components][:hudson][:ssl][:dname] # must be set!
   execute "create-hudson-keystore" do
-    command = "keytool -genkey -keyalg RSA -keysize 1024 -alias #{server} -dname #{dname} -keypass #{keypass} -storepass #{keypass} -storetype jks -keystore #{keystore}"
-    path = ["#{node[:components][:hudson][:java]}/bin"]
+    command "keytool -genkey -keyalg RSA -keysize 1024 -alias #{server} -dname #{dname} -keypass #{keypass} -storepass #{keypass} -storetype jks -keystore #{keystore}"
+    path ["#{node[:components][:hudson][:java]}/bin"]
     creates keystore
     cwd hudsonhome
     user hudsonuser
@@ -72,8 +72,8 @@ if node[:components][:hudson][:ssl]
   
   csrfile = "#{server}.csr"
   execute "create-hudson-csr" do
-    command = "keytool -certreq -alias #{server} -file #{csrfile} -keypass #{keypass} -storepass #{keypass} -keystore #{keystore}"
-    path = ["#{node[:components][:hudson][:java]}/bin"]
+    command "keytool -certreq -alias #{server} -file #{csrfile} -keypass #{keypass} -storepass #{keypass} -keystore #{keystore}"
+    path ["#{node[:components][:hudson][:java]}/bin"]
     action :nothing
     cwd hudsonhome
     user hudsonuser
