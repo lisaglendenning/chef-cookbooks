@@ -121,7 +121,7 @@ if node[:components][:hudson][:ssl]
      opt = "--#{kv[0]}=#{kv[1]}"
       if !opts.include?(opt)
         opts.length.times { |i|
-          if opts[i]["--kv[0]="]
+          if opts[i]["--#{kv[0]}="]
             opts[i] = opt
             break
           end
