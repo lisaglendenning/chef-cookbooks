@@ -59,7 +59,7 @@ if node[:components][:hudson][:ssl]
   server = node[:fqdn]
   dname = node[:components][:hudson][:ssl][:dname] # must be set!
   execute "create-hudson-keystore" do
-    command "keytool -genkey -keyalg RSA -keysize 1024 -alias #{server} -dname \"#{dname}\" -keypass #{keypass} -storepass #{keypass} -storetype jks -keystore #{keystore}"
+    command "keytool -genkey -keyalg RSA -keysize 1024 -alias #{server}.key -dname \"#{dname}\" -keypass #{keypass} -storepass #{keypass} -storetype jks -keystore #{keystore}"
     path ["#{node[:components][:hudson][:java]}/bin"]
     creates keystore
     cwd hudsonhome
@@ -72,24 +72,26 @@ if node[:components][:hudson][:ssl]
   
   csrfile = "#{server}.csr"
   execute "create-hudson-csr" do
-    command "keytool -certreq -alias #{server} -file #{csrfile} -keypass #{keypass} -storepass #{keypass} -keystore #{keystore}"
+    command "keytool -certreq -alias #{server}.key -file #{csrfile} -keypass #{keypass} -storepass #{keypass} -keystore #{keystore}"
     path ["#{node[:components][:hudson][:java]}/bin"]
     action :nothing
     cwd hudsonhome
     user hudsonuser
     group hudsongroup
-    umask 027
+    umask 022
     subscribes :run, resources(:execute => "create-hudson-keystore"), :immediately
   end
   
   # TODO: get CSR signed
+  # example: openssl x509 -req -days 1825 -in example.com.csr -out example.com.crt -CA ca.crt -CAkey ca.key -CAserial serial -extensions server -extfile openssl.cnf
+  
   crtfile = "#{server}.crt"
   
   # Import signed certificate
   # NOTE:  The data to be imported must be either in binary or base64 encoding format (between -----BEGIN/------END)
   # can be converted using: openssl x509 -in cert.crt.pem -inform PEM -out cert.crt.der -outform DER
   execute "import-hudson-crt" do
-    command = "keytool -import -noprompt -trustcacerts -alias #{server} -file #{crtfile} -storepass #{keypass} -storetype jks -keystore #{keystore}"
+    command = "keytool -import -noprompt -trustcacerts -alias #{server}.crt -file #{crtfile} -storepass #{keypass} -storetype jks -keystore #{keystore}"
     path = ["#{node[:components][:hudson][:java]}/bin"]
     action :nothing
     cwd hudsonhome
@@ -103,7 +105,7 @@ if node[:components][:hudson][:ssl]
   cakey = node[:components][:hudson][:ssl][:ca][:key]
   cafile = nil
   execute "import-hudson-ca" do
-    command = "keytool -import -noprompt -trustcacerts -alias #{cakey} -file #{cafile} -storepass #{keypass} -storetype jks -keystore #{keystore}"
+    command = "keytool -import -noprompt -trustcacerts -alias #{cakey}.crt -file #{cafile} -storepass #{keypass} -storetype jks -keystore #{keystore}"
     path = ["#{node[:components][:hudson][:java]}/bin"]
     action :nothing
     cwd hudsonhome
