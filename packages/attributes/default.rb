@@ -1,5 +1,5 @@
 
-node.default[:components][:packages][:builder] = True
+node.default[:components][:packages][:builder] = true
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
