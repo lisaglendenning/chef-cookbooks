@@ -1,7 +1,7 @@
 
 include_attribute "packages"
 
-if node[:packages][:packages][:builder]
+if node[:components][:packages][:builder]
   case node[:platform]
   when 'redhat', 'centos', 'fedora'
     if node[:platform] == 'centos'
