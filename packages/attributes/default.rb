@@ -36,6 +36,10 @@ when 'redhat', 'centos', 'fedora'
         if tokens[content] =~ /^\[(.+)\]/
           if section
             node.default[:components][:packages][:repos][reponame][:sections][section][:priority] = 5
+            if k && v
+              # store the previous value
+              node.default[:components][:packages][:repos][reponame][:sections][section][k] = v
+            end
           end
           section = $1.strip
         elsif tokens[content] =~ /^(.+?)\s*=\s*(.+)/
