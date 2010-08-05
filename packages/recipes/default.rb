@@ -67,28 +67,29 @@ end
 # manage packages after managing repositories
 #
 
-node[:components][:packages][:registry].each { |p,v|
-  act = v.key?(:action) ? v[:action] : :install
-  if v.key?(:url)
-    f = v[:url][/[^\/]+$/]
-    source = "/tmp/#{f}"
-    package p do
-      source source
-      only_if "[ -f #{source} ]"
-      action :nothing
-    end
-    remote_file source do
-      path source
-      source v[:url]
-      if v.key?(:checksum)
-        checksum v[:checksum]
+if node.components.packages.attribute?(:registry)
+  node[:components][:packages][:registry].each { |p,v|
+    act = v.key?(:action) ? v[:action] : :install
+    if v.key?(:url)
+      f = v[:url][/[^\/]+$/]
+      source = "/tmp/#{f}"
+      package p do
+        source source
+        only_if "[ -f #{source} ]"
+        action :nothing
       end
-      notifies action, resources(:package => p), :immediately
-    end
-  else
-    package p do
-      action act
-    end
-  end
-  
-}
+      remote_file source do
+        path source
+        source v[:url]
+        if v.key?(:checksum)
+          checksum v[:checksum]
+        end
+        notifies action, resources(:package => p), :immediately
+      end
+    else
+      package p do
+        action act
+      end
+    end 
+  }
+end
