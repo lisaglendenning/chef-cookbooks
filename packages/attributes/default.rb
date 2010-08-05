@@ -1,4 +1,6 @@
 
+node.default[:components][:packages][:builder] = True
+
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
   node.set[:components][:packages][:repodir] = '/etc/yum.repos.d'
