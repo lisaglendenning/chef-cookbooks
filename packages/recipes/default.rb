@@ -44,7 +44,7 @@ when 'redhat', 'centos', 'fedora'
         :sections => v[:sections],
         :exclude => v[:exclude]
       )
-      if node[:components][:packages][:repos][k][:action] != "create"
+      if node[:components][:packages][:repos][k][:action] != :create
         only_if "[ -f #{conffile} ]"
       end
     end
