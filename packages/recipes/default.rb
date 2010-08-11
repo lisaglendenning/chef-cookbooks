@@ -33,6 +33,7 @@ when 'redhat', 'centos', 'fedora'
 
   # manage repos
   node[:components][:packages][:repos].each { |k,v|
+    node.default[:components][:packages][:repos][k][:exclude] = []
     conffile = "#{node[:components][:packages][:repodir]}/#{k}.repo"
     template k do
       path conffile
@@ -44,7 +45,7 @@ when 'redhat', 'centos', 'fedora'
         :sections => v[:sections],
         :exclude => v[:exclude]
       )
-      if node[:components][:packages][:repos][k][:action] != :create
+      if v[:action] != 'create'
         only_if "[ -f #{conffile} ]"
       end
     end
