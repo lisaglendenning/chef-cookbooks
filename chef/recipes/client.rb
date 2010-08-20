@@ -5,8 +5,10 @@ chef_version = chef_version[0, 2].join('.')
 
 if node[:components][:chef][:client][:enabled]
   
-  package 'chef' do
-    action :upgrade
+  if node[:components][:chef][:client][:install] == :package
+    package 'chef' do
+      action :upgrade
+    end
   end
   
   template "chef-client-config" do
