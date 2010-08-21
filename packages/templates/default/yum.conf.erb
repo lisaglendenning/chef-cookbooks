@@ -1,4 +1,16 @@
 [main]
+<% if node[:platform] == 'fedora' %>
+cachedir=/var/cache/yum
+keepcache=0
+debuglevel=2
+logfile=/var/log/yum.log
+exactarch=1
+obsoletes=1
+gpgcheck=1
+plugins=1
+metadata_expire=1800
+installonly_limit=2
+<% else %>
 cachedir=/var/cache/yum
 keepcache=0
 debuglevel=2
@@ -15,6 +27,7 @@ metadata_expire=1h
 
 # Default.
 # installonly_limit = 3
+<% end %>
 
 # PUT YOUR REPOS HERE OR IN separate files named file.repo
 # in /etc/yum.repos.d
