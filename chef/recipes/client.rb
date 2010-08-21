@@ -58,7 +58,7 @@ if node[:components][:chef][:client][:enabled]
       pids = procs.split(' ')
       pids.each { |p|
         if p != pid
-          Process.kill("SIGINT", p)
+          Process.kill("SIGINT", Integer(p))
         end
       }
     end
