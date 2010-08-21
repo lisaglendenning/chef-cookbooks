@@ -24,7 +24,7 @@ if node[:components][:chef][:client][:enabled]
   
   service "chef-client" do
     supports :restart => true, :status => true
-    action :enable
+    action :enable, :start
     only_if "[ -f #{node[:components][:chef][:client][:config]} ]"
   end
   
@@ -47,4 +47,21 @@ if node[:components][:chef][:client][:enabled]
     only_if "[[ (-f #{clikey}) && (-f #{valkey}) ]]"
     action :run
   end
+  
+  # hack to destroy zombie chef processes
+  # IMPORTANT: turn this off if you have a reason to run multiple clients!
+  PIDFILE = '/var/run/chef/client.pid'
+  ruby_block "clean-chef-client" do
+    block do
+      pid = `cat #{PIDFILE}`
+      procs = `ps -C chef-client -o pid=`
+      pids = procs.split(' ')
+      pids.each { |p|
+        if p != pid
+          Process.kill("SIGINT", p)
+        end
+      }
+    end
+  end
+  
 end
