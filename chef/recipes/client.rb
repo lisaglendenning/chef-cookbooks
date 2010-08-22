@@ -5,7 +5,7 @@ chef_version = chef_version[0, 2].join('.')
 
 if node[:components][:chef][:client][:enabled]
   
-  if node[:components][:chef][:client][:install] == :package
+  if node[:components][:chef][:install] == :package
     package 'chef' do
       action :upgrade
     end

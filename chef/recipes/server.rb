@@ -13,8 +13,10 @@ if node[:components][:chef][:server][:enabled]
     node.set[:components][:firewall][:registry]['chef-server'] = [server]
   end
 
-  package 'chef-server-api' do
-    action :upgrade
+  if node[:components][:chef][:install] == :package
+    package 'chef-server-api' do
+      action :upgrade
+    end
   end
   
   services = ['couchdb', 'rabbitmq-server', 'chef-solr', 'chef-solr-indexer', 'chef-server']
@@ -47,8 +49,10 @@ if node[:components][:chef][:webui][:enabled]
     node.set[:components][:firewall][:registry]['chef-webui'] = [server]
   end
 
-  package 'chef-server-webui' do
-    action :upgrade
+  if node[:components][:chef][:install] == :package
+    package 'chef-server-webui' do
+      action :upgrade
+    end
   end
   
   service "chef-server-webui" do
