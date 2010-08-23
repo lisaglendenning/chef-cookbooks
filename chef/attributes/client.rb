@@ -13,4 +13,5 @@ if node[:components][:chef][:client][:enabled]
   node.default[:components][:chef][:client][:node] = node.name
   node.default[:components][:chef][:client][:splay] = 20 # seconds
   node.default[:components][:chef][:client][:interval] = 1800 # seconds
+  node.default[:components][:chef][:client][:daemon] = true
 end

@@ -22,10 +22,12 @@ if node[:components][:chef][:client][:enabled]
     )
   end
   
-  service "chef-client" do
-    supports :restart => true, :status => true
-#    action [ :enable, :start ]
-    only_if "[ -f #{node[:components][:chef][:client][:config]} ]"
+  if node[:components][:chef][:client][:daemon]
+    service "chef-client" do
+      supports :restart => true, :status => true
+      action [ :enable, :start ]
+      only_if "[ -f #{node[:components][:chef][:client][:config]} ]"
+    end
   end
   
   template "chef-client-config-service" do
@@ -50,19 +52,21 @@ if node[:components][:chef][:client][:enabled]
   
   # hack to destroy zombie chef processes
   # IMPORTANT: turn this off if you have a reason to run multiple clients!
-  PIDFILE = '/var/run/chef/client.pid'
-  ruby_block "clean-chef-client" do
-    block do
-      pid = `cat #{PIDFILE}`
-      procs = `ps -C chef-client -o pid=`
-      pids = procs.split(' ')
-      pids.each { |p|
-        if p != pid
-          Process.kill("SIGINT", Integer(p))
-        end
-      }
+  if node[:components][:chef][:client][:daemon]
+    PIDFILE = '/var/run/chef/client.pid'
+    ruby_block "clean-chef-client" do
+      block do
+        pid = `cat #{PIDFILE}`
+        procs = `ps -C chef-client -o pid=`
+        pids = procs.split(' ')
+        pids.each { |p|
+          if p != pid
+            Process.kill("SIGINT", Integer(p))
+          end
+        }
+      end
+      only_if "[ -f #{PIDFILE} ]"
     end
-    only_if "[ -f #{PIDFILE} ]"
   end
   
 end
