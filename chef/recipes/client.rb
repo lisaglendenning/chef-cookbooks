@@ -24,7 +24,7 @@ if node[:components][:chef][:client][:enabled]
   
   service "chef-client" do
     supports :restart => true, :status => true
-    action [ :enable, :start ]
+#    action [ :enable, :start ]
     only_if "[ -f #{node[:components][:chef][:client][:config]} ]"
   end
   
