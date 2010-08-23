@@ -53,9 +53,6 @@ if node[:components][:chef][:client][:enabled]
   PIDFILE = '/var/run/chef/client.pid'
   ruby_block "clean-chef-client" do
     block do
-      if ! FileTest.exists?(PIDFILE)
-        `service chef-client start`
-      end
       pid = `cat #{PIDFILE}`
       procs = `ps -C chef-client -o pid=`
       pids = procs.split(' ')
@@ -65,6 +62,7 @@ if node[:components][:chef][:client][:enabled]
         end
       }
     end
+    only_if "[ -f #{PIDFILE} ]"
   end
   
 end
