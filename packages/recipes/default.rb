@@ -84,7 +84,7 @@ if node.components.packages.attribute?(:registry)
         if v.key?(:checksum)
           checksum v[:checksum]
         end
-        notifies action, resources(:package => p), :immediately
+        notifies :upgrade, resources(:package => p), :immediately
       end
     else
       package p do
