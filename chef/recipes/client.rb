@@ -41,13 +41,15 @@ if node[:components][:chef][:client][:enabled]
     )
   end
   
-  # remove the validation key once we have a client key
-  valkey = node[:components][:chef][:client][:validator_key]
-  clikey = node[:components][:chef][:client][:client_key]
-  execute "remove-validation" do
-    command "if [ -f #{valkey} ]; then rm -f #{valkey}; fi"
-    only_if "[[ (-f #{clikey}) && (-f #{valkey}) ]]"
-    action :run
+  if not node[:components][:chef][:server][:enabled]
+    # remove the validation key once we have a client key
+    valkey = node[:components][:chef][:client][:validator_key]
+    clikey = node[:components][:chef][:client][:client_key]
+    execute "remove-validation" do
+      command "if [ -f #{valkey} ]; then rm -f #{valkey}; fi"
+      only_if "[[ (-f #{clikey}) && (-f #{valkey}) ]]"
+      action :run
+    end
   end
   
   # hack to destroy zombie chef processes
