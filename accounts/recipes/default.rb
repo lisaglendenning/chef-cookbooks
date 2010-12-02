@@ -58,34 +58,55 @@ group 'admin' do
 end
 
 #
-# Populate SSH authorized keys
+# Manage SSH
 #
 
 if node.components.attribute?(:ssh)
   AUTHFILE = 'authorized_keys'
   users.each { |name, props|
     user_info = `getent passwd #{name}`
-    if ! user_info.empty? && props.key?('pki') && props['pki'].key?('authorized')
-      authkeys = props['pki']['authorized']
+    if ! user_info.empty?
       user_info = user_info.split(':')
       dotssh = "#{user_info[5]}/.ssh"
-      file "#{user_info[0]}-dotssh-authkeys" do
-        path "#{dotssh}/#{AUTHFILE}"
-        owner user_info[0]
-        group user_info[3]
-        mode "0600"
-        content authkeys.join("\n") + "\n"
-        action :create
-        not_if "[ ! -d #{dotssh} ]"
-      end
       directory "#{user_info[0]}-dotssh" do
         path dotssh
         owner user_info[0]
         group user_info[3]
         mode "0700"
         not_if "[ ! -d #{user_info[5]} ]"
-        notifies :create, resources(:file => "#{user_info[0]}-dotssh-authkeys")
       end 
+      if props.key?('pki')
+        if props['pki'].key?('authorized')
+          authkeys = props['pki']['authorized']
+          file "#{user_info[0]}-dotssh-authkeys" do
+            path "#{dotssh}/#{AUTHFILE}"
+            owner user_info[0]
+            group user_info[3]
+            mode "0600"
+            content authkeys.join("\n") + "\n"
+            action :create
+            not_if "[ ! -d #{dotssh} ]"
+            subscribes :create, resources(:directory => "#{user_info[0]}-dotssh")
+          end
+        end
+        if props['pki'].key?('identities')
+          props['pki']['identities'].each do |id, keys|
+            idfile = "#{dotssh}/#{id}"
+            [[idfile, keys['private']], ["#{idfile}.pub", keys['public']]].each do |pair|
+              file pair[0] do
+                path pair[0]
+                owner user_info[0]
+                group user_info[3]
+                mode "0600"
+                content pair[1] + "\n"
+                action :create
+                not_if "[ ! -d #{dotssh} ]"
+                subscribes :create, resources(:directory => "#{user_info[0]}-dotssh")
+              end
+            end
+          end
+        end
+      end
     end
   }
 end
