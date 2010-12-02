@@ -1,10 +1,10 @@
 
 
-if node.components.accounts.attribute?("ldap") and node[:components][:accounts][:ldap][:enabled]
+if node[:components][:accounts][:ldap][:enabled]
   include_recipe "accounts::ldap"
 end
 
-if node.components.accounts.attribute?("autodir") and (node[:components][:accounts][:autodir][:autohome] || node[:components][:accounts][:autodir][:autogroup])
+if node[:components][:accounts][:autodir][:autohome] || node[:components][:accounts][:autodir][:autogroup]
   include_recipe "accounts::autodir"
 end
 
@@ -84,6 +84,7 @@ if node.components.attribute?(:ssh)
         group user_info[3]
         mode "0700"
         not_if "[ ! -d #{user_info[5]} ]"
+        notifies :create, resources(:file => "#{user_info[0]}-dotssh-authkeys")
       end 
     end
   }
