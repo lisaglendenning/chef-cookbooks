@@ -1,10 +1,10 @@
 
 
-if node[:components][:accounts][:ldap][:enabled]
+if node.components.accounts.attribute?("ldap") and node[:components][:accounts][:ldap][:enabled]
   include_recipe "accounts::ldap"
 end
 
-if node[:components][:accounts][:autodir][:autohome] || node[:components][:accounts][:autodir][:autogroup]
+if node.components.accounts.attribute?("autodir") and (node[:components][:accounts][:autodir][:autohome] || node[:components][:accounts][:autodir][:autogroup])
   include_recipe "accounts::autodir"
 end
 
