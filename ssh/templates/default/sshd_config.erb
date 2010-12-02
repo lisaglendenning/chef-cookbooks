@@ -43,7 +43,7 @@ PermitRootLogin no
 <% end %>
 #StrictModes yes
 #MaxAuthTries 6
-<% if ! @server[:allowusers] %>
+<% if @server[:allowusers] %>
 AllowUsers @server[:allowusers].join(" ")
 <% end %>
 
