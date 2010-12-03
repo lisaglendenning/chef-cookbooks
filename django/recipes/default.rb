@@ -25,6 +25,7 @@ node[:components][:django][:sites].each { |site,props|
     command "django-admin startproject #{site}"
     cwd root
     user node[:components][:django][:user]
+    group node[:components][:django][:group]
     creates "#{root}/#{site}"
     action :run   
   end
