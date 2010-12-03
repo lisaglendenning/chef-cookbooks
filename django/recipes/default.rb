@@ -1,4 +1,5 @@
 
+# install
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
@@ -8,7 +9,7 @@ when 'redhat', 'centos', 'fedora'
   end
 end
 
-# initialize sites
+# install sites
 
 root = node[:components][:django][:root]
 
@@ -29,4 +30,17 @@ node[:components][:django][:sites].each { |site,props|
     creates "#{root}/#{site}"
     action :run   
   end
+
+  # server
+  
+  server = { :port => 80 }
+  
+  # firewall
+  
+  if node.components.attribute?(:firewall)
+    server = Mash.new(:protocol => 'tcp', :port => server[:port])
+    node.set[:components][:firewall][:registry]["django-#{site}"] = [server]
+  end
 }
+
+
