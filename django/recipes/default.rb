@@ -24,7 +24,8 @@ node[:components][:django][:sites].each { |site,props|
   execute "django-admin #{site}" do
     command "django-admin startproject #{site}"
     cwd root
-    creates "#{root}/#{site}" 
+    user node[:components][:django][:user]
+    creates "#{root}/#{site}"
     action :run   
   end
 }
