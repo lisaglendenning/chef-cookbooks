@@ -1,4 +1,6 @@
 
+include_recipe "accounts"
+
 packages = ['autodir']
 packages.each { |p|
   package p do
