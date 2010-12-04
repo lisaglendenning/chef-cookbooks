@@ -30,6 +30,18 @@ node[:components][:django][:sites].each { |site,props|
     creates "#{root}/#{site}"
     action :run   
   end
+  
+  # django service
+  name = "django-#{site}"
+  service = Mash.new(
+    :exec => `which python`,
+    :cwd => "#{root}/#{site}",
+    :user => node[:components][:django][:user],
+    :args => ['#{root}/#{site}/manage.py', 
+              'runfcgi'
+             ]  
+  )
+  node[:components][:daemon][:registry][name] = service
 
   # server
   
@@ -43,4 +55,6 @@ node[:components][:django][:sites].each { |site,props|
   end
 }
 
+include_recipe "daemon"
+include_recipe "webserver"
 

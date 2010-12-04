@@ -1,0 +1,77 @@
+#!/bin/sh
+#
+# <%= @name %>  Service <%= @name %>
+#
+# chkconfig: 345 91 10
+# description: <%= @name %>
+### BEGIN INIT INFO
+# Provides: <%= @name %>
+# Required-Start: $local_fs $network
+# Required-Stop: $local_fs $network
+# Should-Start: $named $time
+# Should-Stop: $named $time
+# Short-Description: Service <%= @name %>
+# Description: <%= @name %>
+### END INIT INFO
+
+. /etc/rc.d/init.d/functions
+
+DAEMON_NAME="<%= @name %>"
+DAEMON_CWD="<%= @service[:cwd] %>"
+DAEMON_USER="<%= @service[:user] %>"
+DAEMON_ARGS="<%= @service[:args].join(' ') %>"
+
+exec="<%= @service[:exec] %>"
+prog="<%= (@service[:exec] =~ /[^\/]+$/ %>"
+pidfile="${DAEMON_CWD}/${DAEMON_NAME}.pid"
+lockfile="${DAEMON_CWD}/${DAEMON_NAME}.lock"
+logfile="${DAEMON_CWD}/${DAEMON_NAME}.log"
+
+cmd="daemonize -c ${DAEMON_CWD} -u ${DAEMON_USER} -e ${logfile} -o ${logfile} -p ${pidfile} -l ${lockfile} ${exec} ${DAEMON_ARGS}"
+
+[ -f /etc/sysconfig/${DAEMON_NAME} ] && . /etc/sysconfig/${DAEMON_NAME}
+
+start() {
+    [ -x ${exec} ] || exit 5
+    action $"Starting ${DAEMON_NAME}: "
+    ${cmd}
+    retval=$?
+    echo
+    return $retval
+}
+
+stop() {
+    action $"Stopping ${DAEMON_NAME}: "
+    killproc -p ${pidfile} ${prog}
+    retval=$?
+    echo
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+case "$1" in
+    start)
+        $1
+        ;;
+    stop)
+        $1
+        ;;
+    status)
+        status -p ${pidfile} ${prog}
+        ;;
+    restart)
+        $1
+        ;;
+    force-reload)
+        restart
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|force-reload}"
+        exit 2
+        ;;
+esac
+exit $?
