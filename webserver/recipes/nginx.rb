@@ -19,7 +19,7 @@ confdir = '/etc/nginx'
 template "nginx.conf" do
   path "#{confdir}/nginx.conf"
   source 'nginx.conf.erb'
-  mode 0544
+  mode 0644
   owner "root"
   group "root"
   notifies :restart, resources(:service => :nginx)
@@ -33,7 +33,7 @@ node[:components][:webserver][:registry].each { |name,server|
   template "#{name}.nginx.conf" do
     path "#{confdir}/conf.d/#{name}.nginx.conf"
     source 'nginx.conf.d.erb'
-    mode 0544
+    mode 0644
     owner "root"
     group "root"
     variables(
