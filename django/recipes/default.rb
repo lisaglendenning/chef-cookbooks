@@ -67,5 +67,5 @@ node[:components][:django][:sites].each { |site,props|
 }
 
 include_recipe "daemon"
-include_recipe "webserver"
+include_recipe "webserver::nginx"
 
