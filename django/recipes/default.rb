@@ -45,7 +45,11 @@ node[:components][:django][:sites].each { |site,props|
     :user => node[:components][:django][:user],
     :group => node[:components][:django][:group],
     :args => ["#{root}/#{site}/manage.py", 
-              'runfcgi'
+              'runfcgi',
+              'protocol=fcgi',
+              "socket=#{root}/#{site}/#{name}.sock",
+              'daemonize=false',
+              'method=threaded'
              ]  
   )
   node[:components][:daemon][:registry][name] = service
