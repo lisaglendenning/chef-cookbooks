@@ -23,6 +23,9 @@ template "nginx.conf" do
   owner "root"
   group "root"
   notifies :restart, resources(:service => :nginx)
+  variables(
+    :webserver => node[:components][:webserver]
+  )
 end
 
 # servers

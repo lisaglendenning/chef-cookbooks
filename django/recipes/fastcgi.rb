@@ -16,7 +16,8 @@ node[:components][:django][:sites].each { |site,props|
     'protocol=fcgi',
     "socket=#{root}/#{site}/#{name}.sock",
     'daemonize=false',
-    'method=threaded'
+    'method=threaded',
+    'umask=002'
   ]  
   service = Mash.new(
     :exec => `which python`.chomp,
