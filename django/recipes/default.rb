@@ -38,7 +38,7 @@ node[:components][:django][:sites].each { |site,props|
     :cwd => "#{root}/#{site}",
     :user => node[:components][:django][:user],
     :group => node[:components][:django][:group],
-    :args => ['#{root}/#{site}/manage.py', 
+    :args => ["#{root}/#{site}/manage.py", 
               'runfcgi'
              ]  
   )

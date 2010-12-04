@@ -9,13 +9,14 @@ end
 
 service_dir = case node[:platform]
 when 'redhat', 'centos', 'fedora'
-  '/etc/rc.d/init.d/'
+  '/etc/rc.d/init.d'
 end
 
 if node.components.daemon.attribute?(:registry)
   node[:components][:daemon][:registry].each { |name,props|
     
     # user/group
+    
     if `getent passwd #{props[:user]}`.length == 0
       user props[:user] do
         system true
@@ -31,9 +32,9 @@ if node.components.daemon.attribute?(:registry)
     end
     
     
-    # service
+    # init script
   
-    template 'daemon-#{name}' do
+    template "daemon-#{name}" do
       path "#{service_dir}/#{name}"
       source "service.sh.erb"
       mode 0755
@@ -45,5 +46,11 @@ if node.components.daemon.attribute?(:registry)
       )
     end
   
+    # service
+
+    service name do
+      supports :restart => true, :status =>true
+      action :enable, :start
+    end
   }
 end
