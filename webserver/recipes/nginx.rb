@@ -9,6 +9,11 @@ when 'redhat', 'centos', 'fedora'
   end
 end
 
+service 'nginx' do
+  supports :restart => true, :status =>true
+  action [:enable, :start]
+end
+
 confdir = '/etc/nginx'
 
 template "nginx.conf" do
@@ -17,6 +22,7 @@ template "nginx.conf" do
   mode 0544
   owner "root"
   group "root"
+  notifies :restart, resources(:service => :nginx)
 end
 
 # servers
@@ -30,10 +36,6 @@ node[:components][:webserver][:registry].each { |name,server|
     variables(
       :server => server
     )
+    notifies :restart, resources(:service => :nginx)
   end
 }
-
-service 'nginx' do
-  supports :restart => true, :status =>true
-  action [:enable, :start]
-end
