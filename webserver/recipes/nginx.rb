@@ -11,8 +11,8 @@ end
 
 confdir = '/etc/nginx'
 
-template 'nginx.conf' do
-  path '#{confdir}/nginx.conf'
+template "nginx.conf" do
+  path "#{confdir}/nginx.conf"
   source 'nginx.conf.erb'
   mode 0544
   owner "root"
