@@ -37,6 +37,7 @@ node[:components][:django][:sites].each { |site,props|
     :exec => `which python`,
     :cwd => "#{root}/#{site}",
     :user => node[:components][:django][:user],
+    :group => node[:components][:django][:group],
     :args => ['#{root}/#{site}/manage.py', 
               'runfcgi'
              ]  

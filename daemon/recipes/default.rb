@@ -22,6 +22,9 @@ if node.components.daemon.attribute?(:registry)
         shell '/bin/false'
       end
     end
+    if not props.key?(:group)
+      props[:group] = props[:user]
+    end
     group props[:group] do
       members [props[:user]]
       append true    
