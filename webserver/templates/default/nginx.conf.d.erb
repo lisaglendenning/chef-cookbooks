@@ -1,30 +1,29 @@
 <% name = @server.key?(:name) ? @server[:name] : '_' %>
-http {
-    server {
-        listen       <%= @server[:port] %>;
-        server_name  <%= name %>;
 
-        access_log  /var/log/nginx/<%= name %>.access.log main;
-        error_log   /var/log/nginx/<%= name %>.error.log;
+server {
+    listen       <%= @server[:port] %>;
+    server_name  <%= name %>;
+
+    access_log  /var/log/nginx/<%= name %>.access.log main;
+    error_log   /var/log/nginx/<%= name %>.error.log;
+    
+    <% ['/'].each do |location| %>
+    location <%= location %> {
+        <% if @server[:backend] == 'fastcgi' %>
+        <%   if @server[:backend].key?(:socket) %>
+        fastcgi_pass unix:<%= @server[:backend][:socket] %>;
+        <%   else %>
+        fastcgi_pass <%= @server[:backend][:host] %>:<%= @server[:backend][:port] %>;
+        <%   end %>
         
-        <% ['/'].each do |location| %>
-        location <%= location %> {
-            <% if @server[:backend] == 'fastcgi' %>
-            <%   if @server[:backend].key?(:socket) %>
-            fastcgi_pass unix:<%= @server[:backend][:socket] %>;
-            <%   else %>
-            fastcgi_pass <%= @server[:backend][:host] %>:<%= @server[:backend][:port] %>;
-            <%   end %>
-            
-            fastcgi_param PATH_INFO $fastcgi_script_name;
-            fastcgi_param REQUEST_METHOD $request_method;
-            fastcgi_param QUERY_STRING $query_string;
-            fastcgi_param CONTENT_TYPE $content_type;
-            fastcgi_param CONTENT_LENGTH $content_length;
-            fastcgi_pass_header Authorization;
-            fastcgi_intercept_errors off;
-            <% end %>
-        }
+        fastcgi_param PATH_INFO $fastcgi_script_name;
+        fastcgi_param REQUEST_METHOD $request_method;
+        fastcgi_param QUERY_STRING $query_string;
+        fastcgi_param CONTENT_TYPE $content_type;
+        fastcgi_param CONTENT_LENGTH $content_length;
+        fastcgi_pass_header Authorization;
+        fastcgi_intercept_errors off;
         <% end %>
     }
+    <% end %>
 }

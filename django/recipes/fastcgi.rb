@@ -5,6 +5,8 @@ package 'python-flup' do
   action :upgrade
 end
 
+root = node[:components][:django][:root]
+
 node[:components][:django][:sites].each { |site,props|
   # django server
   name = "django-#{site}"
