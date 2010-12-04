@@ -22,7 +22,7 @@ DAEMON_USER="<%= @service[:user] %>"
 DAEMON_ARGS="<%= @service[:args].join(' ') %>"
 
 exec="<%= @service[:exec] %>"
-prog="<%= (@service[:exec] =~ /[^\/]+$/) %>"
+prog="<%= @service[:exec].match(/[^\/]+$/) %>"
 pidfile="${DAEMON_CWD}/${DAEMON_NAME}.pid"
 lockfile="${DAEMON_CWD}/${DAEMON_NAME}.lock"
 logfile="${DAEMON_CWD}/${DAEMON_NAME}.log"
