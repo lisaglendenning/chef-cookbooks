@@ -17,7 +17,7 @@ directory root do
   path root
   owner node[:components][:django][:user]
   group node[:components][:django][:group]
-  mode "0750"
+  mode "0755"
   recursive true
 end
     
