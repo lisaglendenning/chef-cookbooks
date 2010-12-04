@@ -9,6 +9,12 @@ when 'redhat', 'centos', 'fedora'
   end
 end
 
+# fastcgi requires flup http://www.saddi.com/software/flup/
+# EPEL
+package 'python-flup' do
+  action :upgrade
+end
+
 # install sites
 
 root = node[:components][:django][:root]
@@ -34,7 +40,7 @@ node[:components][:django][:sites].each { |site,props|
   # django service
   name = "django-#{site}"
   service = Mash.new(
-    :exec => `which python`,
+    :exec => `which python`.chomp,
     :cwd => "#{root}/#{site}",
     :user => node[:components][:django][:user],
     :group => node[:components][:django][:group],
