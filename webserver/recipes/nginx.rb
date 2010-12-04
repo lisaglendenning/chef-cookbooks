@@ -1,4 +1,5 @@
 
+include_recipe "webserver"
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
