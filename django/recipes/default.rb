@@ -37,33 +37,31 @@ node[:components][:django][:sites].each { |site,props|
     action :run   
   end
   
-  # django service
+  # django server
   name = "django-#{site}"
+  args = [
+    "#{root}/#{site}/manage.py", 
+    'runfcgi',
+    'protocol=fcgi',
+    "socket=#{root}/#{site}/#{name}.sock",
+    'daemonize=false',
+    'method=threaded'
+  ]  
   service = Mash.new(
     :exec => `which python`.chomp,
     :cwd => "#{root}/#{site}",
     :user => node[:components][:django][:user],
     :group => node[:components][:django][:group],
-    :args => ["#{root}/#{site}/manage.py", 
-              'runfcgi',
-              'protocol=fcgi',
-              "socket=#{root}/#{site}/#{name}.sock",
-              'daemonize=false',
-              'method=threaded'
-             ]  
+    :args => args
   )
   node[:components][:daemon][:registry][name] = service
 
-  # server
-  
-  server = { :port => 80 }
-  
-  # firewall
-  
-  if node.components.attribute?(:firewall)
-    server = Mash.new(:protocol => 'tcp', :port => server[:port])
-    node.set[:components][:firewall][:registry]["django-#{site}"] = [server]
-  end
+  # web server
+  server = Mash.new
+  server[:port] = 80
+  server[:backend] = :fastcgi
+  server[:backend][:socket] = "{root}/#{site}/#{name}.sock"
+  node[:components][:webserver][:registry][name] = server
 }
 
 include_recipe "daemon"
