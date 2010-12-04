@@ -31,7 +31,7 @@ node[:components][:django][:sites].each { |site,props|
   server = Mash.new
   server[:port] = 80
   server[:backend] = :fastcgi
-  server[:backend][:socket] = "{root}/#{site}/#{name}.sock"
+  server[:fastcgi] = Mash.new(:socket => "{root}/#{site}/#{name}.sock")
   node[:components][:webserver][:registry][name] = server
 }
 

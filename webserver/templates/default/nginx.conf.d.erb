@@ -10,10 +10,10 @@ server {
     <% ['/'].each do |location| %>
     location <%= location %> {
         <% if @server[:backend] == 'fastcgi' %>
-        <%   if @server[:backend].key?(:socket) %>
-        fastcgi_pass unix:<%= @server[:backend][:socket] %>;
+        <%   if @server[:fastcgi].key?(:socket) %>
+        fastcgi_pass unix:<%= @server[:fastcgi][:socket] %>;
         <%   else %>
-        fastcgi_pass <%= @server[:backend][:host] %>:<%= @server[:backend][:port] %>;
+        fastcgi_pass <%= @server[:fastcgi][:host] %>:<%= @server[:fastcgi][:port] %>;
         <%   end %>
         
         fastcgi_param PATH_INFO $fastcgi_script_name;
