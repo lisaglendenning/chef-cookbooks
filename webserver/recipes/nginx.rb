@@ -27,6 +27,9 @@ node[:components][:webserver][:registry].each { |name,server|
     mode 0544
     owner "root"
     group "root"
+    variables(
+      :server => server
+    )
   end
 }
 
