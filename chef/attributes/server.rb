@@ -5,7 +5,7 @@ if node[:components][:chef][:server][:enabled]
   node.default[:components][:chef][:server][:config] = '/etc/chef/server.rb'
   node.default[:components][:chef][:server][:service_config] = '/etc/sysconfig/chef-server'
   node.default[:components][:chef][:server][:validator] = 'chef-validator'
-  node.default[:components][:chef][:server][:validator_key] = '/etc/chef/certificates/validation.pem'
+  node.default[:components][:chef][:server][:validator_key] = '/etc/chef/validation.pem'
   node.default[:components][:chef][:server][:fqdn] = node[:components][:fqdn] ? node[:components][:fqdn] : node.name 
   node.default[:components][:chef][:server][:port] = 4000
   node.default[:components][:chef][:server][:log_level] = :info
