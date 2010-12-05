@@ -14,6 +14,7 @@ end
 local = data_bag_item('accounts', 'local')
 local['users'].each { |k,v|
   user k do
+    action :create
     comment v.key?('comment') ? v['comment'] : nil
     uid v.key?('uid') ? v['uid'] : nil
     gid v.key?('gid') ? v['gid'] : nil
