@@ -11,6 +11,7 @@ directory root do
   recursive true
 end
 
+# Ruby environment
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
@@ -54,6 +55,8 @@ when 'redhat', 'centos', 'fedora'
   end
   
   # RVM
+
+  rvm_root = '/usr/local'
   
   git "sod.git" do
     destination "#{root}/sod.git"
@@ -70,6 +73,8 @@ when 'redhat', 'centos', 'fedora'
   end  
   
   # Ruby deps
+
+  ruby_version = "ree-1.8.7-2010.02"
   
   packages = [
     'gcc-c++',
@@ -89,35 +94,54 @@ when 'redhat', 'centos', 'fedora'
     end
   end
   
-  rvm_root = '/usr/local'
-  
-  ruby_version = "ree-1.8.7-2010.02"
-  
   # RVM packages ?
   rvms = ['zlib', 'openssl', 'readline']
   rvms.each do |r|
     execute "rvm-install-#{r}" do
-      command ". #{rvm_root}/lib/rvm && rvm package install #{r}"
+      command "source #{rvm_root}/lib/rvm && rvm package install #{r}"
     end
+    action :nothing
   end
   
   # And, Ruby
   execute "ruby-install" do
-    command ". #{rvm_root}/lib/rvm && rvm install #{ruby_version} -C --with-zlib-dir=#{rvm_root}/rvm/usr --with-readline-dir=#{rvm_root}/rvm/usr --with-openssl-dir=#{rvm_root}/rvm/usr"
+    command "source #{rvm_root}/lib/rvm && rvm install #{ruby_version} -C --with-zlib-dir=#{rvm_root}/rvm/usr --with-readline-dir=#{rvm_root}/rvm/usr --with-openssl-dir=#{rvm_root}/rvm/usr"
+    #action :nothing
   end
+  
+  # Bundler
+  execute "bundler-install" do
+    command "source #{rvm_root}/lib/rvm && rvm use #{ruby_version} && gem install bundler"
+    action :nothing
+    subscribes :run, resources(:execute => "ruby-install"), :immediately
+  end
+  
 end
+
+# Application dependencies
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
+
+  packages = [
+    'ImageMagick', 
+    'redis', 
+    'mongodb', 
+    'mongodb-server'
+  ]
   
-  include_recipe "diaspora::mongodb"
-
-  # Diaspora
-
-  git "#{root}/diaspora.git" do
-    repository "git://github.com/diaspora/diaspora.git"
-    reference "master"
-    action :sync
+  packages.each do |p|
+    package p do
+      action :upgrade
+    end
   end
-  
 end
+
+# And, Diaspora
+
+git "#{root}/diaspora.git" do
+  repository "git://github.com/diaspora/diaspora.git"
+  reference "master"
+  action :sync
+end
+
