@@ -70,6 +70,7 @@ when 'redhat', 'centos', 'fedora'
     command "bash rvm_install.sh"
     action :nothing
     subscribes :run, resources(:git => "sod.git"), :immediately
+    creates "#{rvm_root}/lib/rvm"
   end  
   
   # Ruby deps
@@ -94,13 +95,13 @@ when 'redhat', 'centos', 'fedora'
     end
   end
   
-  # RVM packages ?
-  rvms = ['zlib', 'openssl', 'readline']
+  # Ruby EE dependencies
+  rvms = ['ree_dependencies']
   rvms.each do |r|
     execute "rvm-install-#{r}" do
       command "source #{rvm_root}/lib/rvm && rvm package install #{r}"
+      #action :nothing
     end
-    action :nothing
   end
   
   # And, Ruby
