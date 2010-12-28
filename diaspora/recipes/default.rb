@@ -89,7 +89,7 @@ when 'redhat', 'centos', 'fedora'
     end
   end
   
-  rvm_root = '/usr/local/rvm'
+  rvm_root = '/usr/local'
   
   ruby_version = "ree-1.8.7-2010.02"
   
@@ -97,13 +97,13 @@ when 'redhat', 'centos', 'fedora'
   rvms = ['zlib', 'openssl', 'readline']
   rvms.each do |r|
     execute "rvm-install-#{r}" do
-      command "rvm package install #{r}"
+      command ". #{rvm_root}/lib/rvm && rvm package install #{r}"
     end
   end
   
   # And, Ruby
   execute "ruby-install" do
-    command "rvm install #{ruby_version} -C --with-zlib-dir=#{rvm_root}/usr --with-readline-dir=#{rvm_root}/usr --with-openssl-dir=#{rvm_root}/usr"
+    command ". #{rvm_root}/lib/rvm && rvm install #{ruby_version} -C --with-zlib-dir=#{rvm_root}/rvm/usr --with-readline-dir=#{rvm_root}/rvm/usr --with-openssl-dir=#{rvm_root}/rvm/usr"
   end
 end
 
