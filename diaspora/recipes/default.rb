@@ -1,14 +1,28 @@
 
-# Requirements
+# Root
+
+root = node[:components][:diaspora][:root]
+
+directory root do
+  path root
+  owner node[:components][:diaspora][:user]
+  group node[:components][:diaspora][:group]
+  mode "0755"
+  recursive true
+end
+
 
 case node[:platform]
 when 'redhat', 'centos', 'fedora'
+  
+  # Bootstrap
+  
   packages = [
     'cpio',
     'libxml2-devel', 
     'libxslt-devel',
-    'gcc-c++',
-    'openssl-devel',
+#    'gcc-c++',
+#    'openssl-devel',
     'htop',
     'psmisc',
     'screen',
@@ -21,13 +35,15 @@ when 'redhat', 'centos', 'fedora'
       action :upgrade
     end
   end
-end
-
-# Ruby 1.87
-
-case node[:platform]
-when 'redhat', 'centos', 'fedora'
+    
+  # Build tools
+  
   packages = [
+    'gcc',
+    'automake',
+    'autoconf',
+    'libtool',
+    'make',
     'git'
   ]
   
@@ -39,16 +55,46 @@ when 'redhat', 'centos', 'fedora'
   
   # RVM
   
-  remote_file "rvm-install-head" do
-    path "/tmp/rvm-install-head"
-    source "http://rvm.beginrescueend.com/releases/rvm-install-head"
-    mode "0755"
-    backup false
+  git "sod.git" do
+    destination "#{root}/sod.git"
+    repository "git://github.com/MikeSofaer/sod.git"
+    reference "master"
+    action :sync
+  end
+
+  execute "rvm-install" do
+    cwd "#{root}/sod.git"
+    command "bash rvm_install.sh"
+    action :nothing
+    subscribes :run, resources(:git => "sod.git")
+  end  
+  
+  # Ruby deps
+  
+  packages = [
+    'gcc-c++',
+    'patch', 
+    'readline', 
+    'readline-devel', 
+    'zlib', 
+    'zlib-devel', 
+    'libyaml-devel', 
+    'libffi-devel',
+    'openssl-devel'
+  ]  
+
+  packages.each do |p|
+    package p do
+      action :upgrade
+    end
+  end
+
+  # Diaspora
+
+  git "#{root}/diaspora.git" do
+    repository "http://github.com/diaspora/diaspora.git"
+    reference "master"
+    action :sync
   end
   
-  execute "rvm-install-head" do
-    command "/tmp/rvm-install-head"
-    action :nothing
-    subscribes :run, resources(:remote_file => "rvm-install-head")
-  end
 end
