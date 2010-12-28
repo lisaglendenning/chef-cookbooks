@@ -88,6 +88,29 @@ when 'redhat', 'centos', 'fedora'
       action :upgrade
     end
   end
+  
+  rvm_root = '/usr/local/rvm'
+  
+  ruby_version = "ree-1.8.7-2010.02"
+  
+  # RVM packages ?
+  rvms = ['zlib', 'openssl', 'readline']
+  rvms.each do |r|
+    execute "rvm-install-#{r}" do
+      command "rvm package install #{r}"
+    end
+  end
+  
+  # And, Ruby
+  execute "ruby-install" do
+    command "rvm install #{ruby_version} -C --with-zlib-dir=#{rvm_root}/usr --with-readline-dir=#{rvm_root}/usr --with-openssl-dir=#{rvm_root}/usr"
+  end
+end
+
+case node[:platform]
+when 'redhat', 'centos', 'fedora'
+  
+  include_recipe "diaspora::mongodb"
 
   # Diaspora
 
