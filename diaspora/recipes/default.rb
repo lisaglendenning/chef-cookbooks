@@ -66,7 +66,7 @@ when 'redhat', 'centos', 'fedora'
     cwd "#{root}/sod.git"
     command "bash rvm_install.sh"
     action :nothing
-    subscribes :run, resources(:git => "sod.git")
+    subscribes :run, resources(:git => "sod.git"), :immediately
   end  
   
   # Ruby deps
@@ -92,7 +92,7 @@ when 'redhat', 'centos', 'fedora'
   # Diaspora
 
   git "#{root}/diaspora.git" do
-    repository "http://github.com/diaspora/diaspora.git"
+    repository "git://github.com/diaspora/diaspora.git"
     reference "master"
     action :sync
   end
