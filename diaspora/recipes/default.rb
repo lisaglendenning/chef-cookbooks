@@ -150,7 +150,7 @@ git "diaspora.git" do
 end
 
 execute "diaspora-install" do
-  cwd "#{root}"
+  cwd "#{root}/diaspora.git"
   command "source #{rvm_root}/lib/rvm && bundle install"
   action :nothing
   subscribes :run, resources(:git => "diaspora.git"), :immediately
