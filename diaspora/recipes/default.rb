@@ -68,7 +68,6 @@ when 'redhat', 'centos', 'fedora'
     action :sync
   end
 
-  # TODO will this rerun if sod.git is updated and rvm_root exists?
   # TODO how to update rvm?
   execute "rvm-install" do
     cwd "#{diaspora[:root]}/source/sod.git"
@@ -166,7 +165,7 @@ end
 
 execute "diaspora-install" do
   cwd "#{diaspora[:root]}/source/diaspora.git"
-  command "source #{rvm_root}/lib/rvm && bundle install"
+  command "source #{rvm_root}/lib/rvm && rvm use #{ruby_version} && bundle install"
   action :nothing
   subscribes :run, resources(:git => "diaspora.git"), :immediately
 end
