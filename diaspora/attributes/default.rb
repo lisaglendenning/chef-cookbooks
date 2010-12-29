@@ -5,7 +5,7 @@ node.default[:components][:diaspora][:user] = 'nobody'
 node.default[:components][:diaspora][:group] = 'nobody'
 
 # app_config.yml
-defaults = (
+defaults = {
   'pod_url' => "http://#{node[:hostname]}.#{node[:components][:diaspora][:domain]}:80",
   'registrations_closed' => false,
   'invites_off' => false,
@@ -33,7 +33,7 @@ defaults = (
   'piwiki_site' => nil,
   'cloudfiles_username' => nil,
   'cloudfiles_api_key' => nil
-)
+}
 
 node.default[:components][:diaspora][:app][:default] = Mash.new
 node.default[:components][:diaspora][:app][:development] = Mash.new
