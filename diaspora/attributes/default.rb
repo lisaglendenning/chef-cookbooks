@@ -41,7 +41,5 @@ node.default[:components][:diaspora][:app][:test] = Mash.new
 node.default[:components][:diaspora][:app][:production] = Mash.new
 
 defaults.each do |k,v|
-  if not node[:components][:diaspora][:app][:default].has_key?(k)
-    node[:components][:diaspora][:app][:default][k] = v
-  end
+  node.default[:components][:diaspora][:app][:default][k] = v
 end

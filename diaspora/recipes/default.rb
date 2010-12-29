@@ -187,6 +187,11 @@ execute "diaspora-install" do
   subscribes :run, resources(:git => "diaspora.git"), :immediately
 end
 
+config = Mash.new
+diaspora[:app].each do |section,settings|
+  config[section] = Mash.new(settings)
+end
+
 template "app_config.yml" do
   path "#{diaspora[:root]}source/diaspora.git/config/app_config.yml"
   source "app_config.yml.erb"
@@ -194,7 +199,7 @@ template "app_config.yml" do
   owner diaspora[:user]
   group diaspora[:group]
   variables(
-    :config => diaspora[:app]
+    :config => config
   )
 end
 
