@@ -1,7 +1,7 @@
 # mongodb.conf
 
 #where to log
-logpath=<%= @rundir %>/mongodb.log
+logpath=/var/log/mongodb/mongodb.log
 
 # fork and run in background
 fork = true
@@ -10,7 +10,7 @@ fork = true
 
 dbpath=<%= @datadir %>/mongodb
 
-pidfilepath=<%= @rundir %>/mongodb.pid
+pidfilepath=/var/run/mongodb/mongodb.pid
 
 # Enables periodic logging of CPU utilization and I/O wait
 #cpu = true

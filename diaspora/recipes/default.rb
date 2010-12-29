@@ -3,12 +3,12 @@
 
 diaspora = node[:components][:diaspora]
 
-[diaspora[:root], "#{diaspora[:root]}/run", "#{diaspora[:root]}/source", "#{diaspora[:root]}/data"].each do |dir|
+[diaspora[:root], "#{diaspora[:root]}/source", "#{diaspora[:root]}/data"].each do |dir|
   directory dir do
     path dir
     owner diaspora[:user]
     group diaspora[:group]
-    mode "0777"
+    mode "0755"
     recursive true
   end
 end  
@@ -149,7 +149,6 @@ when 'redhat', 'centos', 'fedora'
       owner diaspora[:user]
       group diaspora[:group]
       variables(
-        :rundir => "#{diaspora[:root]}/run",
         :datadir => "#{diaspora[:root]}/data"
       )
     end
@@ -165,6 +164,12 @@ when 'redhat', 'centos', 'fedora'
     supports :restart => true, :status =>true
     action [:enable, :start]
     subscribes :restart, resources(:template => "mongodb.conf")
+  end
+
+  service "redis" do
+    supports :restart => true, :status =>true
+    action [:enable, :start]
+    subscribes :restart, resources(:template => "redis.conf")
   end
 end
 
