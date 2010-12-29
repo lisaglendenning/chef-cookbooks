@@ -194,7 +194,7 @@ template "app_config.yml" do
   owner diaspora[:user]
   group diaspora[:group]
   variables(
-    :sections => diaspora[:app]
+    :config => diaspora[:app]
   )
 end
 
