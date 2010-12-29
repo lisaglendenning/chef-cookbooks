@@ -6,7 +6,8 @@
 <%= section %>
 
 <%   settings.each do |k,v| %>
-<%     if v.is_a?(string) %>
+<%     case v
+<%     when String %>
   <%= k %>: "<%= v %>"
 <%     else %>
   <%= k %>: <%= v %>
