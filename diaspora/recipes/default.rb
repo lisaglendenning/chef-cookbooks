@@ -1,15 +1,18 @@
 
-# Root
+# Directory structure
 
-root = node[:components][:diaspora][:root]
+diaspora = node[:components][:diaspora]
 
-directory root do
-  path root
-  owner node[:components][:diaspora][:user]
-  group node[:components][:diaspora][:group]
-  mode "0755"
-  recursive true
-end
+[diaspora[:root], "#{diaspora[:root]}/run", "#{diaspora[:root]}/source"].each do |dir|
+  directory dir do
+    path dir
+    owner diaspora[:user]
+    group diaspora[:group]
+    mode "0755"
+    recursive true
+  end
+end  
+  
 
 # Ruby environment
 
@@ -59,7 +62,7 @@ when 'redhat', 'centos', 'fedora'
   rvm_root = '/usr/local'
   
   git "sod.git" do
-    destination "#{root}/sod.git"
+    destination "#{diaspora[:root]}/source/sod.git"
     repository "git://github.com/MikeSofaer/sod.git"
     reference "master"
     action :sync
@@ -68,7 +71,7 @@ when 'redhat', 'centos', 'fedora'
   # TODO will this rerun if sod.git is updated and rvm_root exists?
   # TODO how to update rvm?
   execute "rvm-install" do
-    cwd "#{root}/sod.git"
+    cwd "#{diaspora[:root]}/source/sod.git"
     command "bash rvm_install.sh"
     action :run
     creates "#{rvm_root}/lib/rvm"
@@ -138,22 +141,45 @@ when 'redhat', 'centos', 'fedora'
       action :upgrade
     end
   end
+  
+  template "redis.conf" do
+    path "/etc/redis.conf"
+    source "redis.conf.erb"
+    mode "0644"
+    owner diaspora[:user]
+    group diaspora[:group]
+    variables(
+      :rundir => "#{diaspora[:root]}/run",
+      :datadir => "#{diaspora[:root]}/data"
+    )
+  end
 end
 
-# And, Diaspora
+# Install Diaspora
 
 git "diaspora.git" do
-  destination "#{root}/diaspora.git"
+  destination "#{diaspora[:root]}/source/diaspora.git"
   repository "git://github.com/diaspora/diaspora.git"
   reference "master"
   action :sync
 end
 
 execute "diaspora-install" do
-  cwd "#{root}/diaspora.git"
+  cwd "#{diaspora[:root]}/source/diaspora.git"
   command "source #{rvm_root}/lib/rvm && bundle install"
   action :nothing
   subscribes :run, resources(:git => "diaspora.git"), :immediately
 end
+
+
+
+# Run
+
+service "mongod" do
+  supports :restart => true, :status =>true
+  action [:enable, :start]
+end
+
+
 
 
