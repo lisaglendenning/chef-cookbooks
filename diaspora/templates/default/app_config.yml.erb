@@ -5,6 +5,9 @@
 <% @config.each do |section,settings| %>
 <%= section %>
 
+<%   if settings.nil? %>
+<%     next %>
+<%   end %>
 <%   settings.each do |k,v| %>
 <%     case v %>
 <%     when String %>
