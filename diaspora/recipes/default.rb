@@ -141,20 +141,28 @@ when 'redhat', 'centos', 'fedora'
     end
   end
   
-  template "redis.conf" do
-    path "/etc/redis.conf"
-    source "redis.conf.erb"
-    mode "0644"
-    owner diaspora[:user]
-    group diaspora[:group]
-    variables(
-      :rundir => "#{diaspora[:root]}/run",
-      :datadir => "#{diaspora[:root]}/data"
-    )
+  ['redis', 'mongodb'].each do |conf|
+    template "#{conf}.conf" do
+      path "/etc/#{conf}.conf"
+      source "#{conf}.conf.erb"
+      mode "0644"
+      owner diaspora[:user]
+      group diaspora[:group]
+      variables(
+        :rundir => "#{diaspora[:root]}/run",
+        :datadir => "#{diaspora[:root]}/data"
+      )
+    end
+  end
+
+  service "mongod" do
+    supports :restart => true, :status =>true
+    action [:enable, :start]
+    subscribes :restart, resources(:template => "mongodb.conf")
   end
 end
 
-# Install Diaspora
+# Diaspora
 
 git "diaspora.git" do
   destination "#{diaspora[:root]}/source/diaspora.git"
@@ -169,16 +177,4 @@ execute "diaspora-install" do
   action :nothing
   subscribes :run, resources(:git => "diaspora.git"), :immediately
 end
-
-
-
-# Run
-
-service "mongod" do
-  supports :restart => true, :status =>true
-  action [:enable, :start]
-end
-
-
-
 
