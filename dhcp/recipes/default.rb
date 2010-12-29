@@ -150,27 +150,29 @@ end
 dhcp['hosts'].each do |k,v|
   
   hosts = []
-  v[:interfaces].each do |name,iface|
-    host = {
-      :keyword => :host, 
-      :values => ["#{k}-#{name}"], 
-      :blocks => get_options(iface) + get_parameters(iface)
-    }
-    host[:blocks].push({:keyword => :hostname, :values => [k]})
-    if iface.has_key?(:mac)
-      host[:blocks].push({:keyword => :hardware, :values => ['ethernet', iface[:mac]]})
-    end
-    if iface.has_key?(:assignments)
-      iface[:assignments].each do |assign|
-        subnet = IPAddr.new(assign[subnet])
-        ip = IPAddr.new(assign[ip]) | subnet
-        ihost = host.dclone
-        ihost[:values][0] += "-#{subnet}"
-        ihost[:blocks].push({:keyword => 'fixed_address', :values => [ip]})
-        hosts.push(ihost)
+  if v.key?(:interfaces)
+    v[:interfaces].each do |name,iface|
+      host = {
+        :keyword => :host, 
+        :values => ["#{k}-#{name}"], 
+        :blocks => get_options(iface) + get_parameters(iface)
+      }
+      host[:blocks].push({:keyword => :hostname, :values => [k]})
+      if iface.has_key?(:mac)
+        host[:blocks].push({:keyword => :hardware, :values => ['ethernet', iface[:mac]]})
       end
-    else
-      hosts.push(host)
+      if iface.has_key?(:assignments)
+        iface[:assignments].each do |assign|
+          subnet = IPAddr.new(assign[subnet])
+          ip = IPAddr.new(assign[ip]) | subnet
+          ihost = host.dclone
+          ihost[:values][0] += "-#{subnet}"
+          ihost[:blocks].push({:keyword => 'fixed_address', :values => [ip]})
+          hosts.push(ihost)
+        end
+      else
+        hosts.push(host)
+      end
     end
   end
   
