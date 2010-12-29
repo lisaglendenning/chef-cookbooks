@@ -65,11 +65,12 @@ when 'redhat', 'centos', 'fedora'
     action :sync
   end
 
+  # TODO will this rerun if sod.git is updated and rvm_root exists?
+  # TODO how to update rvm?
   execute "rvm-install" do
     cwd "#{root}/sod.git"
     command "bash rvm_install.sh"
-    action :nothing
-    subscribes :run, resources(:git => "sod.git"), :immediately
+    action :run
     creates "#{rvm_root}/lib/rvm"
   end  
   
@@ -100,20 +101,21 @@ when 'redhat', 'centos', 'fedora'
   rvms.each do |r|
     execute "rvm-install-#{r}" do
       command "source #{rvm_root}/lib/rvm && rvm package install #{r}"
-      #action :nothing
+      action :nothing
+      subscribes :run, resources(:execute => "rvm-install"), :immediately
     end
   end
   
   # And, Ruby
   execute "ruby-install" do
     command "source #{rvm_root}/lib/rvm && rvm install #{ruby_version} -C --with-zlib-dir=#{rvm_root}/rvm/usr --with-readline-dir=#{rvm_root}/rvm/usr --with-openssl-dir=#{rvm_root}/rvm/usr"
-    #action :nothing
+    creates "#{rvm_root}/rvm/rubies/#{ruby_version}"
   end
   
   # Bundler
   execute "bundler-install" do
     command "source #{rvm_root}/lib/rvm && rvm use #{ruby_version} && gem install bundler"
-    action :nothing
+    #action :nothing
     subscribes :run, resources(:execute => "ruby-install"), :immediately
   end
   
