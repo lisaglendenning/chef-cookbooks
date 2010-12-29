@@ -188,7 +188,7 @@ execute "diaspora-install" do
 end
 
 template "app_config.yml" do
-  path "#{diaspora[:root]}source/diaspora.git/config/app_config.yml"
+  path "#{diaspora[:root]}/source/diaspora.git/config/app_config.yml"
   source "app_config.yml.erb"
   mode "0644"
   owner diaspora[:user]
