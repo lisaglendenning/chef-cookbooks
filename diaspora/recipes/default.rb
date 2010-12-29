@@ -177,7 +177,7 @@ git "diaspora.git" do
   destination "#{diaspora[:root]}/diaspora.git"
   repository "git://github.com/diaspora/diaspora.git"
   reference "#{diaspora[:reference]}"
-  action :sync
+  action :checkout
 end
 
 execute "diaspora-install" do

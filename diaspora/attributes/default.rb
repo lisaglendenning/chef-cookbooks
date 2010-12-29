@@ -3,7 +3,7 @@ node.default[:components][:diaspora][:domain] = "#{node[:domain]}"
 node.default[:components][:diaspora][:root] = '/var/local/diaspora'
 node.default[:components][:diaspora][:user] = 'nobody'
 node.default[:components][:diaspora][:group] = 'nobody'
-node.default[:components][:diaspora][:reference] = '7aed0e63a4080b52c6f2a10965150308e725722d'
+node.default[:components][:diaspora][:reference] = 'master'
 
 # app_config.yml
 defaults = {
