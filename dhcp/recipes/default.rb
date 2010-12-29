@@ -56,9 +56,7 @@ template "dhcpd.conf" do
   owner 'root'
   group 'root'
   notifies :restart, resources(:service => "dhcpd")
-  variables(
-    :blocks => blocks,
-  )
+  variables(:blocks => blocks)
 end
 
 confdir = "#{confdir}/dhcpd.conf.d"
@@ -95,7 +93,7 @@ dhcp[:networks].each do |k,v|
   :values => [k],
   :blocks => get_options(v) + get_parameters(v) }
   
-  if v.has_key?(:pools) do
+  if v.has_key?(:pools)
     v[:pools].each do |pool|
       block = {
         :keyword => 'pool', 
@@ -110,7 +108,7 @@ dhcp[:networks].each do |k,v|
     v[:subnets].each do |subnet|
       block = {
         :keyword => 'subnet', 
-        :values => [subnet[:number], 'netmask', subnet[:mask]], 
+        :values => [subnet[:ip], 'netmask', subnet[:mask]], 
         :blocks => get_options(subnet) + get_parameters(subnet)
       }
       top.blocks.push(block)
