@@ -3,7 +3,7 @@
 
 diaspora = node[:components][:diaspora]
 
-[diaspora[:root], "#{diaspora[:root]}/source", "#{diaspora[:root]}/data"].each do |dir|
+[diaspora[:root], "#{diaspora[:root]}/data"].each do |dir|
   directory dir do
     path dir
     owner diaspora[:user]
@@ -60,7 +60,7 @@ when 'redhat', 'centos', 'fedora'
   rvm_root = '/usr/local'
   
   git "sod.git" do
-    destination "#{diaspora[:root]}/source/sod.git"
+    destination "#{diaspora[:root]}/sod.git"
     repository "git://github.com/MikeSofaer/sod.git"
     reference "master"
     action :sync
@@ -68,7 +68,7 @@ when 'redhat', 'centos', 'fedora'
 
   # TODO how to update rvm?
   execute "rvm-install" do
-    cwd "#{diaspora[:root]}/source/sod.git"
+    cwd "#{diaspora[:root]}/sod.git"
     command "bash rvm_install.sh"
     action :run
     creates "#{rvm_root}/lib/rvm"
@@ -174,21 +174,21 @@ end
 # Diaspora
 
 git "diaspora.git" do
-  destination "#{diaspora[:root]}/source/diaspora.git"
+  destination "#{diaspora[:root]}/diaspora.git"
   repository "git://github.com/diaspora/diaspora.git"
-  reference "master"
+  reference "#{diaspora[:reference]}"
   action :sync
 end
 
 execute "diaspora-install" do
-  cwd "#{diaspora[:root]}/source/diaspora.git"
+  cwd "#{diaspora[:root]}/diaspora.git"
   command "source #{rvm_root}/lib/rvm && rvm use #{ruby_version} && bundle install"
   action :nothing
   subscribes :run, resources(:git => "diaspora.git"), :immediately
 end
 
 template "app_config.yml" do
-  path "#{diaspora[:root]}/source/diaspora.git/config/app_config.yml"
+  path "#{diaspora[:root]}/diaspora.git/config/app_config.yml"
   source "app_config.yml.erb"
   mode "0644"
   owner diaspora[:user]

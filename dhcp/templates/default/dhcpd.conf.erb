@@ -1,0 +1,31 @@
+# dhcpd.conf file
+
+<% # dhcpd configuration files are composed of a sequence of nested blocks %>
+<% queue = @blocks.reverse %>
+<% while queue do %>
+<%   depth = 0 %>
+<%   finger = queue %>
+<%   block = finger.last %>
+<%   while block.is_a?(Array) do %>
+<%     if block.empty? %>
+<%=      ['\t'*depth, '}'].join('') %>
+<%       block = nil %>
+<%     else %>
+<%       depth += 1 %>
+<%       block = finger.last %>
+<%     end %>
+<%   end %>
+<%   finger.pop %>
+<%   if block.nil? %>
+<%     next %>
+<%   end %>
+<%   output = ['\t'*depth, block['keyword'], '\t'*2] %>
+<%   output<< block['values'].join(' ') %>
+<%   if block.has_key?(:blocks) %>
+<%     output << " {" %>
+<%     finger.push(block[:blocks]) %>
+<%   else %>
+<%     output << ";" %>
+<%   end %>
+<%=  output.join('') %>
+<% end %>
