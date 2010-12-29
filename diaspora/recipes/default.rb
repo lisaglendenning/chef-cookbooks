@@ -8,7 +8,7 @@ diaspora = node[:components][:diaspora]
     path dir
     owner diaspora[:user]
     group diaspora[:group]
-    mode "0755"
+    mode "0777"
     recursive true
   end
 end  
