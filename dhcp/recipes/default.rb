@@ -122,7 +122,7 @@ dhcp['networks'].each do |k,v|
     owner 'root'
     group 'root'
     notifies :restart, resources(:service => "dhcpd")
-    variabes(:blocks => [top])
+    variables(:blocks => [top])
   end
 end
 
