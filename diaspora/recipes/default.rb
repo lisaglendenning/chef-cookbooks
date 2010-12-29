@@ -144,8 +144,8 @@ when 'redhat', 'centos', 'fedora'
       path "/etc/#{serv}.conf"
       source "#{serv}.conf.erb"
       mode "0644"
-      owner root
-      group root
+      owner "root"
+      group "root"
       variables(
         :datadir => "#{diaspora[:root]}/data"
       )
