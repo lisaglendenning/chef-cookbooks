@@ -3,17 +3,20 @@
 #   the COPYRIGHT file.
 
 <% @config.each do |section,settings| %>
-<%= section %>
+<%= section %>:
 
 <%   if settings.nil? %>
 <%     next %>
 <%   end %>
 <%   settings.each do |k,v| %>
 <%     case v %>
+<%     when nil %>
+# <%= k %>
 <%     when String %>
   <%= k %>: "<%= v %>"
 <%     else %>
   <%= k %>: <%= v %>
 <%     end %>
 <%  end %>
+
 <% end %>
