@@ -1,0 +1,15 @@
+#   Copyright (c) 2010, Diaspora Inc.  This file is
+#   licensed under the Affero General Public License version 3 or later.  See
+#   the COPYRIGHT file.
+
+<% @config.each do |section,settings| %>
+<%= section %>
+
+<%   settings.each do |k,v| %>
+<%     if v.is_a?(string) %>
+  <%= k %>: "<%= v %>"
+<%     else %>
+  <%= k %>: <%= v %>
+<%     end %>
+<%  end %>
+<% end %>
