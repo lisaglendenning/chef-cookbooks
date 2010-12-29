@@ -75,7 +75,7 @@ directory "#{confdir}/networks" do
   group 'root'
 end
 
-blocks = get_includes("#{confdir}/networks", dhcp[:networks].keys)
+blocks = get_includes("#{confdir}/networks", dhcp['networks'].keys)
 
 template "networks.conf" do
   path "#{confdir}/networks.conf"
@@ -87,7 +87,7 @@ template "networks.conf" do
   notifies :restart, resources(:service => "dhcpd")
 end
 
-dhcp[:networks].each do |k,v|
+dhcp['networks'].each do |k,v|
 
   top = {:keyword => 'shared-network',
   :values => [k],
@@ -135,7 +135,7 @@ directory "#{confdir}/clients" do
   group 'root'
 end
 
-blocks = get_includes("#{confdir}/clients", dhcp[:hosts].keys)
+blocks = get_includes("#{confdir}/clients", dhcp['hosts'].keys)
 
 template "clients.conf" do
   path "#{confdir}/clients.conf"
@@ -147,7 +147,7 @@ template "clients.conf" do
   notifies :restart, resources(:service => "dhcpd")
 end
 
-dhcp[:hosts].each do |k,v|
+dhcp['hosts'].each do |k,v|
   
   hosts = []
   v[:interfaces].each do |name,iface|
