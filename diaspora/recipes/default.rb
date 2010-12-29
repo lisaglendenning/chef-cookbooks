@@ -141,10 +141,10 @@ when 'redhat', 'centos', 'fedora'
     end
   end
   
-  ['redis', 'mongodb'].each do |conf|
-    template "#{conf}.conf" do
-      path "/etc/#{conf}.conf"
-      source "#{conf}.conf.erb"
+  ['redis', 'mongodb'].each do |serv|
+    template "#{serv}.conf" do
+      path "/etc/#{serv}.conf"
+      source "#{serv}.conf.erb"
       mode "0644"
       owner diaspora[:user]
       group diaspora[:group]
@@ -152,6 +152,12 @@ when 'redhat', 'centos', 'fedora'
         :rundir => "#{diaspora[:root]}/run",
         :datadir => "#{diaspora[:root]}/data"
       )
+    end
+    directory "#{diaspora[:root]}/data/#{serv}" do
+      owner "#{serv}"
+      group "#{serv}"
+      mode "0755"
+      recursive true
     end
   end
 
