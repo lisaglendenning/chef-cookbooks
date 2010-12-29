@@ -104,7 +104,7 @@ dhcp[:networks].each do |k,v|
     end
   end
   
-  if v.has_key?(:subnets) do  
+  if v.has_key?(:subnets)
     v[:subnets].each do |subnet|
       block = {
         :keyword => 'subnet', 
