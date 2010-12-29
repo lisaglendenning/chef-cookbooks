@@ -142,9 +142,18 @@ end
 
 # And, Diaspora
 
-git "#{root}/diaspora.git" do
+git "diaspora.git" do
+  destination "#{root}/diaspora.git"
   repository "git://github.com/diaspora/diaspora.git"
   reference "master"
   action :sync
 end
+
+execute "diaspora-install" do
+  cwd "#{root}"
+  command "source #{rvm_root}/lib/rvm && bundle install"
+  action :nothing
+  subscribes :run, resources(:git => "diaspora.git"), :immediately
+end
+
 
