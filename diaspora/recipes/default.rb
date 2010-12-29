@@ -25,12 +25,10 @@ when 'redhat', 'centos', 'fedora'
     'cpio',
     'libxml2-devel', 
     'libxslt-devel',
-#    'gcc-c++',
-#    'openssl-devel',
     'htop',
     'psmisc',
     'screen',
-    'java',
+    'java-1.6.0-openjdk',
     'bzip2'
   ]
   
@@ -146,8 +144,8 @@ when 'redhat', 'centos', 'fedora'
       path "/etc/#{serv}.conf"
       source "#{serv}.conf.erb"
       mode "0644"
-      owner diaspora[:user]
-      group diaspora[:group]
+      owner root
+      group root
       variables(
         :datadir => "#{diaspora[:root]}/data"
       )
