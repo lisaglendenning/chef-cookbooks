@@ -3,7 +3,7 @@
 
 diaspora = node[:components][:diaspora]
 
-[diaspora[:root], "#{diaspora[:root]}/run", "#{diaspora[:root]}/source"].each do |dir|
+[diaspora[:root], "#{diaspora[:root]}/run", "#{diaspora[:root]}/source", "#{diaspora[:root]}/data"].each do |dir|
   directory dir do
     path dir
     owner diaspora[:user]
