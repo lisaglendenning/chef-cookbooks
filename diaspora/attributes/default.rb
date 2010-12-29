@@ -35,10 +35,9 @@ defaults = {
   'cloudfiles_api_key' => nil
 }
 
-node.default[:components][:diaspora][:app][:default] = Mash.new
-node.default[:components][:diaspora][:app][:development] = Mash.new
-node.default[:components][:diaspora][:app][:test] = Mash.new
-node.default[:components][:diaspora][:app][:production] = Mash.new
+node.default[:components][:diaspora][:app][:development] = nil
+node.default[:components][:diaspora][:app][:test] = nil
+node.default[:components][:diaspora][:app][:production] = nil
 
 defaults.each do |k,v|
   node.default[:components][:diaspora][:app][:default][k] = v
