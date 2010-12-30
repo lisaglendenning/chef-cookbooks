@@ -179,7 +179,7 @@ when 'redhat', 'centos', 'fedora'
     variables(
       :rvm => "/usr/local/lib/rvm",
       :ruby => ruby_version,
-      :cwd => "#{diaspora[:root]}/util",
+      :cwd => "#{diaspora[:root]}/diaspora.git",
       :env => '',
       :gem => 'thin',
       :args => ['start']
