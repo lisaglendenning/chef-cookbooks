@@ -18,9 +18,14 @@ node[:components][:django][:sites].each { |site,props|
     'daemonize=false',
     'method=threaded',
     'umask=002'
-  ]  
+  ]
+  if props.has_key?(:python)
+    python = props[:python]
+  else
+    python = `which python`.chomp
+  end
   service = Mash.new(
-    :exec => `which python`.chomp,
+    :exec => python,
     :cwd => "#{root}/#{site}",
     :user => node[:components][:django][:user],
     :group => node[:components][:django][:group],
