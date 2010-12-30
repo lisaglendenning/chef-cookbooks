@@ -100,7 +100,7 @@ dhcp['networks'].each do |k,v|
         :values => [], 
         :blocks => get_options(pool) + get_parameters(pool)
       }
-      top.blocks.push(block)
+      top[:blocks].push(block)
     end
   end
   
@@ -111,7 +111,7 @@ dhcp['networks'].each do |k,v|
         :values => [subnet['ip'], 'netmask', subnet['mask']], 
         :blocks => get_options(subnet) + get_parameters(subnet)
       }
-      top.blocks.push(block)
+      top[:blocks].push(block)
     end
   end
   
