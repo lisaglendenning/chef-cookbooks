@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-GEM="<%= @gem %>"
-GEM_ARGS="<%= @args.join(' ') %>"
-GEM_ENV="<%= @env %>"
+PROG="<%= @gem %>"
+PROG_ARGS="<%= @args.join(' ') %>"
+PROG_ENV="<%= @env %>"
+PROG_CWD="<%= @cwd %>"
 
-source <%= @rvm %> && rvm use <%= @ruby %> && ${GEM_ENV} bundle exec ${GEM} ${GEM_ARGS}
+cd ${PROG_CWD} && source <%= @rvm %> && rvm use <%= @ruby %> && ${PROG_ENV} bundle exec ${PROG} ${PROG_ARGS}
