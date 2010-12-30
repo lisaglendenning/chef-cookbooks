@@ -20,8 +20,8 @@ dhcp = data_bag_item('network', 'dhcp')
 
 def get_options(bag)
   blocks = []
-  if bag.has_key?(:options)
-    bag[:options].each do |k,v|
+  if bag.has_key?('options')
+    bag['options'].each do |k,v|
       blocks.push({:keyword => :option, :values => [k,v]})
     end
   end
@@ -30,8 +30,8 @@ end
 
 def get_parameters(bag)
   blocks = []
-  if bag.has_key?(:parameters)
-    bag[:parameters].each do |k,v|
+  if bag.has_key?('parameters')
+    bag['parameters'].each do |k,v|
       blocks.push({:keyword => k, :values => [v]})
     end
   end
@@ -93,8 +93,8 @@ dhcp['networks'].each do |k,v|
   :values => [k],
   :blocks => get_options(v) + get_parameters(v) }
   
-  if v.has_key?(:pools)
-    v[:pools].each do |pool|
+  if v.has_key?('pools')
+    v['pools'].each do |pool|
       block = {
         :keyword => 'pool', 
         :values => [], 
@@ -104,11 +104,11 @@ dhcp['networks'].each do |k,v|
     end
   end
   
-  if v.has_key?(:subnets)
-    v[:subnets].each do |subnet|
+  if v.has_key?('subnets')
+    v['subnets'].each do |subnet|
       block = {
         :keyword => 'subnet', 
-        :values => [subnet[:ip], 'netmask', subnet[:mask]], 
+        :values => [subnet['ip'], 'netmask', subnet['mask']], 
         :blocks => get_options(subnet) + get_parameters(subnet)
       }
       top.blocks.push(block)
@@ -150,21 +150,21 @@ end
 dhcp['hosts'].each do |k,v|
   
   hosts = []
-  if v.key?(:interfaces)
-    v[:interfaces].each do |name,iface|
+  if v.key?('interfaces')
+    v['interfaces'].each do |name,iface|
       host = {
         :keyword => :host, 
         :values => ["#{k}-#{name}"], 
         :blocks => get_options(iface) + get_parameters(iface)
       }
       host[:blocks].push({:keyword => :hostname, :values => [k]})
-      if iface.has_key?(:mac)
-        host[:blocks].push({:keyword => :hardware, :values => ['ethernet', iface[:mac]]})
+      if iface.has_key?('mac')
+        host[:blocks].push({:keyword => :hardware, :values => ['ethernet', iface['mac']]})
       end
-      if iface.has_key?(:assignments)
-        iface[:assignments].each do |assign|
-          subnet = IPAddr.new(assign[subnet])
-          ip = IPAddr.new(assign[ip]) | subnet
+      if iface.has_key?('assignments')
+        iface['assignments'].each do |assign|
+          subnet = IPAddr.new(assign['subnet'])
+          ip = IPAddr.new(assign['ip']) | subnet
           ihost = host.dclone
           ihost[:values][0] += "-#{subnet}"
           ihost[:blocks].push({:keyword => 'fixed_address', :values => [ip]})
