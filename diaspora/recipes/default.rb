@@ -216,6 +216,8 @@ when 'redhat', 'centos', 'fedora'
     )
   end
 
+  include_recipe "daemon"
+  
 end
 
 # Diaspora

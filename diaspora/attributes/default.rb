@@ -7,7 +7,7 @@ node.default[:components][:diaspora][:reference] = 'master'
 
 # app_config.yml
 defaults = {
-  'pod_url' => "http://#{node[:hostname]}.#{node[:components][:diaspora][:domain]}:80",
+  'pod_url' => "http://#{node[:components][:diaspora][:domain]}:80",
   'registrations_closed' => false,
   'invites_off' => false,
   'socket_debug' => false,
