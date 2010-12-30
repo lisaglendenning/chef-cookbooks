@@ -5,4 +5,10 @@ PROG_ARGS="<%= @args.join(' ') %>"
 PROG_ENV="<%= @env %>"
 PROG_CWD="<%= @cwd %>"
 
+<% if not @env.nil? %>
+<%  @env.each do |k,v| %>
+<%= "export #{k}=\"#{v}\"" %>
+<%  end %>
+<% end %>
+
 cd ${PROG_CWD} && source <%= @rvm %> && rvm use <%= @ruby %> && ${PROG_ENV} bundle exec ${PROG} ${PROG_ARGS}

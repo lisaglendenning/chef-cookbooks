@@ -180,7 +180,6 @@ when 'redhat', 'centos', 'fedora'
       :rvm => "/usr/local/lib/rvm",
       :ruby => ruby_version,
       :cwd => "#{diaspora[:root]}/diaspora.git",
-      :env => '',
       :prog => 'thin',
       :args => ['start']
     )
@@ -196,7 +195,6 @@ when 'redhat', 'centos', 'fedora'
       :rvm => "/usr/local/lib/rvm",
       :ruby => ruby_version,
       :cwd => "#{diaspora[:root]}/diaspora.git",
-      :env => "",
       :prog => 'ruby',
       :args => ['script/websocket_server.rb']
     )
@@ -212,7 +210,7 @@ when 'redhat', 'centos', 'fedora'
       :rvm => "/usr/local/lib/rvm",
       :ruby => ruby_version,
       :cwd => "#{diaspora[:root]}/diaspora.git",
-      :env => "QUEUE=receive,mail,receive_local,socket_webfinger,http_service,http,receive_salmon",
+      :env => {'QUEUE': "receive,mail,receive_local,socket_webfinger,http_service,http,receive_salmon"},
       :prog => 'rake',
       :args => ['resque:work']
     )
