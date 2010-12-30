@@ -48,7 +48,6 @@ end
 
 # top-level blocks
 blocks = get_options(dhcp) + get_parameters(dhcp) + get_includes("#{confdir}/dhcpd.d", ["networks", "clients"])
-Chef::Log.info(blocks)
     
 template "dhcpd.conf" do
   path "#{confdir}/dhcpd.conf"
