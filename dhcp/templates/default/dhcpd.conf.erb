@@ -21,12 +21,18 @@
 <%     next %>
 <%   end %>
 <%   output = ["\t"*depth, block[:keyword]] %>
-<%   block[:values].each do |val| %>
-<%     case val %>
-<%     when /^[^\d-]/ %>
-<%       val = "\"#{val}\"" %>
+<%   block[:values].length().times |i| %>
+<%     output << " "
+<%     case block[:values][i] %>
+<%     when /^[\d-]/ %>
+<%       output << block[:values] %>
+<%     else %>
+<%       if block[:keyword] != :option or i > 0 %>
+<%         output << "\"#{block[:values]}\"" %>
+<%       else %>
+<%         output << block[:values] %>
+<%       end %>
 <%     end %>
-<%     output << " " << val %>
 <%   end %>
 <%   if block.has_key?(:blocks) %>
 <%     output << " {" %>
