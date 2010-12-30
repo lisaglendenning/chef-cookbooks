@@ -157,7 +157,7 @@ dhcp['hosts'].each do |k,v|
         :values => ["#{k}-#{name}"], 
         :blocks => get_options(iface) + get_parameters(iface)
       }
-      host[:blocks].push({:keyword => :hostname, :values => [k]})
+      host[:blocks].push({:keyword => :option, :values => ['host-name', k]})
       if iface.has_key?('mac')
         host[:blocks].push({:keyword => :hardware, :values => ['ethernet', iface['mac']]})
       end

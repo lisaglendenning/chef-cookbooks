@@ -29,8 +29,12 @@
 <%     when :include %>
 <%       value = "\"#{value}\"" %>
 <%     when :option %>
-<%       if i>0 and block[:values][i-1] == 'domain-name' %>
-<%         value = "\"#{value}\"" %>
+<%       if i > 0 %>
+<%         case block[:values][i-1] %>
+<%         when 'domain-name', 'host-name' %>
+<%           value = "\"#{value}\"" %>
+<%         end %>
+<%       end %>
 <%       end %>
 <%     end %>
 <%     output << value %>
