@@ -167,7 +167,7 @@ dhcp['hosts'].each do |k,v|
           ip = IPAddr.new(assign['ip']) | subnet
           ihost = Marshal::load(Marshal.dump(host))
           ihost[:values][0] += "-#{subnet}"
-          ihost[:blocks].push({:keyword => 'fixed_address', :values => [ip]})
+          ihost[:blocks].push({:keyword => 'fixed-address', :values => [ip]})
           hosts.push(ihost)
         end
       else
