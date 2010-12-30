@@ -2,7 +2,6 @@
 
 PROG="<%= @prog %>"
 PROG_ARGS="<%= @args.join(' ') %>"
-PROG_ENV="<%= @env %>"
 PROG_CWD="<%= @cwd %>"
 
 <% if not @env.nil? %>
@@ -11,4 +10,4 @@ PROG_CWD="<%= @cwd %>"
 <%  end %>
 <% end %>
 
-cd ${PROG_CWD} && source <%= @rvm %> && rvm use <%= @ruby %> && ${PROG_ENV} bundle exec ${PROG} ${PROG_ARGS}
+cd ${PROG_CWD} && source <%= @rvm %> && rvm use <%= @ruby %> && bundle exec ${PROG} ${PROG_ARGS}
