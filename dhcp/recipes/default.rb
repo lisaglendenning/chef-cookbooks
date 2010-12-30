@@ -47,7 +47,7 @@ def get_includes(dir, names)
 end
 
 # top-level blocks
-blocks = get_options(dhcp) + get_parameters(dhcp) + get_includes("#{confdir}/dhcpd.conf.d", ["networks", "clients"])
+blocks = get_options(dhcp) + get_parameters(dhcp) + get_includes("#{confdir}/dhcpd.d", ["networks", "clients"])
     
 template "dhcpd.conf" do
   path "#{confdir}/dhcpd.conf"
@@ -59,7 +59,7 @@ template "dhcpd.conf" do
   variables(:blocks => blocks)
 end
 
-confdir = "#{confdir}/dhcpd.conf.d"
+confdir = "#{confdir}/dhcpd.d"
 
 
 #
