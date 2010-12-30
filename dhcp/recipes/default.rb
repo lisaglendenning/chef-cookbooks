@@ -92,17 +92,6 @@ dhcp['networks'].each do |k,v|
   top = {:keyword => 'shared-network',
   :values => [k],
   :blocks => get_options(v) + get_parameters(v) }
-  
-  if v.has_key?('subnets')
-    v['subnets'].each do |subnet|
-      block = {
-        :keyword => 'subnet', 
-        :values => [subnet['ip'], 'netmask', subnet['mask']], 
-        :blocks => get_options(subnet) + get_parameters(subnet)
-      }
-      top[:blocks].push(block)
-    end
-  end
 
   if v.has_key?('pools')
     v['pools'].each do |pool|
@@ -110,6 +99,17 @@ dhcp['networks'].each do |k,v|
         :keyword => 'pool', 
         :values => [], 
         :blocks => get_options(pool) + get_parameters(pool)
+      }
+      top[:blocks].push(block)
+    end
+  end
+
+  if v.has_key?('subnets')
+    v['subnets'].each do |subnet|
+      block = {
+        :keyword => 'subnet', 
+        :values => [subnet['ip'], 'netmask', subnet['mask']], 
+        :blocks => get_options(subnet) + get_parameters(subnet)
       }
       top[:blocks].push(block)
     end

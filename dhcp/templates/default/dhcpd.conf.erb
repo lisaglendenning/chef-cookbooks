@@ -2,13 +2,13 @@
 
 <% # dhcpd configuration files are composed of a sequence of nested blocks %>
 <% queue = @blocks.reverse %>
+<% spacer = "    " %>
 <% while not queue.empty? do %>
 <%   depth = 0 %>
 <%   finger = queue %>
 <%   block = finger.last %>
 <%   while block.is_a?(Array) do %>
 <%     if block.empty? %>
-<%=      ["\t"*depth, "}"].join("") %>
 <%       block = nil %>
 <%     else %>
 <%       depth += 1 %>
@@ -18,15 +18,20 @@
 <%   end %>
 <%   finger.pop %>
 <%   if block.nil? %>
+<%=    [spacer*depth, "}"].join("") %>
 <%     next %>
 <%   end %>
-<%   output = ["\t"*depth, block[:keyword]] %>
+<%   output = [spacer*depth, block[:keyword]] %>
 <%   block[:values].length().times do |i| %>
 <%     output << " " %>
 <%     value = block[:values][i] %>
 <%     case block[:keyword] %>
-<%     when :include, 'domain-name' %>
+<%     when :include %>
+<%       value = "\"#{value}\"" %>
+<%     when :option %>
+<%       if i>0 and block[:values][i-1] == 'domain-name' %>
 <%         value = "\"#{value}\"" %>
+<%       end %>
 <%     end %>
 <%     output << value %>
 <%   end %>
