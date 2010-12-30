@@ -200,7 +200,6 @@ when 'redhat', 'centos', 'fedora'
     )
   end
   
-  env = {'QUEUE': "receive,mail,receive_local,socket_webfinger,http_service,http,receive_salmon"}
   template "diaspora-resque-service" do
     path "#{diaspora[:root]}/util/resque"
     source "service.sh.erb"
@@ -211,7 +210,7 @@ when 'redhat', 'centos', 'fedora'
       :rvm => "/usr/local/lib/rvm",
       :ruby => ruby_version,
       :cwd => "#{diaspora[:root]}/diaspora.git",
-      :env => env,
+      :env => {'QUEUE' => "receive,mail,receive_local,socket_webfinger,http_service,http,receive_salmon"},
       :prog => 'rake',
       :args => ['resque:work']
     )
