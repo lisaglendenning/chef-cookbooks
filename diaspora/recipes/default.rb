@@ -3,7 +3,7 @@
 
 diaspora = node[:components][:diaspora]
 
-[diaspora[:root], "#{diaspora[:root]}/data"].each do |dir|
+[diaspora[:root], "#{diaspora[:root]}/data", "#{diaspora[:root]}/util"].each do |dir|
   directory dir do
     path dir
     owner diaspora[:user]
@@ -169,6 +169,22 @@ when 'redhat', 'centos', 'fedora'
     action [:enable, :start]
     subscribes :restart, resources(:template => "redis.conf")
   end
+  
+  template "diaspora-thin-service" do
+    path "#{diaspora[:root]}/util/thin"
+    source "service.sh.erb"
+    mode "0755"
+    owner diaspora[:user]
+    group diaspora[:group]
+    variables(
+      :rvm => "/usr/local/lib/rvm",
+      :ruby => ruby_version,
+      :env => '',
+      :gem => 'thin',
+      :args => ['start']
+    )
+  end
+
 end
 
 # Diaspora

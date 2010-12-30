@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+GEM="<%= @gem %>"
+GEM_ARGS="<%= @args.join(' ') %>"
+GEM_ENV="<%= @env %>"
+
+source <%= @rvm $> && rvm use <%= @ruby %> && ${GEM_ENV} bundle exec ${GEM} ${GEM_ARGS}
