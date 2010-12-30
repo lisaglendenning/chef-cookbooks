@@ -41,13 +41,14 @@ end
 def get_includes(dir, names)
   blocks = []
   names.each do |name|
-    blocks.push({:keyword => :include, :values => ["#{dir}/#{name}.conf"]})
+    blocks.push({:keyword => :include, :values => ["\"#{dir}/#{name}.conf\""]})
   end
   return blocks
 end
 
 # top-level blocks
 blocks = get_options(dhcp) + get_parameters(dhcp) + get_includes("#{confdir}/dhcpd.d", ["networks", "clients"])
+Chef::Log.info(blocks)
     
 template "dhcpd.conf" do
   path "#{confdir}/dhcpd.conf"
