@@ -23,14 +23,15 @@
 <%   output = ["\t"*depth, block[:keyword]] %>
 <%   block[:values].length().times do |i| %>
 <%     output << " " %>
-<%     case block[:values][i] %>
+<%     value = block[:values][i] %>
+<%     case value] %>
 <%     when /^[\d-]/ %>
-<%       output << block[:values] %>
+<%       output << value %>
 <%     else %>
 <%       if block[:keyword] != :option or i > 0 %>
-<%         output << "\"#{block[:values]}\"" %>
+<%         output << "\"#{value}\"" %>
 <%       else %>
-<%         output << block[:values] %>
+<%         output << value %>
 <%       end %>
 <%     end %>
 <%   end %>
