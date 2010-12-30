@@ -181,8 +181,40 @@ when 'redhat', 'centos', 'fedora'
       :ruby => ruby_version,
       :cwd => "#{diaspora[:root]}/diaspora.git",
       :env => '',
-      :gem => 'thin',
+      :prog => 'thin',
       :args => ['start']
+    )
+  end
+  
+  template "diaspora-websocket-service" do
+    path "#{diaspora[:root]}/util/websocket"
+    source "service.sh.erb"
+    mode "0755"
+    owner diaspora[:user]
+    group diaspora[:group]
+    variables(
+      :rvm => "/usr/local/lib/rvm",
+      :ruby => ruby_version,
+      :cwd => "#{diaspora[:root]}/diaspora.git",
+      :env => "",
+      :prog => 'ruby',
+      :args => ['script/websocket_server.rb']
+    )
+  end
+  
+  template "diaspora-resque-service" do
+    path "#{diaspora[:root]}/util/resque"
+    source "service.sh.erb"
+    mode "0755"
+    owner diaspora[:user]
+    group diaspora[:group]
+    variables(
+      :rvm => "/usr/local/lib/rvm",
+      :ruby => ruby_version,
+      :cwd => "#{diaspora[:root]}/diaspora.git",
+      :env => "QUEUE=receive,mail,receive_local,socket_webfinger,http_service,http,receive_salmon",
+      :prog => 'rake',
+      :args => ['resque:work']
     )
   end
 
