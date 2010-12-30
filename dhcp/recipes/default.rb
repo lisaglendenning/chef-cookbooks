@@ -41,7 +41,7 @@ end
 def get_includes(dir, names)
   blocks = []
   names.each do |name|
-    blocks.push({:keyword => :include, :values => ["\"#{dir}/#{name}.conf\""]})
+    blocks.push({:keyword => :include, :values => ["#{dir}/#{name}.conf"]})
   end
   return blocks
 end

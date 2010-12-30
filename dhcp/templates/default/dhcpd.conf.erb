@@ -20,8 +20,14 @@
 <%   if block.nil? %>
 <%     next %>
 <%   end %>
-<%   output = ["\t"*depth, block[:keyword], "\t"*2] %>
-<%   output << block[:values].join(" ") %>
+<%   output = ["\t"*depth, block[:keyword]] %>
+<%   block[:values].each do |val| %>
+<%     case val %>
+<%     when /^[^\d-]/ %>
+<%       val = "\"#{val}\"" %>
+<%     end %>
+<%     output << " " << val %>
+<%   end %>
 <%   if block.has_key?(:blocks) %>
 <%     output << " {" %>
 <%     finger.push(block[:blocks]) %>
