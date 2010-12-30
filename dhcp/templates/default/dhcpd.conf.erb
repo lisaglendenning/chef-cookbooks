@@ -24,16 +24,11 @@
 <%   block[:values].length().times do |i| %>
 <%     output << " " %>
 <%     value = block[:values][i] %>
-<%     case value %>
-<%     when /^[\d-]/ %>
-<%       output << value %>
-<%     else %>
-<%       if block[:keyword] != :option or i > 0 %>
-<%         output << "\"#{value}\"" %>
-<%       else %>
-<%         output << value %>
-<%       end %>
+<%     case block[:keyword] %>
+<%     when :include, 'domain-name' %>
+<%         value = "\"#{value}\"" %>
 <%     end %>
+<%     output << value %>
 <%   end %>
 <%   if block.has_key?(:blocks) %>
 <%     output << " {" %>
