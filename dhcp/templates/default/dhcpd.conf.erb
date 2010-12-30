@@ -2,7 +2,7 @@
 
 <% # dhcpd configuration files are composed of a sequence of nested blocks %>
 <% queue = @blocks.reverse %>
-<% while queue do %>
+<% while not queue.empty? do %>
 <%   depth = 0 %>
 <%   finger = queue %>
 <%   block = finger.last %>
