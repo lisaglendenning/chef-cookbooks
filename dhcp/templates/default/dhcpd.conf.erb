@@ -21,7 +21,7 @@
 <%     next %>
 <%   end %>
 <%   output = ["\t"*depth, block[:keyword]] %>
-<%   block[:values].length().times |i| %>
+<%   block[:values].length().times do |i| %>
 <%     output << " " %>
 <%     case block[:values][i] %>
 <%     when /^[\d-]/ %>
