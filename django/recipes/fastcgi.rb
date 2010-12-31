@@ -24,6 +24,11 @@ node[:components][:django][:sites].each { |site,props|
   else
     python = `which python`.chomp
   end
+  if props.has_key?(:port)
+    port = props[:port]
+  else
+    port = 80
+  end
   service = Mash.new(
     :exec => python,
     :cwd => "#{root}/#{site}",
@@ -35,7 +40,7 @@ node[:components][:django][:sites].each { |site,props|
   
   # web server
   server = Mash.new
-  server[:port] = 80
+  server[:port] = port
   server[:backend] = :fastcgi
   server[:fastcgi] = Mash.new(:socket => "#{root}/#{site}/#{name}.sock")
   node[:components][:webserver][:registry][name] = server
